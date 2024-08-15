@@ -1,0 +1,142 @@
+template:
+  - sensor:
+      - name: "available_power_sensors_part1"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh']) 
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[0:5] | join(', ') }}
+
+      - name: "available_power_sensors_part2"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[5:10] | join(', ') }}
+
+      - name: "available_power_sensors_part3"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh']) 
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[10:15] | join(', ') }}
+
+      - name: "available_power_sensors_part4"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh']) 
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[15:20] | join(', ') }}
+
+      - name: "available_power_sensors_part5"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh']) 
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[20:25] | join(', ') }}
+
+      - name: "available_power_sensors_part6"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh']) 
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[25:30] | join(', ') }}
+
+      - name: "available_power_sensors_part7"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[30:35] | join(', ') }}
+
+      - name: "available_power_sensors_part8"
+        state: >
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage'] %}
+          {%- set sensors = states.sensor 
+              | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
+              | rejectattr('entity_id', 'in', excluded_sensors) 
+              | map(attribute='entity_id') 
+              | list %}
+          {{ sensors[35:40] | join(', ') }}
+
+      - name: "dynamic_power_sensor"
+        state: >
+          {{ states(states('input_select.home_power_measurement_device')) }}
+        attributes:
+          unit_of_measurement: >
+            {{ state_attr(states('input_select.home_power_measurement_device'), 'unit_of_measurement') }}
+          device_class: >
+            {{ state_attr(states('input_select.home_power_measurement_device'), 'device_class') }}
+          friendly_name: >
+            {{ state_attr(states('input_select.home_power_measurement_device'), 'friendly_name') }}
+
+input_button:
+  update_power_measurement_devices:
+    name: Update Power Measurement Devices
+    icon: mdi:update
+
+input_text:
+  dynamic_power_sensor_storage:
+    name: "Dynamic Power Sensor Storage"
+
+automation:
+  - alias: Save Power Sensor Before Shutdown
+    trigger:
+      - platform: homeassistant
+        event: shutdown
+    action:
+      - service: input_text.set_value
+        target:
+          entity_id: input_text.dynamic_power_sensor_storage
+        data:
+          value: "{{ states('input_select.home_power_measurement_device') }}"
+
+  - alias: Restore Power Sensor After Startup and Update List
+    trigger:
+      - platform: homeassistant
+        event: start
+    action:
+      - variables:
+          all_sensors: >
+            {% set ns = namespace(sensors=[]) %}
+            {% for i in range(1, 8) %}
+              {% set part = states('sensor.available_power_sensors_part' ~ i) %}
+              {% if part not in ['unavailable', 'none', '', 'unknown'] %}
+                {% set ns.sensors = ns.sensors + part.split(', ') %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.sensors | unique | list }}
+      - condition: template
+        value_template: "{{ all_sensors | length > 0 }}"
+      - service: input_select.set_options
+        target:
+          entity_id: input_select.home_power_measurement_device
+        data:
+          options: "{{ all_sensors }}"
+      - delay: 00:00:05
+      - service: input_select.select_option
+        target:
+          entity_id: input_select.home_power_measurement_device
+        data:
+          option: "{{ states('input_text.dynamic_power_sensor_storage') }}"
