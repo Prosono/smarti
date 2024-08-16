@@ -1,0 +1,11 @@
+lovelace:
+  mode: storage
+  dashboards:
+    smarti_language_norsk:
+      mode: yaml
+      title: "SMARTi Language Norsk"
+      filename: dashboards/SMARTi_Language_Norsk.yaml
+    smarti_language_english:
+      mode: yaml
+      title: "SMARTi Language English"
+      filename: dashboards/SMARTi_Language_English.yaml
