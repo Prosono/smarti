@@ -12,4 +12,4 @@ lovelace:
       filename: dashboards/SMARTi_Language_English.yaml
       icon: mdi:tablet-dashboard
       description: "This is SMARTis Auto-Updated Dashboard."     
-      show_in_sidebar: true      
+      show_in_sidebar: true
