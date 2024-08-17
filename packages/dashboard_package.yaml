@@ -1,14 +1,14 @@
-# /config/packages/dashboard_package.yaml
 lovelace:
   dashboards:
-    smarti-language-norsk:  # URL path with a hyphen
+    smarti-language-norsk: # URL path with a hyphen
       mode: yaml
       title: "SMARTi Language Norsk"
       filename: dashboards/SMARTi_Language_Norsk.yaml
       show_in_sidebar: false
-    smarti-language-english:  # URL path with a hyphen
+    smarti-language-english: # URL path with a hyphen
       mode: yaml
       title: "SMARTi Language English"
       filename: dashboards/SMARTi_Language_English.yaml
-      show_in_sidebar: false  
-          
+      icon: mdi:tablet-dashboard
+      description: "This is SMARTis Auto-Updated Dashboard."
+      show_in_sidebar: true
