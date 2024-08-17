@@ -1,4 +1,3 @@
-# /config/packages/dashboard_package.yaml
 lovelace:
   dashboards:
     smarti-language-norsk:  # URL path with a hyphen
