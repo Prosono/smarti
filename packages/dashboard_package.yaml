@@ -11,3 +11,4 @@ lovelace:
       filename: dashboards/SMARTi_Language_English.yaml
       icon: mdi:tablet-dashboard
       show_in_sidebar: true
+      #Comment
