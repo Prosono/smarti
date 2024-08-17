@@ -14,10 +14,12 @@ DOMAIN = "smartiupdater"
 GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
+SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 DASHBOARDS_PATH = "/config/dashboards/"
+SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -62,6 +64,7 @@ def ensure_directory(path: str):
 async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
+    ensure_directory(SMARTIUPDATER_PATH)
 
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
@@ -79,6 +82,15 @@ async def update_files(session: aiohttp.ClientSession):
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(DASHBOARDS_PATH, file_name)
             _LOGGER.info(f"Saving dashboard file to {dest_path}")
+            await download_file(file_url, dest_path, session)
+
+    # Get and download custom component files
+    smartiupdater_files = await get_files_from_github(SMARTIUPDATER_URL, session)
+    for file_url in smartiupdater_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(SMARTIUPDATER_PATH, file_name)
+            _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
@@ -129,4 +141,4 @@ async def update_manifest_version(latest_version: str):
             await file.truncate()
         _LOGGER.info(f"Updated manifest file version to {latest_version}")
     except Exception as e:
-        _LOGGER.error(f"Error updating manifest file: {str(e)}")     
+        _LOGGER.error(f"Error updating manifest file: {str(e)}")
