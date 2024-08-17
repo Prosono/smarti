@@ -1,0 +1,15 @@
+{
+    "domain": "smartiupdater",
+    "name": "Smarti Updater",
+    "version": "unknown",
+    "documentation": "https://github.com/Prosono/smarti",
+    "dependencies": [],
+    "after_dependencies": [
+        "update"
+    ],
+    "codeowners": [
+        "@Prosono"
+    ],
+    "requirements": [],
+    "config_flow": true
+}

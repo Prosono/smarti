@@ -1,0 +1,3 @@
+update:
+  description: "Trigger the Smarti Updater service."
+  fields: {}
