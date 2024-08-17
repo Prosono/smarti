@@ -10,4 +10,7 @@ lovelace:
       mode: yaml
       title: "SMARTi Language English"
       filename: dashboards/SMARTi_Language_English.yaml
+      icon: mdi:tablet-dashboard
+      description: "This is SMARTis Auto-Updated Dashboard." 
+      theme: "light-mode"      
       show_in_sidebar: false      
