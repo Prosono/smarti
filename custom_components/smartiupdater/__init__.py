@@ -4,7 +4,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components import persistent_notification
 from .updater import update_files, check_for_update, update_manifest_version
-
+#Added comment her for testing
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "smartiupdater"
