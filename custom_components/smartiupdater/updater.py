@@ -67,7 +67,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
-    ensure_directory(os.path.dirname(NODE_RED_PATH))  # Ensure directory for Node-RED flows
+    ensure_directory(NODE_RED_PATH)  # Ensure directory for Node-RED flows
 
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
@@ -104,10 +104,6 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(NODE_RED_PATH, file_name)
             _LOGGER.info(f"Saving Node Red Flow file to {dest_path}")
             await download_file(file_url, dest_path, session)        
-
-    # Download the Node-RED flows file
-    _LOGGER.info(f"Saving Node-RED flows file to {NODE_RED_PATH}")
-    await download_file(NODE_RED_FLOWS_URL, NODE_RED_PATH, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
