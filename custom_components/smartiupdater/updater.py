@@ -96,14 +96,14 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Get and download custom component files
-    node_red_files = await get_files_from_github(SMARTIUPDATER_URL, session)
+    # Get and download Node-RED flows
+    node_red_files = await get_files_from_github(NODE_RED_FLOWS_URL, session)  # Corrected to NODE_RED_FLOWS_URL
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(NODE_RED_PATH, file_name)
-            _LOGGER.info(f"Saving Node Red Flow file to {dest_path}")
-            await download_file(file_url, dest_path, session)        
+            _LOGGER.info(f"Saving Node-RED flow file to {dest_path}")
+            await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
@@ -133,7 +133,7 @@ async def get_latest_version(session: aiohttp.ClientSession):
 async def check_for_update(session: aiohttp.ClientSession, current_version: str):
     try:
         latest_version = await get_latest_version(session)
-        _LOGGER.debug(f"Current version: {current_version}, Latest version: {latest_version}")  # Add this line
+        _LOGGER.debug(f"Current version: {current_version}, Latest version: {latest_version}")
         return current_version != latest_version, latest_version
     except aiohttp.ClientError as http_err:
         _LOGGER.error(f"HTTP error occurred while fetching version info: {http_err}")
