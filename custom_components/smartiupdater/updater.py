@@ -15,13 +15,13 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/flows.json"
+NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/flows.json"
+NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -95,6 +95,15 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(SMARTIUPDATER_PATH, file_name)
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
+
+    # Get and download custom component files
+    node_red_files = await get_files_from_github(SMARTIUPDATER_URL, session)
+    for file_url in node_red_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(NODE_RED_PATH, file_name)
+            _LOGGER.info(f"Saving Node Red Flow file to {dest_path}")
+            await download_file(file_url, dest_path, session)        
 
     # Download the Node-RED flows file
     _LOGGER.info(f"Saving Node-RED flows file to {NODE_RED_PATH}")
