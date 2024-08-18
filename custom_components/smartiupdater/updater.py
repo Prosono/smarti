@@ -15,7 +15,7 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/"
+NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/flows.json"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
