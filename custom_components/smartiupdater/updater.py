@@ -15,13 +15,13 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/flows.json"
+NODE_RED_FLOWS_URL = GITHUB_REPO_URL + "node_red_flows/"  # Directory containing Node-RED flows
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
+NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"  # Directory where Node-RED flows will be saved
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -97,7 +97,7 @@ async def update_files(session: aiohttp.ClientSession):
             await download_file(file_url, dest_path, session)
 
     # Get and download Node-RED flows
-    node_red_files = await get_files_from_github(NODE_RED_FLOWS_URL, session)  # Corrected to NODE_RED_FLOWS_URL
+    node_red_files = await get_files_from_github(NODE_RED_FLOWS_URL, session)  # Use the same function for Node-RED
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
@@ -111,7 +111,7 @@ async def get_latest_version(session: aiohttp.ClientSession):
         async with session.get(VERSION_URL + cache_buster) as response:
             response.raise_for_status()
             version_info = await response.json()
-            _LOGGER.debug(f"Fetched version info: {version_info}")  # Debugging line
+            _LOGGER.debug(f"Fetched version info: {version_info}")
 
             # Decode the base64 content
             encoded_content = version_info.get("content", "")
