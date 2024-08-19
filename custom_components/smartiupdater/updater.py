@@ -15,7 +15,7 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOW_URL = "node_red_flows/"
+NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
@@ -126,8 +126,8 @@ async def update_files(session: aiohttp.ClientSession):
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(NODE_RED_PATH, file_name)
-            _LOGGER.info(f"Saving Node-RED flow file to {dest_path}")
-            await download_file(file_url, dest_path, session)  # Correct the log message          
+            _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
+            await download_file(file_url, dest_path, session)            
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
