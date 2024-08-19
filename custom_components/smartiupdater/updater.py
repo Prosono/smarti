@@ -25,19 +25,23 @@ NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
 
 async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     try:
-        _LOGGER.info(f"Fetching file list from {url}")
+        _LOGGER.info(f"Fetching file or directory list from {url}")
         async with session.get(url) as response:
             response.raise_for_status()
             files = await response.json()
 
-            # Check if 'files' is a list (multiple files) or a dictionary (single file)
+            # Check if the response is a list (directory) or a dict (single file)
             if isinstance(files, list):
                 file_urls = [file['download_url'] for file in files if file['type'] == 'file']
                 _LOGGER.info(f"Found {len(file_urls)} files at {url}")
             elif isinstance(files, dict):
-                # It's a single file, add its download URL to the list
-                file_urls = [files['download_url']]
-                _LOGGER.info(f"Found a single file at {url}")
+                # It's a single file, so return its download URL directly
+                if 'download_url' in files:
+                    file_urls = [files['download_url']]
+                    _LOGGER.info(f"Found a single file at {url}")
+                else:
+                    _LOGGER.error(f"No download URL found for the file at {url}")
+                    return []
             else:
                 _LOGGER.error(f"Unexpected format from {url}")
                 return []
