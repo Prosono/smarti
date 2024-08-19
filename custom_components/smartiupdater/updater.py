@@ -43,9 +43,16 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
         async with session.get(url) as response:
             response.raise_for_status()
             files = await response.json()
-            file_urls = [file['download_url'] for file in files if file['type'] == 'file']
-            _LOGGER.info(f"Found {len(file_urls)} files at {url}")
-            return file_urls
+
+            # Check if response is a list, meaning it's a directory listing
+            if isinstance(files, list):
+                file_urls = [file['download_url'] for file in files if file['type'] == 'file']
+                _LOGGER.info(f"Found {len(file_urls)} files at {url}")
+                return file_urls
+            else:
+                _LOGGER.error(f"Expected a directory listing but got a different response structure.")
+                return []
+
     except aiohttp.ClientError as http_err:
         _LOGGER.error(f"HTTP error occurred while fetching file list from {url}: {http_err}")
         return []
