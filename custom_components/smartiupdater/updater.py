@@ -29,8 +29,19 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
         async with session.get(url) as response:
             response.raise_for_status()
             files = await response.json()
-            file_urls = [file['download_url'] for file in files if file['type'] == 'file']
-            _LOGGER.info(f"Found {len(file_urls)} files at {url}")
+
+            # Check if 'files' is a list (multiple files) or a dictionary (single file)
+            if isinstance(files, list):
+                file_urls = [file['download_url'] for file in files if file['type'] == 'file']
+                _LOGGER.info(f"Found {len(file_urls)} files at {url}")
+            elif isinstance(files, dict):
+                # It's a single file, add its download URL to the list
+                file_urls = [files['download_url']]
+                _LOGGER.info(f"Found a single file at {url}")
+            else:
+                _LOGGER.error(f"Unexpected format from {url}")
+                return []
+
             return file_urls
     except aiohttp.ClientError as http_err:
         _LOGGER.error(f"HTTP error occurred while fetching file list from {url}: {http_err}")
@@ -38,7 +49,7 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     except Exception as e:
         _LOGGER.error(f"Error occurred while fetching file list from {url}: {str(e)}")
         return []
-
+    
 def ensure_directory(path: str):
     try:
         if not os.path.exists(path):
