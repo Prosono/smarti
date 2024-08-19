@@ -15,9 +15,11 @@ PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
+THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
+THEMES_PATH = "/config/themes/smarti_themes"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
@@ -91,6 +93,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(NODE_RED_PATH)
+    ensure_directory(THEMES_PATH)
 
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
@@ -126,6 +129,15 @@ async def update_files(session: aiohttp.ClientSession):
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(NODE_RED_PATH, file_name)
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
+            await download_file(file_url, dest_path, session)
+
+    # Get and download Themes files
+    themes_files = await get_files_from_github(THEMES_URL_URL, session)
+    for file_url in themes_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(THEMES_PATH, file_name)
+            _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
