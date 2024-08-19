@@ -96,7 +96,7 @@ async def update_files(session: aiohttp.ClientSession):
             await download_file(file_url, dest_path, session)
 
     # Get and download Node-RED flows
-    node_red_files = await get_files_from_github(NODE_RED_FLOWS_URL, session)  # Use the same function for Node-RED
+    node_red_files = await get_files_from_github(NODE_RED_FLOWS_URL, session)  # Correct directory URL used here
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
