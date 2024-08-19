@@ -23,6 +23,20 @@ DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
 
+async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
+    try:
+        _LOGGER.info(f"Attempting to download file from {url} to {dest}")
+        async with session.get(url) as response:
+            response.raise_for_status()
+            content = await response.read()
+            async with aiofiles.open(dest, "wb") as file:
+                await file.write(content)
+        _LOGGER.info(f"File successfully downloaded and saved to {dest}")
+    except aiohttp.ClientError as http_err:
+        _LOGGER.error(f"HTTP error occurred while downloading {url}: {http_err}")
+    except Exception as e:
+        _LOGGER.error(f"Error occurred while downloading {url}: {str(e)}")
+
 async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     try:
         _LOGGER.info(f"Fetching file list from {url}")
