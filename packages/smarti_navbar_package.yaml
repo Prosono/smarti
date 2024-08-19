@@ -1,0 +1,186 @@
+sensor:
+  - platform: template
+    sensors:
+      active_motion_sensors:
+        friendly_name: "Active Motion Sensors"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'motion') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_motion_sensors') not in ['unknown', None] %}
+            {% if states('sensor.active_motion_sensors')|int > 0 %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_motion_detectors_list:
+        friendly_name: "Active Motion Detectors List"
+        value_template: >
+          {%- set active_motion_detectors = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'motion') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_motion_detectors | join(', ') }}
+
+      active_lights:
+        friendly_name: "Active Lights"
+        value_template: >
+          {{ states.light | selectattr('state','eq','on') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_lights') not in ['unknown', None] %}
+            {% if states('sensor.active_lights')|int > 0 %}
+              mdi:lightbulb-on
+            {% else %}
+              mdi:lightbulb-off
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_lights_list:
+        friendly_name: "Active Lights List"
+        value_template: >
+          {%- set active_lights = states.light | selectattr('state', 'eq', 'on') | rejectattr('state', 'eq', 'unavailable') | map(attribute='name') | list %}
+          {{ active_lights | join(', ') }}
+
+      active_doors:
+        friendly_name: "Active Doors"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'door') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_doors') not in ['unknown', None] %}
+            {% if states('sensor.active_doors')|int > 0 %}
+              mdi:door-open
+            {% else %}
+              mdi:door-closed
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_doors_list:
+        friendly_name: "Active Doors List"
+        value_template: >
+          {%- set active_doors = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'door') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_doors | join(', ') }}
+
+      active_windows:
+        friendly_name: "Active Windows"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'window') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_windows') not in ['unknown', None] %}
+            {% if states('sensor.active_windows')|int > 0 %}
+              mdi:window-open
+            {% else %}
+              mdi:window-closed
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_windows_list:
+        friendly_name: "Active Windows List"
+        value_template: >
+          {%- set active_windows = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'window') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_windows | join(', ') }}
+
+      active_water_sensors:
+        friendly_name: "Active Water Sensors"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'moisture') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_water_sensors') not in ['unknown', None] %}
+            {% if states('sensor.active_water_sensors')|int > 0 %}
+              mdi:water-alert
+            {% else %}
+              mdi:water-off
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_water_sensors_list:
+        friendly_name: "Active Water Sensors List"
+        value_template: >
+          {%- set active_water_sensors = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'moisture') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_water_sensors | join(', ') if active_water_sensors else 'No active water sensors' }}
+
+      active_gas_sensors:
+        friendly_name: "Active Gas Sensors"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'gas') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_gas_sensors') not in ['unknown', None] %}
+            {% if states('sensor.active_gas_sensors')|int > 0 %}
+              mdi:smoke-detector-variant-alert
+            {% else %}
+              mdi:smoke-detector-variant-off
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_gas_sensors_list:
+        friendly_name: "Active Gas Sensors List"
+        value_template: >
+          {%- set active_gas_sensors = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'gas') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_gas_sensors | join(', ') if active_gas_sensors else 'No active gas sensors' }}
+
+      active_smoke_detectors:
+        friendly_name: "Active Smoke Detectors"
+        value_template: >
+          {{ states.binary_sensor | selectattr('state','eq','on') | selectattr('attributes.device_class', 'eq', 'smoke') | list | count }}
+        icon_template: >
+          {% if states('sensor.active_smoke_detectors') not in ['unknown', None] %}
+            {% if states('sensor.active_smoke_detectors')|int > 0 %}
+              mdi:fire-alert
+            {% else %}
+              mdi:fire-off
+            {% endif %}
+          {% else %}
+            mdi:alert-circle-outline  # or any default icon for unknown state
+          {% endif %}
+
+      active_smoke_detectors_list:
+        friendly_name: "Active Smoke Detectors List"
+        value_template: >
+          {%- set active_smoke_detectors = states.binary_sensor | selectattr('attributes.device_class', 'eq', 'smoke') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+          {{ active_smoke_detectors | join(', ') if active_smoke_detectors else 'No active smoke detectors' }}
+
+      active_low_battery_devices_count:
+        friendly_name: "Active Low Battery Devices Count"
+        value_template: >
+          {%- set low_battery_devices_count = namespace(count=0) %}
+          {%- for state in states.sensor | selectattr('attributes.device_class', 'eq', 'battery') %}
+            {% if 0 <= state.state | int(-1) <= 20 %}
+              {%- set low_battery_devices_count.count = low_battery_devices_count.count + 1 %}
+            {% endif %}
+          {%- endfor %}
+          {%- for state in states.binary_sensor | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'eq', 'on') %}
+            {%- set low_battery_devices_count.count = low_battery_devices_count.count + 1 %}
+          {%- endfor %}
+          {{ low_battery_devices_count.count }}
+        icon_template: >
+          {% if states('sensor.active_low_battery_devices_count')|int > 0 %}
+            mdi:battery-alert
+          {% else %}
+            mdi:battery
+          {% endif %}
+
+      active_battery_devices_list:
+        friendly_name: "Active Battery Devices List"
+        value_template: >
+          {%- set active_battery_devices = states.sensor |
+            selectattr('attributes.device_class', 'eq', 'battery') |
+            selectattr('attributes.state_class', 'eq', 'measurement') %}
+          {% for device in active_battery_devices %}
+            {% set battery_level = device.state | int %}
+            {% if battery_level < 20 and device.name and battery_level %}
+              {{ device.name }} (Battery Level: {{ battery_level }}){% if not loop.last %}, {% endif %}
+            {% endif %}
+          {% endfor %}
+
+input_text:
+  default_dashboard:
+    name: "Default Dashboard Sensor Storage"

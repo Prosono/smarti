@@ -1,0 +1,9 @@
+sensor:
+  - platform: template
+    sensors:
+      home_latitude:
+        friendly_name: "Home Latitude"
+        value_template: "{{ state_attr('zone.home', 'latitude') | float | round(3) }}"
+      home_longitude:
+        friendly_name: "Home Longitude"
+        value_template: "{{ state_attr('zone.home', 'longitude') | float | round(3) }}"
