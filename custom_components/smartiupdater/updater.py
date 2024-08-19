@@ -5,7 +5,6 @@ import aiofiles
 import aiohttp
 import json
 import time  # Import for cache-busting
-from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -76,7 +75,7 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     except Exception as e:
         _LOGGER.error(f"Error occurred while fetching file list from {url}: {str(e)}")
         return []
-    
+
 def ensure_directory(path: str):
     try:
         if not os.path.exists(path):
@@ -120,14 +119,14 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Get and download node red files
+    # Get and download Node-RED files
     node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(NODE_RED_PATH, file_name)
-            _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
-            await download_file(file_url, dest_path, session)            
+            _LOGGER.info(f"Saving Node-RED file to {dest_path}")
+            await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
@@ -178,3 +177,50 @@ async def update_manifest_version(latest_version: str):
         _LOGGER.info(f"Updated manifest file version to {latest_version}")
     except Exception as e:
         _LOGGER.error(f"Error updating manifest file: {str(e)}")
+
+# Implement the merge function for Node-RED flows
+async def merge_strømpriser_flow(session: aiohttp.ClientSession):
+    strømpriser_file_url = os.path.join(NODE_RED_PATH, "flows.json")
+    if not os.path.exists(strømpriser_file_url):
+        _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
+        return
+
+    try:
+        # Read existing flows.json
+        async with aiofiles.open(strømpriser_file_url, 'r') as file:
+            existing_flows = json.loads(await file.read())
+
+        # Fetch new strømpriser flow from GitHub
+        strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
+        for file_url in strømpriser_files:
+            if "strømpriser" in file_url:
+                async with session.get(file_url) as response:
+                    response.raise_for_status()
+                    new_flow = await response.json()
+
+                # Extract the specific flow for "strømpriser" from the fetched data
+                strømpriser_flow = None
+                for flow in new_flow:
+                    if flow.get('label') == 'strømpriser':
+                        strømpriser_flow = flow
+                        break
+
+                if not strømpriser_flow:
+                    _LOGGER.error("No strømpriser flow found in the fetched data.")
+                    return
+
+                # Merge the strømpriser flow
+                for i, flow in enumerate(existing_flows):
+                    if flow.get('label') == 'strømpriser':
+                        existing_flows[i] = strømpriser_flow  # Update existing flow
+                        break
+                else:
+                    existing_flows.append(strømpriser_flow)  # Add new flow if it doesn't exist
+
+                # Save the merged flows.json back
+                async with aiofiles.open(strømpriser_file_url, 'w') as file:
+                    await file.write(json.dumps(existing_flows, indent=4))
+
+        _LOGGER.info(f"Merged strømpriser flow successfully.")
+    except Exception as e:
+        _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
