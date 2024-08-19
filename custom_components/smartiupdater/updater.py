@@ -15,27 +15,13 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOW_URL = "https://raw.githubusercontent.com/Prosono/smarti/main/node_red_flows/flows.json"  # Direct URL to the Node-RED flows file
+NODE_RED_FLOW_URL = "https://raw.githubusercontent.com/Prosono/smarti/main/node_red_flows/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/flows.json"  # Direct path to save flows.json
-
-async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
-    try:
-        _LOGGER.info(f"Attempting to download file from {url} to {dest}")
-        async with session.get(url) as response:
-            response.raise_for_status()
-            content = await response.read()
-            async with aiofiles.open(dest, "wb") as file:
-                await file.write(content)
-        _LOGGER.info(f"File successfully downloaded and saved to {dest}")
-    except aiohttp.ClientError as http_err:
-        _LOGGER.error(f"HTTP error occurred while downloading {url}: {http_err}")
-    except Exception as e:
-        _LOGGER.error(f"Error occurred while downloading {url}: {str(e)}")
+NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
 
 async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     try:
@@ -67,12 +53,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
-
-    # Download the Node-RED flows.json file directly
-    node_red_flow_url = NODE_RED_FLOW_URL
-    node_red_dest = NODE_RED_PATH
-    _LOGGER.info(f"Downloading Node-RED flow file to {node_red_dest}")
-    await download_file(node_red_flow_url, node_red_dest, session)
+    ensure_directory(NODE_RED_PATH)
 
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
@@ -100,6 +81,15 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(SMARTIUPDATER_PATH, file_name)
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
+
+    # Get and download node red files
+    node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
+    for file_url in node_red_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(NODE_RED_PATH, file_name)
+            _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
+            await download_file(file_url, dest_path, session)            
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
