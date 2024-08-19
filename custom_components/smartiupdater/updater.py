@@ -190,17 +190,17 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
 
-        # Fetch new strømpriser flow from GitHub
+        # Fetch the new strømpriser flow from GitHub
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
         for file_url in strømpriser_files:
-            if "strømpriser" in file_url:
+            if "flows.json" in file_url:
                 async with session.get(file_url) as response:
                     response.raise_for_status()
-                    new_flow = await response.json()
+                    new_flows = await response.json()
 
-                # Extract the specific flow for "strømpriser" from the fetched data
+                # Find the strømpriser flow in the new flows
                 strømpriser_flow = None
-                for flow in new_flow:
+                for flow in new_flows:
                     if flow.get('label') == 'strømpriser':
                         strømpriser_flow = flow
                         break
@@ -209,15 +209,15 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.error("No strømpriser flow found in the fetched data.")
                     return
 
-                # Merge the strømpriser flow
+                # Merge or replace the strømpriser flow in existing flows
                 for i, flow in enumerate(existing_flows):
                     if flow.get('label') == 'strømpriser':
-                        existing_flows[i] = strømpriser_flow  # Update existing flow
+                        existing_flows[i] = strømpriser_flow  # Replace existing flow
                         break
                 else:
                     existing_flows.append(strømpriser_flow)  # Add new flow if it doesn't exist
 
-                # Save the merged flows.json back
+                # Save the merged flows.json back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w') as file:
                     await file.write(json.dumps(existing_flows, indent=4))
 
