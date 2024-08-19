@@ -25,17 +25,26 @@ NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
 
 async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     try:
-        _LOGGER.info(f"Fetching file or directory list from {url}")
+        _LOGGER.info(f"Fetching file list from {url}")
         async with session.get(url) as response:
             response.raise_for_status()
             files = await response.json()
 
-            # Check if the response is a list (directory) or a dict (single file)
+            _LOGGER.debug(f"API response from {url}: {files}")
+
+            # Check if 'files' is a list (directory) or a dictionary (single file)
             if isinstance(files, list):
-                file_urls = [file['download_url'] for file in files if file['type'] == 'file']
+                for file in files:
+                    _LOGGER.debug(f"Processing file: {file}")
+                    if isinstance(file, dict) and file.get('type') == 'file':
+                        _LOGGER.debug(f"Found file: {file['name']} with download URL: {file['download_url']}")
+                    else:
+                        _LOGGER.warning(f"Unexpected item in list: {file}")
+
+                file_urls = [file['download_url'] for file in files if file.get('type') == 'file']
                 _LOGGER.info(f"Found {len(file_urls)} files at {url}")
             elif isinstance(files, dict):
-                # It's a single file, so return its download URL directly
+                # Handle case where a single file dict is returned
                 if 'download_url' in files:
                     file_urls = [files['download_url']]
                     _LOGGER.info(f"Found a single file at {url}")
