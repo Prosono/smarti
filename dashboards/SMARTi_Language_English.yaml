@@ -1,6 +1,6 @@
 title: SMARTiEnglish
 views:
-  - title: Home
+  - title: Home - English
     path: test23
     icon: mdi:home
     layout:

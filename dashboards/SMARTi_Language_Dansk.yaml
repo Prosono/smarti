@@ -1,6 +1,6 @@
 title: SMARTi
 views:
-  - title: Home - Norsk
+  - title: Home - Dansk
     path: default_view
     icon: mdi:home
     layout:
