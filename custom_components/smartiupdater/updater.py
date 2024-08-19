@@ -15,13 +15,13 @@ GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
 DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
-NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/flows.json"  # Direct URL to the Node-RED flows file
+NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"  # Direct URL to the Node-RED flows file
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/flows.json"  # Direct path to save flows.json
+NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"  # Direct path to save flows.json
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
