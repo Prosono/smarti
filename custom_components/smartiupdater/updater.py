@@ -224,3 +224,5 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         _LOGGER.info(f"Merged strømpriser flow successfully.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
+
+#Comment to check if changes are coming with        
