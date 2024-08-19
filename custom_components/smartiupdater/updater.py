@@ -126,8 +126,8 @@ async def update_files(session: aiohttp.ClientSession):
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(NODE_RED_PATH, file_name)
-            _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
-            await download_file(file_url, dest_path, session)            
+            _LOGGER.info(f"Saving Node-RED flow file to {dest_path}")
+            await download_file(file_url, dest_path, session)  # Correct the log message          
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
