@@ -132,7 +132,7 @@ async def update_files(session: aiohttp.ClientSession):
             await download_file(file_url, dest_path, session)
 
     # Get and download Themes files
-    themes_files = await get_files_from_github(THEMES_URL_URL, session)
+    themes_files = await get_files_from_github(THEMES_URL, session)
     for file_url in themes_files:
         if file_url:
             file_name = os.path.basename(file_url)
