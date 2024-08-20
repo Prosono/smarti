@@ -233,7 +233,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 async with aiofiles.open(strømpriser_file_url, 'w') as file:
                     await file.write(json.dumps(existing_flows, indent=4))
 
-        _LOGGER.info(f"Merged strømpriser flow successfully.")
+        _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
 
