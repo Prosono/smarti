@@ -208,10 +208,11 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
         for file_url in strømpriser_files:
             if "flows.json" in file_url:
+                _LOGGER.debug(f"Downloading strømpriser flow from {file_url}")
                 async with session.get(file_url) as response:
                     response.raise_for_status()
                     new_flows = await response.json()
-                    _LOGGER.debug(f"New flows fetched from GitHub: {new_flows}")
+                    _LOGGER.debug(f"Fetched new flows.json content: {new_flows}")
 
                 # Find the strømpriser flow in the new flows
                 strømpriser_flow = None
