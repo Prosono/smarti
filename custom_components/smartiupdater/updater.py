@@ -248,3 +248,4 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
 
 #Comment to check if changes are coming with        
 # one more comment
+#And one more just for the thrill of it
