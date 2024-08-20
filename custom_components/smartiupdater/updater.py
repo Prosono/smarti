@@ -215,7 +215,15 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 _LOGGER.debug(f"Downloading strømpriser flow from {file_url}")
                 async with session.get(file_url) as response:
                     response.raise_for_status()
-                    new_flows = await response.json()
+
+                    # Force the response to be treated as JSON
+                    response_text = await response.text()
+                    try:
+                        new_flows = json.loads(response_text)
+                    except json.JSONDecodeError:
+                        _LOGGER.error(f"Failed to decode JSON from the response text: {response_text[:100]}")
+                        return
+                    
                     _LOGGER.debug(f"Fetched new flows.json content: {new_flows}")
 
                 # Find and log the strømpriser flow
