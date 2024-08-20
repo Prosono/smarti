@@ -122,7 +122,7 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Get and download Node-RED files
+    # Download Node-RED files and log at each step
     node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
     for file_url in node_red_files:
         if file_url:
@@ -130,6 +130,9 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(NODE_RED_PATH, file_name)
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
+    
+    _LOGGER.info("Starting merge of strømpriser flow.")
+    await merge_strømpriser_flow(session)
 
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
@@ -192,6 +195,7 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
+    _LOGGER.info("Entered merge_strømpriser_flow function.")
     strømpriser_file_url = os.path.join(NODE_RED_PATH, "flows.json")
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
@@ -214,29 +218,25 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     new_flows = await response.json()
                     _LOGGER.debug(f"Fetched new flows.json content: {new_flows}")
 
-                # Find the strømpriser flow in the new flows
-                strømpriser_flow = None
-                for flow in new_flows:
-                    if flow.get('label') == 'Strømpriser':
-                        strømpriser_flow = flow
-                        _LOGGER.debug(f"Found strømpriser flow in new flows: {strømpriser_flow}")
-                        break
+                # Find and log the strømpriser flow
+                strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'strømpriser'), None)
 
-                if not strømpriser_flow:
+                if strømpriser_flow:
+                    _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
+                else:
                     _LOGGER.error("No strømpriser flow found in the fetched data.")
                     return
 
-                # Merge or replace the strømpriser flow in existing flows
-                for i, flow in enumerate(existing_flows):
-                    if flow.get('label') == 'strømpriser':
-                        _LOGGER.debug(f"Replacing existing strømpriser flow at index {i}.")
-                        existing_flows[i] = strømpriser_flow  # Replace existing flow
-                        break
+                # Merge or replace the strømpriser flow
+                existing_flow_index = next((i for i, flow in enumerate(existing_flows) if flow.get('label') == 'strømpriser'), None)
+
+                if existing_flow_index is not None:
+                    _LOGGER.debug(f"Replacing existing strømpriser flow at index {existing_flow_index}.")
+                    existing_flows[existing_flow_index] = strømpriser_flow  # Replace existing flow
                 else:
                     _LOGGER.debug("Adding new strømpriser flow to existing flows.")
                     existing_flows.append(strømpriser_flow)  # Add new flow if it doesn't exist
 
-                # Log the final merged content before saving
                 _LOGGER.debug(f"Final merged flows.json content: {existing_flows}")
 
                 # Save the merged flows.json back to the file
