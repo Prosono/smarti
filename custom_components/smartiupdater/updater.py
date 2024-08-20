@@ -219,6 +219,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 for flow in new_flows:
                     if flow.get('label') == 'strømpriser':
                         strømpriser_flow = flow
+                        _LOGGER.debug(f"Found strømpriser flow in new flows: {strømpriser_flow}")
                         break
 
                 if not strømpriser_flow:
