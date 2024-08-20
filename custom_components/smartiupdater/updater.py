@@ -199,8 +199,10 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
 
     try:
         # Read existing flows.json
+        _LOGGER.debug(f"Reading existing flows.json from {strømpriser_file_url}")
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
+            _LOGGER.debug(f"Existing flows.json content: {existing_flows}")
 
         # Fetch the new strømpriser flow from GitHub
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
@@ -209,6 +211,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 async with session.get(file_url) as response:
                     response.raise_for_status()
                     new_flows = await response.json()
+                    _LOGGER.debug(f"New flows fetched from GitHub: {new_flows}")
 
                 # Find the strømpriser flow in the new flows
                 strømpriser_flow = None
@@ -224,16 +227,20 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 # Merge or replace the strømpriser flow in existing flows
                 for i, flow in enumerate(existing_flows):
                     if flow.get('label') == 'strømpriser':
+                        _LOGGER.debug(f"Replacing existing strømpriser flow at index {i}.")
                         existing_flows[i] = strømpriser_flow  # Replace existing flow
                         break
                 else:
+                    _LOGGER.debug("Adding new strømpriser flow to existing flows.")
                     existing_flows.append(strømpriser_flow)  # Add new flow if it doesn't exist
+
+                # Log the final merged content before saving
+                _LOGGER.debug(f"Final merged flows.json content: {existing_flows}")
 
                 # Save the merged flows.json back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w') as file:
                     await file.write(json.dumps(existing_flows, indent=4))
-
-        _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
+                    _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
 
