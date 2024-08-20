@@ -216,18 +216,19 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 async with session.get(file_url) as response:
                     response.raise_for_status()
 
-                    # Force the response to be treated as JSON
+                    # Read content as text to manually parse as JSON
                     response_text = await response.text()
+                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")  # Log the first 200 characters
+
                     try:
                         new_flows = json.loads(response_text)
-                    except json.JSONDecodeError:
-                        _LOGGER.error(f"Failed to decode JSON from the response text: {response_text[:100]}")
+                        _LOGGER.debug(f"Parsed new flows.json content: {new_flows}")
+                    except json.JSONDecodeError as e:
+                        _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
                         return
-                    
-                    _LOGGER.debug(f"Fetched new flows.json content: {new_flows}")
 
-                # Find and log the strømpriser flow
-                strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'strømpriser'), None)
+                # Process the new flow content
+                strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
 
                 if strømpriser_flow:
                     _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
@@ -236,14 +237,14 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     return
 
                 # Merge or replace the strømpriser flow
-                existing_flow_index = next((i for i, flow in enumerate(existing_flows) if flow.get('label') == 'strømpriser'), None)
+                existing_flow_index = next((i for i, flow in enumerate(existing_flows) if flow.get('label') == 'Strømpriser'), None)
 
                 if existing_flow_index is not None:
                     _LOGGER.debug(f"Replacing existing strømpriser flow at index {existing_flow_index}.")
-                    existing_flows[existing_flow_index] = strømpriser_flow  # Replace existing flow
+                    existing_flows[existing_flow_index] = strømpriser_flow
                 else:
                     _LOGGER.debug("Adding new strømpriser flow to existing flows.")
-                    existing_flows.append(strømpriser_flow)  # Add new flow if it doesn't exist
+                    existing_flows.append(strømpriser_flow)
 
                 _LOGGER.debug(f"Final merged flows.json content: {existing_flows}")
 
