@@ -195,7 +195,6 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    _LOGGER.info("Entered merge_strømpriser_flow function.")
     strømpriser_file_url = os.path.join(NODE_RED_PATH, "flows.json")
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
@@ -203,26 +202,22 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
 
     try:
         # Read existing flows.json
-        _LOGGER.debug(f"Reading existing flows.json from {strømpriser_file_url}")
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
-            _LOGGER.debug(f"Existing flows.json content: {existing_flows}")
 
         # Fetch the new strømpriser flow from GitHub
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
         for file_url in strømpriser_files:
             if "flows.json" in file_url:
-                _LOGGER.debug(f"Downloading strømpriser flow from {file_url}")
                 async with session.get(file_url) as response:
                     response.raise_for_status()
 
-                    # Read content as text to manually parse as JSON
+                    # Read content as text and manually parse it as JSON
                     response_text = await response.text()
                     _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")  # Log the first 200 characters
 
                     try:
                         new_flows = json.loads(response_text)
-                        _LOGGER.debug(f"Parsed new flows.json content: {new_flows}")
                     except json.JSONDecodeError as e:
                         _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
                         return
@@ -240,13 +235,9 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 existing_flow_index = next((i for i, flow in enumerate(existing_flows) if flow.get('label') == 'Strømpriser'), None)
 
                 if existing_flow_index is not None:
-                    _LOGGER.debug(f"Replacing existing strømpriser flow at index {existing_flow_index}.")
                     existing_flows[existing_flow_index] = strømpriser_flow
                 else:
-                    _LOGGER.debug("Adding new strømpriser flow to existing flows.")
                     existing_flows.append(strømpriser_flow)
-
-                _LOGGER.debug(f"Final merged flows.json content: {existing_flows}")
 
                 # Save the merged flows.json back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w') as file:
@@ -254,7 +245,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
-
+        
 #Comment to check if changes are coming with        
 # one more comment
 #And one more just for the thrill of it
