@@ -22,7 +22,7 @@ PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
+NODE_RED_PATH = "/root//addon_configs/a0d7b954_nodered/"
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -245,7 +245,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
-        
+
 #Comment to check if changes are coming with        
 # one more comment
 #And one more just for the thrill of it
