@@ -259,3 +259,4 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
 # one more comment
 #And one more just for the thrill of it
 #and one more
+#last one
