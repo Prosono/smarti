@@ -22,8 +22,8 @@ PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-#NODE_RED_PATH = "/root/addon_configs/a0d7b954_nodered"
-NODE_RED_PATH = "/config/"
+NODE_RED_PATH = "/usr/share/hassio/root/addon_configs/a0d7b954_nodered"
+#NODE_RED_PATH = "/config/"
 
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
