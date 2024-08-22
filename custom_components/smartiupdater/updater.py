@@ -80,6 +80,13 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
         _LOGGER.error(f"Error occurred while fetching file list from {url}: {str(e)}")
         return []
 
+def check_file_permissions(filepath: str):
+    """Check if a file is writable and log the result."""
+    if os.access(filepath, os.W_OK):
+        _LOGGER.info(f"File {filepath} is writable.")
+    else:
+        _LOGGER.error(f"File {filepath} is not writable. Check permissions.")
+
 def ensure_directory(path: str):
     try:
         if not os.path.exists(path):
