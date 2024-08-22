@@ -203,7 +203,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         return
 
     try:
-        # Read existing flows.json
+        # Read the existing flows.json
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
 
@@ -233,17 +233,19 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.error("No strømpriser flow found in the fetched data.")
                     return
 
-                # Merge or replace the strømpriser flow
-                existing_flow_index = next((i for i, flow in enumerate(existing_flows) if flow.get('label') == 'Strømpriser'), None)
+                # Overwrite the strømpriser flow
+                updated_flows = [
+                    flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
+                    for flow in existing_flows
+                ]
 
-                if existing_flow_index is not None:
-                    existing_flows[existing_flow_index] = strømpriser_flow
-                else:
-                    existing_flows.append(strømpriser_flow)
+                # If strømpriser flow wasn't found in existing flows, append it
+                if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
+                    updated_flows.append(strømpriser_flow)
 
                 # Save the merged flows.json back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w') as file:
-                    await file.write(json.dumps(existing_flows, indent=4))
+                    await file.write(json.dumps(updated_flows, indent=4))
                     _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
