@@ -97,6 +97,8 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(NODE_RED_PATH)
     ensure_directory(THEMES_PATH)
 
+    check_file_permissions(os.path.join(NODE_RED_PATH, "flows.json"))
+    
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -202,6 +204,8 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
         return
 
+    check_file_permissions(strømpriser_file_url)
+
     try:
         # Read the existing flows.json
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
@@ -214,9 +218,8 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 async with session.get(file_url) as response:
                     response.raise_for_status()
 
-                    # Read content as text and manually parse it as JSON
                     response_text = await response.text()
-                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")  # Log the first 200 characters
+                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")
 
                     try:
                         new_flows = json.loads(response_text)
@@ -224,7 +227,6 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                         _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
                         return
 
-                # Process the new flow content
                 strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
 
                 if strømpriser_flow:
@@ -233,17 +235,14 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.error("No strømpriser flow found in the fetched data.")
                     return
 
-                # Overwrite the strømpriser flow
                 updated_flows = [
                     flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
                     for flow in existing_flows
                 ]
 
-                # If strømpriser flow wasn't found in existing flows, append it
                 if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
                     updated_flows.append(strømpriser_flow)
 
-                # Save the merged flows.json back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
                     await file.write(json.dumps(updated_flows, indent=4))
                     await file.flush()  # Ensure all data is written to disk
