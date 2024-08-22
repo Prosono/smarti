@@ -23,7 +23,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 NODE_RED_PATH = "/addon_configs/a0d7b954_nodered"
-
+#Comment
 
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
