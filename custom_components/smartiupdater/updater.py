@@ -17,12 +17,14 @@ DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
+IMAGES_URL = GITHUB_REPO_URL + "www/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
+IMAGES_PATH = "/config/www/"
 NODE_RED_PATH = "/mnt/data/supervisor/addon_configs/a0d7b954_nodered"
 #Comment
 
@@ -120,6 +122,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
+    ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(NODE_RED_PATH)
     ensure_directory(THEMES_PATH)
 
@@ -172,6 +175,16 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(THEMES_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
+
+    # Get and download IMAGE files
+    image_files = await get_files_from_github(IMAGES_URL, session)
+    for file_url in image_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(IMAGES_PATH, file_name)
+            _LOGGER.info(f"Saving themes file to {dest_path}")
+            await download_file(file_url, dest_path, session)
+
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
