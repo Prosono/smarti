@@ -29,8 +29,8 @@ SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images/"
 CSS_PATH = "/config/www/"
 NODE_RED_API_URL = "http://localhost:1880/flows"  # Node-RED API endpoint
-NODE_RED_USERNAME = ""  # Replace with your Node-RED username
-NODE_RED_PASSWORD = ""  # Replace with your Node-RED password
+NODE_RED_USERNAME = "ole"  # Replace with your Node-RED username
+NODE_RED_PASSWORD = "idole"  # Replace with your Node-RED password
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
