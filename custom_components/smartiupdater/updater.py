@@ -5,6 +5,7 @@ import aiofiles
 import aiohttp
 import json
 import time  # Import for cache-busting
+import stat  # Import for file permissions
 
 _LOGGER = logging.getLogger(__name__)
 
