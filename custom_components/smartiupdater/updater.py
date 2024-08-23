@@ -4,6 +4,9 @@ import aiofiles
 import aiohttp
 import json
 import time
+import os
+import base64
+import stat  # Import for file permissions
 
 _LOGGER = logging.getLogger(__name__)
 
