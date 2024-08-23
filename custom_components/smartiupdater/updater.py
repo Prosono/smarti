@@ -27,6 +27,15 @@ NODE_RED_PATH = "/addon_configs/a0d7b954_nodered"
 
 _LOGGER = logging.getLogger(__name__)
 
+def ensure_writable(filepath: str):
+    """Ensure that the file has writable permissions."""
+    try:
+        # Set the file permissions to be writable by the user (owner)
+        os.chmod(filepath, stat.S_IWUSR | stat.S_IRUSR)
+        _LOGGER.info(f"Permissions set to writable for {filepath}.")
+    except Exception as e:
+        _LOGGER.error(f"Failed to set writable permissions for {filepath}: {str(e)}")
+
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
         _LOGGER.info(f"Attempting to download file from {url} to {dest}")
