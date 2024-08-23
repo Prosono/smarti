@@ -25,6 +25,7 @@ SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 NODE_RED_PATH = "/addon_configs/a0d7b954_nodered"
 #Comment
 
+_LOGGER = logging.getLogger(__name__)
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -212,6 +213,8 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         return
 
     check_file_permissions(strømpriser_file_url)
+    ensure_writable(strømpriser_file_url)
+    await log_file_size(strømpriser_file_url, "Before writing")
 
     try:
         # Read the existing flows.json
@@ -255,6 +258,8 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     await file.flush()  # Ensure all data is written to disk
                     _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
                     _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
+        
+        await log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
 
