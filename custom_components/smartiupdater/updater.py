@@ -17,7 +17,7 @@ DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
-IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images"
+IMAGES_URL = GITHUB_REPO_URL + "www/smarti_images"
 CSS_URL = GITHUB_REPO_URL + "www/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
