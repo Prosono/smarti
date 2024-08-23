@@ -17,7 +17,7 @@ DASHBOARDS_URL = GITHUB_REPO_URL + "dashboards/"
 SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
-IMAGES_URL = GITHUB_REPO_URL + "www/smarti_images/"
+IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images"
 CSS_URL = GITHUB_REPO_URL + "www/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
@@ -25,7 +25,7 @@ PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-IMAGES_PATH = "/config/www/smarti_images/"
+IMAGES_PATH = "/config/www/images/smarti_images"
 CSS_PATH = "/config/www/"
 NODE_RED_PATH = "/mnt/data/supervisor/addon_configs/a0d7b954_nodered"
 #Comment
@@ -124,10 +124,10 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
-    ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(NODE_RED_PATH)
     ensure_directory(CSS_PATH)
     ensure_directory(THEMES_PATH)
+    ensure_directory(IMAGES_PATH)
 
     check_file_permissions(os.path.join(NODE_RED_PATH, "flows.json"))
     
