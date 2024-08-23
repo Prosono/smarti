@@ -27,6 +27,14 @@ NODE_RED_PATH = "/addon_configs/a0d7b954_nodered"
 
 _LOGGER = logging.getLogger(__name__)
 
+def log_file_size(filepath: str, description: str):
+    """Log the size of a file with a description."""
+    try:
+        file_size = os.path.getsize(filepath)
+        _LOGGER.info(f"{description} - File size of {filepath}: {file_size} bytes")
+    except Exception as e:
+        _LOGGER.error(f"Failed to get file size for {filepath}: {str(e)}")
+
 def ensure_writable(filepath: str):
     """Ensure that the file has writable permissions."""
     try:
@@ -223,7 +231,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
 
     check_file_permissions(strømpriser_file_url)
     ensure_writable(strømpriser_file_url)
-    await log_file_size(strømpriser_file_url, "Before writing")
+    log_file_size(strømpriser_file_url, "Before writing")
 
     try:
         # Read the existing flows.json
@@ -268,7 +276,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
                     _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
         
-        await log_file_size(strømpriser_file_url, "After writing")
+        log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
 
