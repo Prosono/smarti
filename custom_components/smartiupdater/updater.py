@@ -1,11 +1,10 @@
 import os
 import logging
+import base64
 import aiofiles
 import aiohttp
 import json
-import time
-import os
-import base64
+import time  # Import for cache-busting
 import stat  # Import for file permissions
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,11 +25,29 @@ PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-IMAGES_PATH = "/config/www/images/smarti_images/"
+IMAGES_PATH = "/config/www/images/smarti_images"
 CSS_PATH = "/config/www/"
-NODE_RED_API_URL = "http://localhost:1880/flows"  # Node-RED API endpoint
-NODE_RED_USERNAME = "ole"  # Replace with your Node-RED username
-NODE_RED_PASSWORD = "idole"  # Replace with your Node-RED password
+NODE_RED_PATH = "/mnt/data/supervisor/addon_configs/a0d7b954_nodered"
+#Comment
+
+_LOGGER = logging.getLogger(__name__)
+
+def log_file_size(filepath: str, description: str):
+    """Log the size of a file with a description."""
+    try:
+        file_size = os.path.getsize(filepath)
+        _LOGGER.info(f"{description} - File size of {filepath}: {file_size} bytes")
+    except Exception as e:
+        _LOGGER.error(f"Failed to get file size for {filepath}: {str(e)}")
+
+def ensure_writable(filepath: str):
+    """Ensure that the file has writable permissions."""
+    try:
+        # Set the file permissions to be writable by the user (owner)
+        os.chmod(filepath, stat.S_IWUSR | stat.S_IRUSR)
+        _LOGGER.info(f"Permissions set to writable for {filepath}.")
+    except Exception as e:
+        _LOGGER.error(f"Failed to set writable permissions for {filepath}: {str(e)}")
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -55,22 +72,43 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
 
             _LOGGER.debug(f"API response from {url}: {files}")
 
+            # Check if 'files' is a list (directory) or a dictionary (single file)
             if isinstance(files, list):
+                for file in files:
+                    _LOGGER.debug(f"Processing file: {file}")
+                    if isinstance(file, dict) and file.get('type') == 'file':
+                        _LOGGER.debug(f"Found file: {file['name']} with download URL: {file['download_url']}")
+                    else:
+                        _LOGGER.warning(f"Unexpected item in list: {file}")
+
                 file_urls = [file['download_url'] for file in files if file.get('type') == 'file']
                 _LOGGER.info(f"Found {len(file_urls)} files at {url}")
-                return file_urls
-            elif isinstance(files, dict) and 'download_url' in files:
-                _LOGGER.info(f"Found a single file at {url}")
-                return [files['download_url']]
+            elif isinstance(files, dict):
+                # Handle case where a single file dict is returned
+                if 'download_url' in files:
+                    file_urls = [files['download_url']]
+                    _LOGGER.info(f"Found a single file at {url}")
+                else:
+                    _LOGGER.error(f"No download URL found for the file at {url}")
+                    return []
             else:
                 _LOGGER.error(f"Unexpected format from {url}")
                 return []
+
+            return file_urls
     except aiohttp.ClientError as http_err:
         _LOGGER.error(f"HTTP error occurred while fetching file list from {url}: {http_err}")
         return []
     except Exception as e:
         _LOGGER.error(f"Error occurred while fetching file list from {url}: {str(e)}")
         return []
+
+def check_file_permissions(filepath: str):
+    """Check if a file is writable and log the result."""
+    if os.access(filepath, os.W_OK):
+        _LOGGER.info(f"File {filepath} is writable.")
+    else:
+        _LOGGER.error(f"File {filepath} is not writable. Check permissions.")
 
 def ensure_directory(path: str):
     try:
@@ -86,10 +124,13 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
+    ensure_directory(NODE_RED_PATH)
     ensure_directory(CSS_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
+    check_file_permissions(os.path.join(NODE_RED_PATH, "flows.json"))
+    
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -117,7 +158,15 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Get and download Node-RED flows and merge them
+    # Download Node-RED files and log at each step
+    node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
+    for file_url in node_red_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(NODE_RED_PATH, file_name)
+            _LOGGER.info(f"Saving Node-RED file to {dest_path}")
+            await download_file(file_url, dest_path, session)
+    
     _LOGGER.info("Starting merge of strømpriser flow.")
     await merge_strømpriser_flow(session)
 
@@ -148,6 +197,7 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)            
 
+
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
         cache_buster = f"?nocache={str(time.time())}"
@@ -156,6 +206,7 @@ async def get_latest_version(session: aiohttp.ClientSession):
             version_info = await response.json()
             _LOGGER.debug(f"Fetched version info: {version_info}")
 
+            # Decode the base64 content
             encoded_content = version_info.get("content", "")
             if encoded_content:
                 decoded_content = base64.b64decode(encoded_content).decode("utf-8")
@@ -197,34 +248,21 @@ async def update_manifest_version(latest_version: str):
     except Exception as e:
         _LOGGER.error(f"Error updating manifest file: {str(e)}")
 
-async def fetch_node_red_flows(session: aiohttp.ClientSession):
-    """Fetch the current flows from Node-RED."""
-    try:
-        auth = aiohttp.BasicAuth(NODE_RED_USERNAME, NODE_RED_PASSWORD)
-        async with session.get(NODE_RED_API_URL, auth=auth) as response:
-            response.raise_for_status()
-            return await response.json()
-    except Exception as e:
-        _LOGGER.error(f"Error fetching flows from Node-RED: {str(e)}")
-        return None
-    
-async def update_node_red_flows(session: aiohttp.ClientSession, new_flows):
-    """Update the flows in Node-RED."""
-    try:
-        auth = aiohttp.BasicAuth(NODE_RED_USERNAME, NODE_RED_PASSWORD)
-        async with session.post(NODE_RED_API_URL, json=new_flows, auth=auth) as response:
-            response.raise_for_status()
-            _LOGGER.info("Node-RED flows updated successfully.")
-    except Exception as e:
-        _LOGGER.error(f"Error updating flows in Node-RED: {str(e)}")
-
+# Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    """Merge the strømpriser flow into the existing Node-RED flows using the Node-RED API."""
+    strømpriser_file_url = os.path.join(NODE_RED_PATH, "flows.json")
+    if not os.path.exists(strømpriser_file_url):
+        _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
+        return
+
+    check_file_permissions(strømpriser_file_url)
+    ensure_writable(strømpriser_file_url)
+    log_file_size(strømpriser_file_url, "Before writing")
+
     try:
-        # Fetch the current flows from Node-RED
-        existing_flows = await fetch_node_red_flows(session)
-        if existing_flows is None:
-            return
+        # Read the existing flows.json
+        async with aiofiles.open(strømpriser_file_url, 'r') as file:
+            existing_flows = json.loads(await file.read())
 
         # Fetch the new strømpriser flow from GitHub
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
@@ -232,16 +270,24 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
             if "flows.json" in file_url:
                 async with session.get(file_url) as response:
                     response.raise_for_status()
-                    new_flows = await response.json()
+
+                    response_text = await response.text()
+                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")
+
+                    try:
+                        new_flows = json.loads(response_text)
+                    except json.JSONDecodeError as e:
+                        _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
+                        return
 
                 strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
+
                 if strømpriser_flow:
                     _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
                 else:
                     _LOGGER.error("No strømpriser flow found in the fetched data.")
                     return
 
-                # Merge strømpriser flow into existing flows
                 updated_flows = [
                     flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
                     for flow in existing_flows
@@ -250,8 +296,19 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                 if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
                     updated_flows.append(strømpriser_flow)
 
-                # Update the flows in Node-RED
-                await update_node_red_flows(session, updated_flows)
-
+                async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
+                    await file.write(json.dumps(updated_flows, indent=4))
+                    await file.flush()  # Ensure all data is written to disk
+                    _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
+                    _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
+        
+        log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
+
+#Comment to check if changes are coming with        
+# one more comment
+#And one more just for the thrill of it
+#and one more
+#last one
+#ultra last
