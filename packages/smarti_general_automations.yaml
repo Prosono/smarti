@@ -1,6 +1,6 @@
 automation:
 - id: '1716895320123'
-  alias: HA Auto-update
+  alias: SMARTi HA Auto-update
   description: Automatically updates all HACs integrations
   trigger:
   - platform: time
@@ -15,7 +15,7 @@ automation:
         endfor %} {{ update_entities.entities[1:] }}\n"
   mode: single
 - id: '1716896680279'
-  alias: HACS Auto-update
+  alias: SMARTi HACS Auto-update
   description: Automatically update all specified HACS components if they have updates
     available
   trigger:
@@ -59,7 +59,7 @@ automation:
     data: {}
   mode: single
 - id: '1717143003040'
-  alias: Gas Alarm
+  alias: SMARTi Gas Alarm
   description: Alerts all users if a gas sensor has activated
   trigger:
   - platform: state
@@ -73,7 +73,7 @@ automation:
       message: Gas Alarm! Triggered by {{ trigger.entity_id }}
   mode: single
 - id: '1717143183186'
-  alias: Fire alarm
+  alias: SMARTi Fire alarm
   description: Alerts all users if a smoke detector has activated
   trigger:
   - platform: state
@@ -87,7 +87,7 @@ automation:
       message: Fire Alarm! Triggered by {{ trigger.entity_id }}
   mode: single
 - id: '1717143832186'
-  alias: Water Leak Alarm
+  alias: SMARTi Water Leak Alarm
   description: Alerts all users if a water sensor has activated
   trigger:
   - platform: state
@@ -101,7 +101,7 @@ automation:
       message: Water Leak Alarm! Triggered by {{ trigger.entity_id }}
   mode: single
 - id: '1717144589650'
-  alias: Power Outage Alert
+  alias: SMARTi Power Outage Alert
   description: Alerts if the dynamic power sensor value is 0 for more than 5 minutes
   trigger:
     platform: numeric_state
@@ -117,7 +117,7 @@ automation:
         a power outage'
   mode: single
 - id: '1717144717455'
-  alias: Save Power Settings Before Shutdown
+  alias: SMARTi Save Power Settings Before Shutdown
   description: Saves the selected power settings chosen for the SMARTi Dashboard before
     system shutdown
   trigger:
@@ -135,7 +135,7 @@ automation:
 
         '
 - id: '1717144762954'
-  alias: Restore Power Settings
+  alias: SMARTi Restore Power Settings
   description: Restores the selected power settings in the SMARTi dashboard after
     Home Assistant starts
   trigger:
@@ -173,7 +173,7 @@ automation:
               option: '{{ stored_sensor }}'
   mode: single
 - id: '1717255609684'
-  alias: 'Theme: Auto Change'
+  alias: 'MARTi Theme: Auto Change
   description: Trigger at HA startup / sun up / sun down / every hour
   trigger:
   - event: start
@@ -210,7 +210,7 @@ automation:
         action: frontend.set_theme
   mode: single
 - id: '1717740780258'
-  alias: Save Default Dashboard Before Shutdown
+  alias: SMARTi Save Default Dashboard Before Shutdown
   description: Saves the selected ddefault dashboard chosen for the SMARTi installation
   trigger:
   - platform: homeassistant
@@ -224,7 +224,7 @@ automation:
       value: '{{ states(''input_select.default_dashboard'') }}'
   mode: single
 - id: '1717741319907'
-  alias: Restore Default Dashboard After Startup
+  alias: SMARTi Restore Default Dashboard After Startup
   description: Restores the selected default dashboard after Home Assistant restarts
   trigger:
   - platform: homeassistant
@@ -244,7 +244,7 @@ automation:
       option: '{{ states(''input_text.default_dashboard'') }}'
   mode: single
 - id: '1717849580017'
-  alias: Notify Main Fuse Overload
+  alias: SMARTi Notify Main Fuse Overload
   description: Notify if energy usage exceeds main fuse size for more than 5 minutes
   trigger:
   - platform: state
@@ -302,7 +302,7 @@ automation:
       message: Main fuse overload detected! Current energy usage exceeds the main
         fuse size for more than 5 minutes.
 - id: '1717960930252'
-  alias: Update Power Measurement Device List
+  alias: SMARTi Update Power Measurement Device List
   description: Update the list of power measurement devices at startup, every hour,
     and on button press
   trigger:
@@ -329,7 +329,7 @@ automation:
     data:
       option: '{{ states(''input_text.dynamic_power_sensor_storage'') }}'
 - id: '1718111730296'
-  alias: SMARTi Atuomated Backup
+  alias: SMARTi SMARTi Atuomated Backup
   description: Backs up the SMARTi Home Assistant installation once a month
   use_blueprint:
     path: appels/monthly-backup-schedule.yaml
@@ -347,7 +347,7 @@ automation:
     data:
       entity_id: utility_meter.hourly_energy_usage
 - id: '1718353832879'
-  alias: Reset Monthly Peaks
+  alias: SMARTi Reset Monthly Peaks
   description: Resets the monthly top values used for caluculating the capacity steps
   trigger:
   - platform: time
@@ -369,7 +369,7 @@ automation:
       entity_id: input_number.peak_3
       value: 0
 - id: '1718353993177'
-  alias: Update Current Energy Level
+  alias: SMARTi Update Current Energy Level
   description: Updates the calculated energy level
   trigger:
   - platform: state
@@ -420,7 +420,7 @@ automation:
         average_peak }} kWh has exceeded the target energy level of {{ target_energy
         }} kWh.\n{% endif %}\n"
 - id: '1718354347241'
-  alias: Store Daily Peak and Update Monthly Peaks
+  alias: SMARTi Store Daily Peak and Update Monthly Peaks
   description: Stores the daily peaks and updates the monthly peaks
   trigger:
   - platform: time
@@ -483,7 +483,7 @@ automation:
       entity_id: input_number.daily_highest_hour
       value: 0
 - id: '1718354385937'
-  alias: Update Daily Highest Hour
+  alias: SMARTi Update Daily Highest Hour
   description: Updates the highest daily hour
   trigger:
   - platform: time_pattern
@@ -502,7 +502,7 @@ automation:
       entity_id: input_number.current_hour_peak
       value: 0
 - id: '1718354423858'
-  alias: Reset Monthly Data
+  alias: SMARTi Reset Monthly Data
   description: Sets the monthly data to 0 at the first of each month
   trigger:
   - platform: time
