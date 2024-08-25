@@ -1,3 +1,4 @@
+automation:
 - id: '1716895320123'
   alias: HA Auto-update
   description: Automatically updates all HACs integrations
