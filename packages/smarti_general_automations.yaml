@@ -173,7 +173,7 @@ automation:
               option: '{{ stored_sensor }}'
   mode: single
 - id: '1717255609684'
-  alias: SMARTi Theme: Auto Change
+  alias: SMARTi Theme Auto Change
   description: Trigger at HA startup / sun up / sun down / every hour
   trigger:
   - event: start
