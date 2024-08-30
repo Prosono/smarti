@@ -1,0 +1,10 @@
+sensor:
+  - platform: template
+    sensors:
+      smarti_installed_version:
+        friendly_name: "Smarti Installed Version"
+        value_template: "{{ state_attr('update.smarti_updater', 'installed_version') }}"
+
+      smarti_latest_version:
+        friendly_name: "Smarti Latest Version"
+        value_template: "{{ state_attr('update.smarti_updater', 'latest_version') }}"
