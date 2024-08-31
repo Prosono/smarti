@@ -1,4 +1,4 @@
-SMARTi Red Dark:
+SMARTi Red Light:
   accent-color: '#e90062'
   card-mod-card-yaml: ".: |\n  ha-card {\n    --mdc-icon-size: 20px\n  }\n  ha-card\
     \ .value {\n    font-size: var(--h1-font-size);\n    font-weight: var(--h1-font-weight);\n\
