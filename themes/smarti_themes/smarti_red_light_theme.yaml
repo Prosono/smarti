@@ -1,0 +1,249 @@
+SMARTi Red Light:
+  accent-color: '#e90062'
+  card-mod-card-yaml: |
+    .: |
+      ha-card {
+        --mdc-icon-size: 20px
+      }
+      ha-card .value {
+        font-size: var(--h1-font-size);
+        font-weight: var(--h1-font-weight);
+        margin-right: 0;
+      }
+      ha-card .name {
+        font-size: var(--body-font-size);
+        line-height: var(--body-line-height);
+        font-weight: var(--body-font-weight);
+        color: var(--primary-text-color);
+      }
+      ha-card .info {
+        line-height: 32px;
+        padding-top: 8px;
+      }
+      ha-card .header {
+        padding-top: 16px !important;
+      }
+      .icon {
+        line-height: 16px !important;
+      }
+      ha-card .measurement {
+        font-size: var(--h6-font-size);
+        font-weight: 700;
+        color: var(--secondary-text-color);
+        text-transform: uppercase;
+      }
+      .card-header, .card-header .name, :host ::slotted(.card-header), ha-card.type-area .name, ha-card.type-picture-entity .footer.single, ha-card.type-media-control hui-marquee {
+        font-size: var(--card-title-font-size) !important;
+        line-height: var(--card-title-line-height) !important;
+        font-weight: var(--card-title-font-weight) !important;
+        letter-spacing: 0;
+      }
+      .card-header, :host ::slotted(.card-header) {
+        margin-bottom: 8px;
+        padding: 12px 16px;
+      }
+      :host ::slotted(.card-content:not(:first-child)), slot:not(:first-child)::slotted(.card-content) {
+        margin-top: 0;
+      }
+      .entities {
+        align-items: flex-start !important;
+      }
+  card-mod-glance-yaml: |
+    .: |
+      state-badge {
+        --mdc-icon-size: 32px;
+        order: 0;
+      }
+      div.name {
+        font-size: var(--body-font-size);
+        color: var(--primary-font-color);
+        order: 1 !important;
+      }
+      div {
+        order: 2;
+        font-size: var(--small-font-size);
+        color: var(--secondary-text-color);
+        line-height: 1.33;
+        white-space: unset !important;
+      }
+  card-mod-more-info-yaml: |
+    $: |
+      @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+        .mdc-dialog__surface {
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            background-color: rgba(var(--rgb-mdc-theme-surface), 1) !important;
+        }
+      }
+      .mdc-dialog .mdc-dialog__container .mdc-dialog__surface,
+      .mdc-dialog .mdc-dialog__content {
+        overflow: visible;
+      }
+      .mdc-dialog__surface {
+        box-shadow: 0 0px 16px 4px rgba(var(--dialog-box-shadow), .15), 0 16px 64px 32px rgba(var(--dialog-box-shadow), .5) !important;
+      }
+    ha-header-bar$: |
+      .mdc-top-app-bar {
+        background: none !important;
+      }
+    .: |
+      .mdc-top-app-bar__title, .main-title {
+        text-transform: uppercase;
+        font-size: var(--body-font-size);
+        font-weight: 600;
+        line-height: 1.1;
+        overflow: inherit;
+        white-space: normal;
+        margin-left: -6px;
+      }
+      .content {
+        xmargin-top: -8px;
+      }
+    ha-more-info-info$state-card-display$: |
+      .state {
+        margin-left: 46px !important;
+        font-size: var(--h1-font-size);
+        font-weight: var(--h1-font-weight);
+        text-align: left !important;
+        line-height: 1.1;
+      }
+      .layout.horizontal {
+        flex-direction: column-reverse !important;
+      }
+      state-info { margin-left: -8px; margin-top: -42px; }
+    ha-more-info-info$state-card-display$state-info$: |
+      .name { display: none; }
+      .time-ago { margin-top: 42px;
+        font-size: var(--h6-font-size);
+        text-transform: uppercase;}
+      state-badge {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 0 !important;
+        margin: 4px 8px 8px 8px;
+      }
+      state-badge[icon] {
+        margin: 0 0 0 8px !important;
+      }
+    ha-more-info-info$more-info-default$ha-attributes$: |
+      .data-entry { flex-direction: column !important; }
+      .key {
+        font-size: var(--h6-font-size);
+        text-transform: uppercase;
+        line-height: 1.1;
+      }
+      .data-entry .value {
+        text-align: left !important;
+        font-size: var(--h2-font-size);
+        font-weight: var(--h2-font-weight);
+        line-height: 1.1;
+        margin-bottom: 16px;
+        max-width: none !important;
+      }
+      .data-entry:last-child .value {
+        margin-bottom: 0;
+      }
+    ha-more-info-history$state-history-charts:
+      $:
+        state-history-chart-timeline$: |
+          .chartTooltip {
+            margin-top: -200px;
+          }
+    ha-more-info-info:
+      $:
+        ha-more-info-history:
+          $: |
+            state-history-charts, statistics-chart {
+              filter: hue-rotate(calc(var(--hue-primary-color) - 212deg)) saturate(3) brightness(0.66)
+            }
+  card-mod-root-yaml: |
+    .: |
+      @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+        app-header, app-toolbar {
+          background-color: "rgba(var(--rgb-primary-background-color),.33)"
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+      }
+      app-toolbar [main-title] {
+        font-size: var(--h5-font-size);
+        line-height: 1.1;
+        font-weight: var(--h5-font-weight);
+        text-transform: uppercase;
+        margin-left: 8px !important;
+      }
+    app-header$: |
+      :host::before {
+        box-shadow: inset 0px 4px 6px -4px rgb(0 0 0 / 10%) !important;
+      }
+    ha-app-layout$app-header$app-toolbar$ha-tabs$: |
+      .iron-selected paper-tab {
+
+      }
+  card-mod-row-yaml: |
+    .: |
+      hui-generic-entity-row {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+      .info, .info > * {
+        white-space: normal !important;
+      }
+      .secondary {
+        font-size: var(--small-font-size);
+        line-height: 1.4;
+      }
+      .state, .entity div {
+        font-size: var(--h5-font-size);
+        font-weight: 400;
+      }
+    hui-generic-entity-row$: |
+      .info, .info > * {
+        white-space: normal !important;
+      }
+      .secondary {
+        font-size: var(--small-font-size);
+        line-height: 1.4;
+      }
+      .state, .entity div {
+        font-size: var(--h5-font-size);
+        font-weight: 400;
+      }
+  card-mod-sidebar: |
+    .menu .title {
+      font-weight: 600;
+    }
+    :host([expanded]) paper-icon-item {
+      width: 100%;
+    }
+    .iron-selected paper-icon-item {
+      border-left: 3px solid var(--accent-color) !important;
+      border-radius: var(--ha-card-border-radius) !important;
+      padding-left: 9px !important;
+    }
+    .profile.iron-selected paper-icon-item {
+      padding-left: 1px !important;
+    }
+    paper-icon-item span {
+      font-weight: normal !important;
+    }
+  card-mod-theme: Metro Red
+  card-mod-view: |
+    .main-title {
+      font-size: 10pt;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    #tabbar {
+      font-size: 10pt;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    #tabbar:not(.bottom-bar) {
+      justify-content: left;
+    }
+  hue-primary-color: 335deg
+  primary-color: '#C30052'
+  rgb-accent-color: 233, 0, 98
+  rgb-primary-color: 195,0,82
+  rgb-primary-color-lighter: 233, 0, 98
