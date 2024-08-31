@@ -1,0 +1,20 @@
+template:
+  - sensor:
+      - name: "SMARTi Max Temperature"
+        unit_of_measurement: "°C"
+        state: >
+          {% set temp_sensors = expand('group.all_temperature_sensors') | selectattr('state', 'is_number') | map(attribute='state') | map('float') %}
+          {% if temp_sensors | length > 0 %}
+            {{ temp_sensors | max }}
+          {% else %}
+            Unknown
+          {% endif %}
+      - name: "SMARTi Min Temperature"
+        unit_of_measurement: "°C"
+        state: >
+          {% set temp_sensors = expand('group.all_temperature_sensors') | selectattr('state', 'is_number') | map(attribute='state') | map('float') %}
+          {% if temp_sensors | length > 0 %}
+            {{ temp_sensors | min }}
+          {% else %}
+            Unknown
+          {% endif %}          
