@@ -20,7 +20,7 @@ automation:
     available
   trigger:
   - platform: time
-    at: 03:00:00
+    at: '03:00:00'
   condition:
   - condition: template
     value_template: '{{ not is_state(''sensor.hacs'', ''0'') }}'
@@ -37,7 +37,8 @@ automation:
         \ 'update.sankey_chart_card_update',\n  'update.search_card_update',\n  'update.stack_in_card_update',\n
         \ 'update.tabbed_card_update',\n  'update.uptime_card_update',\n  'update.vertical_stack_in_card_update',\n
         \ 'update.watchman_update',\n  'update.weather_card_update',\n  'update.weather_chart_card_update',\n
-        \ 'update.template_entity_row_update'\n] %} {% set update_entities = entities
+        \ 'update.template_entity_row_update',\n  'update.flexible_horseshoe_card_for_lovelace_update',\n
+        \ 'update.weather_radar_card_update'\n] %} {% set update_entities = entities
         | select('in', states.update | selectattr('state', 'eq', 'on') | map(attribute='entity_id')
         | list) | list %} Detected update entities: {{ update_entities }}\n"
   - service: update.install
@@ -51,7 +52,8 @@ automation:
         \ 'update.sankey_chart_card_update',\n  'update.search_card_update',\n  'update.stack_in_card_update',\n
         \ 'update.tabbed_card_update',\n  'update.uptime_card_update',\n  'update.vertical_stack_in_card_update',\n
         \ 'update.watchman_update',\n  'update.weather_card_update',\n  'update.weather_chart_card_update',\n
-        \ 'update.template_entity_row_update'\n] %} {% set update_entities = entities
+        \ 'update.template_entity_row_update',\n  'update.flexible_horseshoe_card_for_lovelace_update',\n
+        \ 'update.weather_radar_card_update'\n] %} {% set update_entities = entities
         | select('in', states.update | selectattr('state', 'eq', 'on') | map(attribute='entity_id')
         | list) | list %} {% if update_entities | length > 0 %}\n  {{ update_entities
         | join(',') }}\n{% else %}\n  none\n{% endif %}\n"
