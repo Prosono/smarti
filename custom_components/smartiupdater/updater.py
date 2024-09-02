@@ -135,6 +135,20 @@ def copy_file_to_container(local_path, container_name, container_path):
     except Exception as e:
         _LOGGER.error(f"Unexpected error occurred while copying file: {str(e)}")
 
+def list_files_in_container(container_name, container_path):
+    try:
+        _LOGGER.info(f"Listing files in {container_name}:{container_path}")
+        result = subprocess.run([
+            'docker', 'exec', container_name, 'ls', '-l', container_path
+        ], check=True, capture_output=True, text=True)
+        _LOGGER.info(f"Files in {container_name}:{container_path}:")
+        _LOGGER.info(result.stdout)
+    except subprocess.CalledProcessError as e:
+        _LOGGER.error(f"Error listing files in container {container_name}:{container_path}: {e}")
+        _LOGGER.debug(f"Listing command stderr: {e.stderr}")
+    except Exception as e:
+        _LOGGER.error(f"Unexpected error occurred while listing files: {str(e)}")        
+
 async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
@@ -179,12 +193,16 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
     
+
     _LOGGER.info("Starting merge of strømpriser flow.")
     await merge_strømpriser_flow(session)
 
     # After merging, copy the updated file to the container
     copy_file_to_container(TEMP_FLOW_PATH, NODE_RED_CONTAINER, "/config/flows.json")
 
+    # List files in the container after copying to ensure it's there
+    list_files_in_container(NODE_RED_CONTAINER, "/config")
+    
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
     for file_url in themes_files:
