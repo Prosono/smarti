@@ -22,9 +22,6 @@ IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images/"
 CSS_URL = GITHUB_REPO_URL + "www/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
-WEATHER_RADAR_CARD_REPO = "https://api.github.com/repos/MarkusLange/weather-radar-card/contents/"
-WEATHER_RADAR_CARD_PATH = "/config/www/community/weather-radar-card/"
-
 PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
@@ -146,27 +143,6 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
-    ensure_directory(WEATHER_RADAR_CARD_PATH)
-
-async def download_weather_radar_card(session: aiohttp.ClientSession):
-    try:
-        # Ensure the target directory exists
-        ensure_directory(WEATHER_RADAR_CARD_PATH)
-
-        # Get the list of files in the repository
-        weather_radar_files = await get_files_from_github(WEATHER_RADAR_CARD_REPO, session)
-
-        for file_url in weather_radar_files:
-            if file_url:
-                file_name = os.path.basename(file_url)
-                dest_path = os.path.join(WEATHER_RADAR_CARD_PATH, file_name)
-                _LOGGER.info(f"Saving weather-radar-card file to {dest_path}")
-                await download_file(file_url, dest_path, session)
-
-        _LOGGER.info("Weather Radar Card installation completed.")
-    except Exception as e:
-        _LOGGER.error(f"Error occurred while downloading weather-radar-card: {str(e)}")
-
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -236,9 +212,7 @@ async def download_weather_radar_card(session: aiohttp.ClientSession):
             dest_path = os.path.join(CSS_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
-
-    # Download and install weather-radar-card
-    await download_weather_radar_card(session)            
+        
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
