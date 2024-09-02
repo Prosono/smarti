@@ -25,8 +25,8 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-TEMP_FLOW_PATH = "/addon_configs/a0d7b954_nodered/flows.json"  # Temporary path to store the file locally before copying
-NODE_RED_CONTAINER_PATH = "/config/flows.json"  # Internal path for Node-RED
+TEMP_FLOW_PATH = "/addon_configs/a0d7b954_nodered/"  # Temporary path to store the file locally before copying
+NODE_RED_CONTAINER_PATH = "/config/"  # Internal path for Node-RED
 
 _LOGGER = logging.getLogger(__name__)
 
