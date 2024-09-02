@@ -1,0 +1,4 @@
+lovelace:
+  resources:
+    - url: /local/community/weather-radar-card/weather-radar-card.js
+      type: module
