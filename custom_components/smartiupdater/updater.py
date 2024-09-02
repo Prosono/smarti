@@ -3,11 +3,9 @@ import logging
 import base64
 import aiofiles
 import aiohttp
-import docker
 import json
 import time  # Import for cache-busting
 import stat  # Import for file permissions
-import subprocess  # Import for running Docker commands
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +25,8 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-TEMP_FLOW_PATH = "/tmp/flows.json"  # Temporary path to store the file locally before copying
-NODE_RED_CONTAINER = "addon_a0d7b954_nodered"  # Node-RED container name
+TEMP_FLOW_PATH = "/addon_configs/a0d7b954_nodered/flows.json"  # Temporary path to store the file locally before copying
+NODE_RED_CONTAINER_PATH = "/config/flows.json"  # Internal path for Node-RED
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -120,33 +118,6 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
-def copy_file_to_container(local_path, container_name, container_path):
-    client = docker.from_env()
-    try:
-        _LOGGER.info(f"Attempting to copy {local_path} to {container_name}:{container_path}")
-        container = client.containers.get(container_name)
-        with open(local_path, 'rb') as f:
-            container.put_archive(container_path, f.read())
-        _LOGGER.info(f"File copied successfully from {local_path} to {container_name}:{container_path}")
-    except docker.errors.APIError as e:
-        _LOGGER.error(f"Error copying file from {local_path} to {container_name}:{container_path}: {e}")
-    except Exception as e:
-        _LOGGER.error(f"Unexpected error occurred while copying file: {str(e)}")
-
-def list_files_in_container(container_name, container_path):
-    try:
-        _LOGGER.info(f"Listing files in {container_name}:{container_path}")
-        result = subprocess.run([
-            'docker', 'exec', container_name, 'ls', '-l', container_path
-        ], check=True, capture_output=True, text=True)
-        _LOGGER.info(f"Files in {container_name}:{container_path}:")
-        _LOGGER.info(result.stdout)
-    except subprocess.CalledProcessError as e:
-        _LOGGER.error(f"Error listing files in container {container_name}:{container_path}: {e}")
-        _LOGGER.debug(f"Listing command stderr: {e.stderr}")
-    except Exception as e:
-        _LOGGER.error(f"Unexpected error occurred while listing files: {str(e)}")        
-
 async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
@@ -186,19 +157,12 @@ async def update_files(session: aiohttp.ClientSession):
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
-            dest_path = TEMP_FLOW_PATH  # Save temporarily to the local path
+            dest_path = TEMP_FLOW_PATH  # Save directly to the add-on path
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
-    
 
     _LOGGER.info("Starting merge of strømpriser flow.")
     await merge_strømpriser_flow(session)
-
-    # After merging, copy the updated file to the container
-    copy_file_to_container(TEMP_FLOW_PATH, NODE_RED_CONTAINER, "/config/flows.json")
-
-    # List files in the container after copying to ensure it's there
-    list_files_in_container(NODE_RED_CONTAINER, "/config")
 
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
@@ -217,7 +181,6 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(IMAGES_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
-        
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
@@ -250,10 +213,10 @@ async def check_for_update(session: aiohttp.ClientSession, current_version: str)
         _LOGGER.debug(f"Current version: {current_version}, Latest version: {latest_version}")
         return current_version != latest_version, latest_version
     except aiohttp.ClientError as http_err:
-        _LOGGER.error(f"HTTP error occurred while fetching version info: {http_err}")
+        _LOGGER.error(f"HTTP error occurred while checking for update: {http_err}")
         return False, "unknown"
     except Exception as e:
-        _LOGGER.error(f"Error occurred while fetching version info: {str(e)}")
+        _LOGGER.error(f"Error occurred while checking for update: {str(e)}")
         return False, "unknown"
 
 async def update_manifest_version(latest_version: str):
@@ -324,3 +287,4 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
+
