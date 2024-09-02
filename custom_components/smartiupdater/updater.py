@@ -6,6 +6,7 @@ import aiohttp
 import json
 import time  # Import for cache-busting
 import stat  # Import for file permissions
+import subprocess  # Import for running Docker commands
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +28,8 @@ DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
 CSS_PATH = "/config/www/"
-NODE_RED_PATH = "/mnt/data/supervisor/addon_configs/a0d7b954_nodered"
-#Comment
+TEMP_FLOW_PATH = "/tmp/flows.json"  # Temporary path to store the file locally before copying
+NODE_RED_CONTAINER = "addon_a0d7b954_nodered"  # Node-RED container name
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -120,17 +121,24 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
+def copy_file_to_container(local_path, container_name, container_path):
+    """Copy a file from the host to a Docker container."""
+    try:
+        subprocess.run([
+            'docker', 'cp', local_path, f'{container_name}:{container_path}'
+        ], check=True)
+        _LOGGER.info("File copied successfully to container.")
+    except subprocess.CalledProcessError as e:
+        _LOGGER.error(f"Error copying file: {e}")
+
 async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
-    ensure_directory(NODE_RED_PATH)
     ensure_directory(CSS_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
-    check_file_permissions(os.path.join(NODE_RED_PATH, "flows.json"))
-    
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -163,12 +171,15 @@ async def update_files(session: aiohttp.ClientSession):
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
-            dest_path = os.path.join(NODE_RED_PATH, file_name)
+            dest_path = TEMP_FLOW_PATH  # Save temporarily to the local path
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
     
     _LOGGER.info("Starting merge of strømpriser flow.")
     await merge_strømpriser_flow(session)
+
+    # After merging, copy the updated file to the container
+    copy_file_to_container(TEMP_FLOW_PATH, NODE_RED_CONTAINER, "/config/flows.json")
 
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
@@ -195,8 +206,7 @@ async def update_files(session: aiohttp.ClientSession):
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(CSS_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
-            await download_file(file_url, dest_path, session)            
-
+            await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
@@ -250,17 +260,15 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    strømpriser_file_url = os.path.join(NODE_RED_PATH, "flows.json")
+    strømpriser_file_url = TEMP_FLOW_PATH  # Use the temporary path for merging
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
         return
 
-    check_file_permissions(strømpriser_file_url)
-    ensure_writable(strømpriser_file_url)
     log_file_size(strømpriser_file_url, "Before writing")
 
     try:
-        # Read the existing flows.json
+        # Read the existing flows.json from the local temporary path
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
 
@@ -305,10 +313,3 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
-
-#Comment to check if changes are coming with        
-# one more comment
-#And one more just for the thrill of it
-#and one more
-#last one
-#ultra last
