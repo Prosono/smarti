@@ -122,14 +122,18 @@ def ensure_directory(path: str):
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
 def copy_file_to_container(local_path, container_name, container_path):
-    """Copy a file from the host to a Docker container."""
     try:
-        subprocess.run([
+        _LOGGER.info(f"Attempting to copy {local_path} to {container_name}:{container_path}")
+        result = subprocess.run([
             'docker', 'cp', local_path, f'{container_name}:{container_path}'
-        ], check=True)
-        _LOGGER.info("File copied successfully to container.")
+        ], check=True, capture_output=True, text=True)
+        _LOGGER.info(f"File copied successfully from {local_path} to {container_name}:{container_path}")
+        _LOGGER.debug(f"Copy command output: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        _LOGGER.error(f"Error copying file: {e}")
+        _LOGGER.error(f"Error copying file from {local_path} to {container_name}:{container_path}: {e}")
+        _LOGGER.debug(f"Copy command stderr: {e.stderr}")
+    except Exception as e:
+        _LOGGER.error(f"Unexpected error occurred while copying file: {str(e)}")
 
 async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
@@ -198,6 +202,7 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(IMAGES_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
+
 
     # Get and download CSS files
     css_files = await get_files_from_github(CSS_URL, session)
