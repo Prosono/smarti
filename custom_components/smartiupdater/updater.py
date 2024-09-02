@@ -3,6 +3,7 @@ import logging
 import base64
 import aiofiles
 import aiohttp
+import docker
 import json
 import time  # Import for cache-busting
 import stat  # Import for file permissions
@@ -19,7 +20,6 @@ SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
 IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images/"
-CSS_URL = GITHUB_REPO_URL + "www/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
@@ -27,7 +27,6 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-CSS_PATH = "/config/www/"
 TEMP_FLOW_PATH = "/tmp/flows.json"  # Temporary path to store the file locally before copying
 NODE_RED_CONTAINER = "addon_a0d7b954_nodered"  # Node-RED container name
 
@@ -122,16 +121,15 @@ def ensure_directory(path: str):
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
 def copy_file_to_container(local_path, container_name, container_path):
+    client = docker.from_env()
     try:
         _LOGGER.info(f"Attempting to copy {local_path} to {container_name}:{container_path}")
-        result = subprocess.run([
-            'docker', 'cp', local_path, f'{container_name}:{container_path}'
-        ], check=True, capture_output=True, text=True)
+        container = client.containers.get(container_name)
+        with open(local_path, 'rb') as f:
+            container.put_archive(container_path, f.read())
         _LOGGER.info(f"File copied successfully from {local_path} to {container_name}:{container_path}")
-        _LOGGER.debug(f"Copy command output: {result.stdout}")
-    except subprocess.CalledProcessError as e:
+    except docker.errors.APIError as e:
         _LOGGER.error(f"Error copying file from {local_path} to {container_name}:{container_path}: {e}")
-        _LOGGER.debug(f"Copy command stderr: {e.stderr}")
     except Exception as e:
         _LOGGER.error(f"Unexpected error occurred while copying file: {str(e)}")
 
@@ -153,7 +151,6 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
-    ensure_directory(CSS_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
@@ -202,7 +199,7 @@ async def update_files(session: aiohttp.ClientSession):
 
     # List files in the container after copying to ensure it's there
     list_files_in_container(NODE_RED_CONTAINER, "/config")
-    
+
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
     for file_url in themes_files:
@@ -218,16 +215,6 @@ async def update_files(session: aiohttp.ClientSession):
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(IMAGES_PATH, file_name)
-            _LOGGER.info(f"Saving themes file to {dest_path}")
-            await download_file(file_url, dest_path, session)
-
-
-    # Get and download CSS files
-    css_files = await get_files_from_github(CSS_URL, session)
-    for file_url in css_files:
-        if file_url:
-            file_name = os.path.basename(file_url)
-            dest_path = os.path.join(CSS_PATH, file_name)
             _LOGGER.info(f"Saving themes file to {dest_path}")
             await download_file(file_url, dest_path, session)
         
