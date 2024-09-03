@@ -25,7 +25,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"  # Full path to the file
+NODE_RED_PATH = "/homeassistant/flows.json"  # Full path to the file in Node-RED
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -132,8 +132,6 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
-    ensure_directory_exists(os.path.dirname(TEMP_FLOW_PATH))  # Ensure the directory for TEMP_FLOW_PATH exists
-
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -166,7 +164,7 @@ async def update_files(session: aiohttp.ClientSession):
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
-            dest_path = NODE_RED_PATH  # Save directly to the add-on path
+            dest_path = NODE_RED_PATH  # Save directly to the Node-RED path in Home Assistant
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
@@ -243,7 +241,7 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    strømpriser_file_url = TEMP_FLOW_PATH  # Use the temporary path for merging
+    strømpriser_file_url = NODE_RED_PATH  # Use the Node-RED path for merging
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
         return
