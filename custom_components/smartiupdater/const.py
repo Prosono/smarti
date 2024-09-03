@@ -1,1 +1,1 @@
-DOMAIN = "SMARTi"
+DOMAIN = "smarti"
