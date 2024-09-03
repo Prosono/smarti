@@ -8,14 +8,14 @@ from .updater import check_for_update, update_files, update_manifest_version
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = "smartiupdater"
+DOMAIN = "smarti"
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
-    """Set up Smarti Updater from a config entry."""
+    """Set up SMARTi from a config entry."""
     async_add_entities([SmartiUpdaterEntity(hass, entry)])
 
 class SmartiUpdaterEntity(UpdateEntity):
-    """Representation of an update entity for the Smarti Updater."""
+    """Representation of an update entity for SMARTi."""
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
         """Initialize the entity."""
@@ -32,7 +32,7 @@ class SmartiUpdaterEntity(UpdateEntity):
     @property
     def name(self):
         """Return the name of the update entity."""
-        return "Smarti Updater"
+        return "SMARTi"
 
     @property
     def entity_category(self):
@@ -63,7 +63,7 @@ class SmartiUpdaterEntity(UpdateEntity):
     @property
     def device_info(self) -> DeviceInfo:
         return DeviceInfo(
-            identifiers={(DOMAIN, "smarti_updater")},
-            name="Smarti Updater",
+            identifiers={(DOMAIN, "smarti")},
+            name="SMARTi",
             manufacturer="Your Name or Company",
         )

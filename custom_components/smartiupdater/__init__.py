@@ -7,21 +7,21 @@ from .updater import update_files, check_for_update, update_manifest_version
 #Added comment her for testing
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = "smartiupdater"
+DOMAIN = "smarti"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    _LOGGER.info("Setting up Smarti Updater integration.")
+    _LOGGER.info("Setting up the SMARTi integration.")
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    _LOGGER.info("Setting up Smarti Updater from config entry.")
+    _LOGGER.info("Setting up SMARTi from config entry.")
 
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, "update")
     )
 
     async def update_service(call):
-        _LOGGER.info("Smarti Updater service was called.")
+        _LOGGER.info("The SMARTi service was called.")
         async with aiohttp.ClientSession() as session:
             current_version = entry.version
             update_available, latest_version = await check_for_update(session, current_version)
@@ -32,27 +32,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                 hass.config_entries.async_update_entry(entry, version=latest_version)
                 persistent_notification.async_create(
                     hass,
-                    f"Smarti Updater Service Completed! Updated to version {latest_version}.",
-                    title="Smarti Updater",
-                    notification_id="smarti_updater"
+                    f"SMARTi Service Completed! Updated to version {latest_version}.",
+                    title="SMARTi",
+                    notification_id="SMARTi"
                 )
             else:
                 _LOGGER.info("Smarti Updater: No updates available.")
                 persistent_notification.async_create(
                     hass,
-                    "Smarti Updater Service Completed! No updates were available.",
-                    title="Smarti Updater",
-                    notification_id="smarti_updater"
+                    "SMARTi Service Completed! No updates were available.",
+                    title="SMARTi",
+                    notification_id="SMARTi"
                 )
 
     hass.services.async_register(DOMAIN, "update", update_service)
-    _LOGGER.info("Smarti Updater service registered successfully.")
+    _LOGGER.info("SMARTi service registered successfully.")
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {}
 
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    _LOGGER.info("Unloading Smarti Updater config entry.")
+    _LOGGER.info("Unloading SMARTi config entry.")
 
     await hass.config_entries.async_forward_entry_unload(entry, "update")
 

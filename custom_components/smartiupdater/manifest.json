@@ -1,6 +1,6 @@
 {
-    "domain": "smartiupdater",
-    "name": "Smarti Updater",
+    "domain": "smarti",
+    "name": "SMARTi",
     "version": "1.2.3",
     "documentation": "https://github.com/Prosono/smarti",
     "dependencies": [],

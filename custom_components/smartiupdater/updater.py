@@ -9,7 +9,7 @@ import stat  # Import for file permissions
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = "smartiupdater"
+DOMAIN = "smarti"
 
 GITHUB_REPO_URL = "https://api.github.com/repos/Prosono/smarti/contents/"
 PACKAGES_URL = GITHUB_REPO_URL + "packages/"
