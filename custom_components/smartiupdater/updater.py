@@ -25,8 +25,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-TEMP_FLOW_PATH = "/addon_configs/a0d7b954_nodered/"  # Temporary path to store the file locally before copying
-NODE_RED_CONTAINER_PATH = "/config/"  # Internal path for Node-RED
+NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"  # Full path to the file
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,6 +45,14 @@ def ensure_writable(filepath: str):
         _LOGGER.info(f"Permissions set to writable for {filepath}.")
     except Exception as e:
         _LOGGER.error(f"Failed to set writable permissions for {filepath}: {str(e)}")
+
+def ensure_directory_exists(directory_path: str):
+    """Ensure that a directory exists."""
+    if not os.path.exists(directory_path):
+        _LOGGER.error(f"The directory {directory_path} does not exist.")
+        raise FileNotFoundError(f"The directory {directory_path} does not exist.")
+    else:
+        _LOGGER.info(f"Directory {directory_path} exists.")
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
@@ -125,6 +132,8 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
 
+    ensure_directory_exists(os.path.dirname(TEMP_FLOW_PATH))  # Ensure the directory for TEMP_FLOW_PATH exists
+
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
     for file_url in package_files:
@@ -157,7 +166,7 @@ async def update_files(session: aiohttp.ClientSession):
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
-            dest_path = TEMP_FLOW_PATH  # Save directly to the add-on path
+            dest_path = NODE_RED_PATH  # Save directly to the add-on path
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
@@ -179,7 +188,7 @@ async def update_files(session: aiohttp.ClientSession):
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(IMAGES_PATH, file_name)
-            _LOGGER.info(f"Saving themes file to {dest_path}")
+            _LOGGER.info(f"Saving image file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
 async def get_latest_version(session: aiohttp.ClientSession):
@@ -287,4 +296,3 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
-
