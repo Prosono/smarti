@@ -59,3 +59,14 @@ To configure the SMARTi integration:
    ```yaml
    smarti:
      domain: "smarti"
+
+Custom Paths (Optional):
+
+Customize the paths where configuration files are stored by editing constants in the `smarti.py` file.
+
+Example:
+
+```python
+PACKAGES_PATH = "/config/packages/"
+THEMES_PATH = "/config/themes/smarti_themes/"
+NODE_RED_PATH = "/homeassistant/flows.json"
