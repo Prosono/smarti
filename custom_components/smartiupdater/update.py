@@ -46,15 +46,14 @@ class SmartiUpdaterEntity(UpdateEntity):
             _LOGGER.debug(f"Fetched latest version: {latest_version}")
             self._attr_latest_version = latest_version
             self._available = update_available
-            self._attr_in_progress = False
-            self.async_write_ha_state()
+            self.async_write_ha_state()  # Update the entity state without triggering an install
 
     async def async_install(self, version=None, backup=False):
-        """Install the update."""
+        """Install the update when triggered by the user."""
         self._attr_in_progress = True
         self.async_write_ha_state()
         async with aiohttp.ClientSession() as session:
-            await update_files(session)
+            await update_files(session)  # Perform the update
             await update_manifest_version(self._attr_latest_version)
         self._attr_installed_version = self._attr_latest_version
         self._attr_in_progress = False
