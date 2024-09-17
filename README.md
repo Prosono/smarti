@@ -70,3 +70,25 @@ Example:
 PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 NODE_RED_PATH = "/homeassistant/flows.json"
+
+Automation:
+
+Set up an automation in Home Assistant to trigger the updater at a specific time or event.
+
+## Usage
+
+Once installed and configured, SMARTi will automatically:
+
+- Download the latest configuration files from the GitHub repository.
+- Merge the specified Node-RED flows into your existing configurations.
+- Update version information in the `manifest.json` file.
+
+### Running the Updater
+
+You can manually trigger the update process using Home Assistant’s service call feature.
+
+Example:
+
+```yaml
+service: smarti.update_files
+
