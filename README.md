@@ -70,6 +70,7 @@ Example:
 PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 NODE_RED_PATH = "/homeassistant/flows.json"
+```
 
 Automation:
 
@@ -91,4 +92,6 @@ Example:
 
 ```yaml
 service: smarti.update_files
+```
+
 
