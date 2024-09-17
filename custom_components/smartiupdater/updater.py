@@ -26,7 +26,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-NODE_RED_PATH = "/config/node_red/flows.json"
+NODE_RED_PATH = "/config/node-red/flows.json"
 CUSTOM_CARD_RADAR_PATH ="/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
@@ -256,9 +256,13 @@ async def update_manifest_version(latest_version: str):
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
     strømpriser_file_url = NODE_RED_PATH  # Use the Node-RED path for merging
+
+    # Check if the file exists, if not create it with an empty list
     if not os.path.exists(strømpriser_file_url):
-        _LOGGER.error(f"The file {strømpriser_file_url} does not exist.")
-        return
+        _LOGGER.error(f"The file {strømpriser_file_url} does not exist. Creating a new one.")
+        async with aiofiles.open(strømpriser_file_url, 'w') as file:
+            await file.write(json.dumps([]))  # Initialize with an empty list
+        return  # You might want to return here, or continue based on your logic
 
     log_file_size(strømpriser_file_url, "Before writing")
 
