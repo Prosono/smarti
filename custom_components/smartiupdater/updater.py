@@ -26,7 +26,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-NODE_RED_PATH = "/homeassistant/flows.json"  # Full path to the file in Node-RED
+NODE_RED_PATH = "/config/node_red/flows.json"
 CUSTOM_CARD_RADAR_PATH ="/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
@@ -199,7 +199,7 @@ async def update_files(session: aiohttp.ClientSession):
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(CUSTOM_CARD_RADAR_PATH, file_name)
-            _LOGGER.info(f"Saving image file to {dest_path}")
+            _LOGGER.info(f"Saving card files to {dest_path}")
             await download_file(file_url, dest_path, session)
 
 
