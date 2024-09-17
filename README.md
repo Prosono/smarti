@@ -95,3 +95,36 @@ service: smarti.update_files
 ```
 
 
+## Troubleshooting
+
+### Common Issues
+
+**File Not Found Errors**:
+
+- Ensure the specified paths exist and have the correct permissions.
+- Check Home Assistant logs for detailed error messages.
+
+**Permissions Errors**:
+
+- Verify that Home Assistant has write access to the directories specified in the configuration.
+
+### Logs
+
+Enable debug logging for the SMARTi integration to get more detailed logs.
+
+Example:
+
+```yaml
+logger:
+  default: info
+  logs:
+    custom_components.smarti: debug
+```
+
+## Contributing
+
+Contributions are welcome! If you have suggestions for improvements or new features, please open an issue or submit a pull request on the GitHub repository.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
