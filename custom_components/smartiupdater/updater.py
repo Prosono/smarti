@@ -18,6 +18,7 @@ SMARTIUPDATER_URL = GITHUB_REPO_URL + "custom_components/smartiupdater/"
 NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
 IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images/"
+CUSTOM_CARD_RADAR_URL = GITHUB_REPO_URL + "www/community/weather-radar-card/"
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
@@ -26,6 +27,7 @@ DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
 NODE_RED_PATH = "/homeassistant/flows.json"  # Full path to the file in Node-RED
+CUSTOM_CARD_RADAR_PATH ="/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -131,6 +133,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
+    ensure_directory(CUSTOM_CARD_RADAR_PATH)
 
     # Get and download package files
     package_files = await get_files_from_github(PACKAGES_URL, session)
@@ -188,6 +191,17 @@ async def update_files(session: aiohttp.ClientSession):
             dest_path = os.path.join(IMAGES_PATH, file_name)
             _LOGGER.info(f"Saving image file to {dest_path}")
             await download_file(file_url, dest_path, session)
+
+
+    # Get and download CUSTOM CARDS files
+    radar_card_files = await get_files_from_github(CUSTOM_CARD_RADAR_URL, session)
+    for file_url in  radar_card_files:
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = os.path.join(CUSTOM_CARD_RADAR_PATH, file_name)
+            _LOGGER.info(f"Saving image file to {dest_path}")
+            await download_file(file_url, dest_path, session)
+
 
 async def get_latest_version(session: aiohttp.ClientSession):
     try:
