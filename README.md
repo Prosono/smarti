@@ -4,11 +4,11 @@ SMARTi is a custom integration for Home Assistant designed and taylored to the S
 Its purpose is to automate the download and update of various configuration files, including Node-RED flows, themes, dashboards, and more, from this GitHub repository. This integration ensures that the Home Assistant environment that is pre-installed and pre-configured for the SMARTi HUB, stays up-to-date with the latest configurations for a smooth user experience.
 
 WARNING!
-Do NOT install this integration unless youare doing this on a SMARTi HUB. This integration could possibly break your existing Home Assistant installation if applied to a non-SMARTi Home Assistant installation. 
+Do NOT install this integration unless youare doing this on a SMARTi HUB (found here: https://www.smarti.dev/smarti-store/p/smarti-hub-63mmp-lfckw-7l3tx) . This integration could possibly break your existing Home Assistant installation if applied to a non-SMARTi Home Assistant installation. 
 
 Table of Contents
 Overview
-Installation
+Installationhttps://github.com/Prosono/smarti/blob/main/README.md
 Configuration
 Usage
 Troubleshooting
