@@ -19,6 +19,7 @@ NODE_RED_FLOW_URL = GITHUB_REPO_URL + "node_red_flows/"
 THEMES_URL = GITHUB_REPO_URL + "themes/smarti_themes/"
 IMAGES_URL = GITHUB_REPO_URL + "www/images/smarti_images/"
 CUSTOM_CARD_RADAR_URL = GITHUB_REPO_URL + "www/community/weather-radar-card/"
+
 VERSION_URL = GITHUB_REPO_URL + "version.json"
 
 PACKAGES_PATH = "/config/packages/"
@@ -133,6 +134,7 @@ async def update_files(session: aiohttp.ClientSession):
     ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
+    ensure_directory(NODE_RED_PATH)
     ensure_directory(CUSTOM_CARD_RADAR_PATH)
 
     # Get and download package files
