@@ -60,6 +60,11 @@ def ensure_directory_exists(directory_path: str):
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
         _LOGGER.info(f"Attempting to download file from {url} to {dest}")
+        
+        # Ensure that 'dest' includes the full path to the file, not just the directory
+        if os.path.isdir(dest):
+            dest = os.path.join(dest, 'flows.json')  # Append the file name if it's a directory
+
         async with session.get(url) as response:
             response.raise_for_status()
             content = await response.read()
@@ -169,7 +174,7 @@ async def update_files(session: aiohttp.ClientSession):
     for file_url in node_red_files:
         if file_url:
             file_name = os.path.basename(file_url)
-            dest_path = NODE_RED_PATH  # Save directly to the Node-RED path in Home Assistant
+            dest_path = os.path.join(NODE_RED_PATH, file_name)  # Ensure the full path to 'flows.json'
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
