@@ -6,6 +6,7 @@ import aiohttp
 import json
 import time  # Import for cache-busting
 import stat  # Import for file permissions
+from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -118,7 +119,7 @@ def check_file_permissions(filepath: str):
     else:
         _LOGGER.error(f"File {filepath} is not writable. Check permissions.")
 
-async def update_files(session: aiohttp.ClientSession, hass):
+async def update_files(session: aiohttp.ClientSession, hass: HomeAssistant):
     """Update files from GitHub and restart Node-RED."""
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
@@ -309,7 +310,7 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
 
-async def restart_node_red(hass):
+async def restart_node_red(hass: HomeAssistant):
     """Restart the Node-RED add-on in Home Assistant."""
     _LOGGER.info("Restarting Node-RED add-on.")
     try:
@@ -319,3 +320,16 @@ async def restart_node_red(hass):
         _LOGGER.info("Node-RED add-on restarted successfully.")
     except Exception as e:
         _LOGGER.error(f"Failed to restart Node-RED add-on: {e}")
+
+# Example of async_setup function in __init__.py
+async def async_setup(hass: HomeAssistant, config):
+    """Set up the SmartiUpdater integration."""
+    session = aiohttp.ClientSession()
+
+    # Optionally, you can check for updates first
+    # current_version = '1.0.0'  # Replace with your current version
+    # needs_update, latest_version = await check_for_update(session, current_version)
+    # if needs_update:
+    await update_files(session, hass)
+    await session.close()
+    return True
