@@ -251,7 +251,8 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    strømpriser_file_url = os.path.join(NODE_RED_PATH, 'flows.json')  # Correct path to flows.json
+    strømpriser_file_url = os.path.join(NODE_RED_PATH, 'flows.json')  # Correct path to local flows.json
+    temp_file_url = os.path.join(NODE_RED_PATH, 'temp_flows.json')    # Temporary path for downloaded flows.json
 
     # Function to set file permissions
     def set_file_permissions(filepath: str):
@@ -265,70 +266,55 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
         except Exception as e:
             _LOGGER.error(f"Failed to set permissions for {filepath}: {str(e)}")
 
-    # Check if the file exists, if not create it
+    # Download the strømpriser flow (flows.json) from GitHub to a temporary location
+    await download_file(NODE_RED_FLOW_URL + "flows.json", temp_file_url, session)
+
+    # Ensure the existing flows.json file is present at the local path
     if not os.path.exists(strømpriser_file_url):
-        _LOGGER.error(f"The file {strømpriser_file_url} does not exist. Creating a new one.")
-        async with aiofiles.open(strømpriser_file_url, 'w') as file:
-            await file.write(json.dumps([]))  # Initialize with an empty list
-        # Set permissions for the new file
-        set_file_permissions(strømpriser_file_url)
+        _LOGGER.error(f"The file {strømpriser_file_url} does not exist. Exiting merge.")
         return
 
-    # Ensure we are not dealing with a directory
-    if os.path.isdir(strømpriser_file_url):
-        _LOGGER.error(f"{strømpriser_file_url} is a directory, not a file.")
-        return
-
-    # Set permissions before reading/writing to the file
-    set_file_permissions(strømpriser_file_url)
-
-    log_file_size(strømpriser_file_url, "Before writing")
+    log_file_size(strømpriser_file_url, "Before merge")
 
     try:
-        # Read the existing flows.json from the local temporary path
+        # Read the existing flows.json from the local path
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
 
-        # Fetch the new strømpriser flow from GitHub
-        strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
-        for file_url in strømpriser_files:
-            if "flows.json" in file_url:
-                async with session.get(file_url) as response:
-                    response.raise_for_status()
+        # Read the newly downloaded flows.json from GitHub
+        async with aiofiles.open(temp_file_url, 'r') as file:
+            new_flows = json.loads(await file.read())
 
-                    response_text = await response.text()
-                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")
+        # Find the "Strømpriser" flow in the new_flows data
+        strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
 
-                    try:
-                        new_flows = json.loads(response_text)
-                    except json.JSONDecodeError as e:
-                        _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
-                        return
+        if strømpriser_flow:
+            _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
+        else:
+            _LOGGER.error("No strømpriser flow found in the fetched data.")
+            return
 
-                strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
+        # Merge the new strømpriser flow into the existing flows
+        updated_flows = [
+            flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
+            for flow in existing_flows
+        ]
 
-                if strømpriser_flow:
-                    _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
-                else:
-                    _LOGGER.error("No strømpriser flow found in the fetched data.")
-                    return
+        # Append the strømpriser flow if it's not already in the list
+        if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
+            updated_flows.append(strømpriser_flow)
 
-                updated_flows = [
-                    flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
-                    for flow in existing_flows
-                ]
+        # Write the merged flows back to the original flows.json file
+        async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
+            await file.write(json.dumps(updated_flows, indent=4))
+            await file.flush()  # Ensure all data is written to disk
+            _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
+            _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
 
-                # Append the strømpriser flow if it's not already in the list
-                if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
-                    updated_flows.append(strømpriser_flow)
-
-                # Write the updated flows back to the file
-                async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
-                    await file.write(json.dumps(updated_flows, indent=4))
-                    await file.flush()  # Ensure all data is written to disk
-                    _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
-                    _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
-        
         log_file_size(strømpriser_file_url, "After writing")
+
+        # Remove the temporary file after merging
+        os.remove(temp_file_url)
+
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
