@@ -28,7 +28,7 @@ DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
 NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
-CUSTOM_CARD_RADAR_PATH ="/config/www/community/weather-radar-card/"
+CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -60,16 +60,18 @@ def ensure_directory_exists(directory_path: str):
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
     try:
         _LOGGER.info(f"Attempting to download file from {url} to {dest}")
-        
-        # Ensure that 'dest' includes the full path to the file, not just the directory
+
+        # Ensure 'dest' is the full path to a file, not a directory
         if os.path.isdir(dest):
-            dest = os.path.join(dest, 'flows.json')  # Append the file name if it's a directory
+            dest = os.path.join(dest, 'flows.json')  # Ensure saving to file, not directory
 
         async with session.get(url) as response:
             response.raise_for_status()
             content = await response.read()
+
             async with aiofiles.open(dest, "wb") as file:
                 await file.write(content)
+
         _LOGGER.info(f"File successfully downloaded and saved to {dest}")
     except aiohttp.ClientError as http_err:
         _LOGGER.error(f"HTTP error occurred while downloading {url}: {http_err}")
@@ -87,13 +89,6 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
 
             # Check if 'files' is a list (directory) or a dictionary (single file)
             if isinstance(files, list):
-                for file in files:
-                    _LOGGER.debug(f"Processing file: {file}")
-                    if isinstance(file, dict) and file.get('type') == 'file':
-                        _LOGGER.debug(f"Found file: {file['name']} with download URL: {file['download_url']}")
-                    else:
-                        _LOGGER.warning(f"Unexpected item in list: {file}")
-
                 file_urls = [file['download_url'] for file in files if file.get('type') == 'file']
                 _LOGGER.info(f"Found {len(file_urls)} files at {url}")
             elif isinstance(files, dict):
@@ -115,13 +110,6 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
     except Exception as e:
         _LOGGER.error(f"Error occurred while fetching file list from {url}: {str(e)}")
         return []
-
-def check_file_permissions(filepath: str):
-    """Check if a file is writable and log the result."""
-    if os.access(filepath, os.W_OK):
-        _LOGGER.info(f"File {filepath} is writable.")
-    else:
-        _LOGGER.error(f"File {filepath} is not writable. Check permissions.")
 
 def ensure_directory(path: str):
     try:
@@ -173,8 +161,8 @@ async def update_files(session: aiohttp.ClientSession):
     node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
     for file_url in node_red_files:
         if file_url:
-            file_name = os.path.basename(file_url)
-            dest_path = os.path.join(NODE_RED_PATH, file_name)  # Ensure the full path to 'flows.json'
+            file_name = os.path.basename(file_url)  # This should be 'flows.json'
+            dest_path = os.path.join(NODE_RED_PATH, file_name)  # Correctly append 'flows.json'
             _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
@@ -199,15 +187,15 @@ async def update_files(session: aiohttp.ClientSession):
             _LOGGER.info(f"Saving image file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-
     # Get and download CUSTOM CARDS files
     radar_card_files = await get_files_from_github(CUSTOM_CARD_RADAR_URL, session)
-    for file_url in  radar_card_files:
+    for file_url in radar_card_files:
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(CUSTOM_CARD_RADAR_PATH, file_name)
             _LOGGER.info(f"Saving card files to {dest_path}")
             await download_file(file_url, dest_path, session)
+
 
 
 async def get_latest_version(session: aiohttp.ClientSession):
@@ -259,6 +247,7 @@ async def update_manifest_version(latest_version: str):
         _LOGGER.info(f"Updated manifest file version to {latest_version}")
     except Exception as e:
         _LOGGER.error(f"Error updating manifest file: {str(e)}")
+
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
