@@ -6,7 +6,7 @@ input_text:
 sensor:
   - platform: command_line
     name: Smarti Integration Version
-    command: 'cat /config/custom_components/smartiupdater/manifest.json | grep "version" | cut -d\'"\' -f4'
+    command: "cat /config/custom_components/smartiupdater/manifest.json | grep 'version' | cut -d'\"' -f4"
     scan_interval: 3600  # Check every hour; adjust as needed
 
 automation:
