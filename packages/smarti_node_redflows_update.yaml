@@ -1,0 +1,36 @@
+# Include the Input Text Helper
+input_text:
+  smarti_previous_version:
+    name: Smarti Previous Version
+
+sensor:
+  - platform: command_line
+    name: Smarti Integration Version
+    command: 'cat /config/custom_components/smartiupdater/manifest.json | grep "version" | cut -d\'"\' -f4'
+    scan_interval: 3600  # Check every hour; adjust as needed
+
+automation:
+  - alias: "Run Copy Script When Smarti Version Increments"
+    trigger:
+      - platform: state
+        entity_id: sensor.smarti_integration_version
+    condition:
+      - condition: template
+        value_template: >
+          {{ trigger.from_state.state != trigger.to_state.state and
+             trigger.to_state.state not in [None, ''] and
+             trigger.to_state.state != states('input_text.smarti_previous_version') }}
+    action:
+      - service: input_text.set_value
+        target:
+          entity_id: input_text.smarti_previous_version
+        data:
+          value: "{{ trigger.to_state.state }}"
+      - service: shell_command.copy_flows
+      - delay: "00:00:05"  # Wait 5 seconds
+      - service: hassio.addon_restart
+        data:
+          addon: "a0d7b954_nodered"
+
+shell_command:
+  copy_flows: 'bash /config/copy_flows.sh'
