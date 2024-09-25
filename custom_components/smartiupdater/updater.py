@@ -27,7 +27,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-NODE_RED_PATH = "/addon_configs/a0d7b954_nodered/"
+NODE_RED_PATH = "/config/node_red_flows/"
 CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
@@ -247,6 +247,7 @@ async def update_manifest_version(latest_version: str):
         _LOGGER.info(f"Updated manifest file version to {latest_version}")
     except Exception as e:
         _LOGGER.error(f"Error updating manifest file: {str(e)}")
+
 
 
 # Implement the merge function for Node-RED flows
