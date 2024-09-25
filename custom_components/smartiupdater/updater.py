@@ -257,14 +257,36 @@ async def update_manifest_version(latest_version: str):
 
 # Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    strømpriser_file_url = NODE_RED_PATH  # Use the Node-RED path for merging
+    strømpriser_file_url = os.path.join(NODE_RED_PATH, 'flows.json')  # Correct path to flows.json
 
-    # Check if the file exists, if not create it with an empty list
+    # Function to set file permissions
+    def set_file_permissions(filepath: str):
+        """Set the file permissions to ensure it's writable."""
+        try:
+            if os.path.isfile(filepath):  # Ensure it's a file
+                os.chmod(filepath, stat.S_IRUSR | stat.S_IWUSR)  # Read and write permissions for the owner
+                _LOGGER.info(f"Permissions set to writable for {filepath}.")
+            else:
+                _LOGGER.error(f"{filepath} is not a file. Cannot set permissions.")
+        except Exception as e:
+            _LOGGER.error(f"Failed to set permissions for {filepath}: {str(e)}")
+
+    # Check if the file exists, if not create it
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist. Creating a new one.")
         async with aiofiles.open(strømpriser_file_url, 'w') as file:
             await file.write(json.dumps([]))  # Initialize with an empty list
-        return  # You might want to return here, or continue based on your logic
+        # Set permissions for the new file
+        set_file_permissions(strømpriser_file_url)
+        return
+
+    # Ensure we are not dealing with a directory
+    if os.path.isdir(strømpriser_file_url):
+        _LOGGER.error(f"{strømpriser_file_url} is a directory, not a file.")
+        return
+
+    # Set permissions before reading/writing to the file
+    set_file_permissions(strømpriser_file_url)
 
     log_file_size(strømpriser_file_url, "Before writing")
 
@@ -302,9 +324,11 @@ async def merge_strømpriser_flow(session: aiohttp.ClientSession):
                     for flow in existing_flows
                 ]
 
+                # Append the strømpriser flow if it's not already in the list
                 if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
                     updated_flows.append(strømpriser_flow)
 
+                # Write the updated flows back to the file
                 async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
                     await file.write(json.dumps(updated_flows, indent=4))
                     await file.flush()  # Ensure all data is written to disk
