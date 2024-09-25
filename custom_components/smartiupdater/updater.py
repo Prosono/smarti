@@ -29,7 +29,7 @@ SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images/"
 CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
-# Updated Node-RED paths
+# Corrected Node-RED paths
 NODE_RED_DIR = "/config/node-red/"
 NODE_RED_FLOW_FILE = os.path.join(NODE_RED_DIR, "flows.json")
 
@@ -125,7 +125,7 @@ async def update_files(session: aiohttp.ClientSession, hass):
     ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
-    ensure_directory(NODE_RED_DIR)
+    ensure_directory(NODE_RED_DIR)  # Corrected here
     ensure_directory(CUSTOM_CARD_RADAR_PATH)
 
     # Get and download package files
