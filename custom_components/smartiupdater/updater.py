@@ -6,7 +6,6 @@ import aiohttp
 import json
 import time  # Import for cache-busting
 import stat  # Import for file permissions
-from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,12 +26,9 @@ PACKAGES_PATH = "/config/packages/"
 THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
-IMAGES_PATH = "/config/www/images/smarti_images/"
-CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
-
-# Corrected Node-RED paths
-NODE_RED_DIR = "/config/node-red/"
-NODE_RED_FLOW_FILE = os.path.join(NODE_RED_DIR, "flows.json")
+IMAGES_PATH = "/config/www/images/smarti_images"
+NODE_RED_PATH = "/config/node-red/flows.json"
+CUSTOM_CARD_RADAR_PATH ="/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,19 +49,15 @@ def ensure_writable(filepath: str):
     except Exception as e:
         _LOGGER.error(f"Failed to set writable permissions for {filepath}: {str(e)}")
 
-def ensure_directory(path: str):
+def ensure_directory_exists(directory_path: str):
     """Ensure that a directory exists."""
-    try:
-        if not os.path.exists(path):
-            os.makedirs(path)
-            _LOGGER.info(f"Created directory {path}")
-        else:
-            _LOGGER.info(f"Directory {path} already exists")
-    except Exception as e:
-        _LOGGER.error(f"Error creating directory {path}: {str(e)}")
+    if not os.path.exists(directory_path):
+        _LOGGER.error(f"The directory {directory_path} does not exist.")
+        raise FileNotFoundError(f"The directory {directory_path} does not exist.")
+    else:
+        _LOGGER.info(f"Directory {directory_path} exists.")
 
 async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
-    """Download a file from a URL to a destination path."""
     try:
         _LOGGER.info(f"Attempting to download file from {url} to {dest}")
         async with session.get(url) as response:
@@ -80,7 +72,6 @@ async def download_file(url: str, dest: str, session: aiohttp.ClientSession):
         _LOGGER.error(f"Error occurred while downloading {url}: {str(e)}")
 
 async def get_files_from_github(url: str, session: aiohttp.ClientSession):
-    """Get a list of file URLs from a GitHub repository directory."""
     try:
         _LOGGER.info(f"Fetching file list from {url}")
         async with session.get(url) as response:
@@ -91,9 +82,17 @@ async def get_files_from_github(url: str, session: aiohttp.ClientSession):
 
             # Check if 'files' is a list (directory) or a dictionary (single file)
             if isinstance(files, list):
+                for file in files:
+                    _LOGGER.debug(f"Processing file: {file}")
+                    if isinstance(file, dict) and file.get('type') == 'file':
+                        _LOGGER.debug(f"Found file: {file['name']} with download URL: {file['download_url']}")
+                    else:
+                        _LOGGER.warning(f"Unexpected item in list: {file}")
+
                 file_urls = [file['download_url'] for file in files if file.get('type') == 'file']
                 _LOGGER.info(f"Found {len(file_urls)} files at {url}")
             elif isinstance(files, dict):
+                # Handle case where a single file dict is returned
                 if 'download_url' in files:
                     file_urls = [files['download_url']]
                     _LOGGER.info(f"Found a single file at {url}")
@@ -119,14 +118,23 @@ def check_file_permissions(filepath: str):
     else:
         _LOGGER.error(f"File {filepath} is not writable. Check permissions.")
 
-async def update_files(session: aiohttp.ClientSession, hass: HomeAssistant):
-    """Update files from GitHub and restart Node-RED."""
+def ensure_directory(path: str):
+    try:
+        if not os.path.exists(path):
+            os.makedirs(path)
+            _LOGGER.info(f"Created directory {path}")
+        else:
+            _LOGGER.info(f"Directory {path} already exists")
+    except Exception as e:
+        _LOGGER.error(f"Error creating directory {path}: {str(e)}")
+
+async def update_files(session: aiohttp.ClientSession):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
     ensure_directory(THEMES_PATH)
     ensure_directory(IMAGES_PATH)
-    ensure_directory(NODE_RED_DIR)  # Corrected here
+    ensure_directory(NODE_RED_PATH)
     ensure_directory(CUSTOM_CARD_RADAR_PATH)
 
     # Get and download package files
@@ -156,14 +164,14 @@ async def update_files(session: aiohttp.ClientSession, hass: HomeAssistant):
             _LOGGER.info(f"Saving SmartiUpdater file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Download Node-RED flows.json file
+    # Download Node-RED files and log at each step
     node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
     for file_url in node_red_files:
-        if file_url.endswith('flows.json'):
-            dest_path = NODE_RED_FLOW_FILE
-            _LOGGER.info(f"Saving Node-RED flows to {dest_path}")
+        if file_url:
+            file_name = os.path.basename(file_url)
+            dest_path = NODE_RED_PATH  # Save directly to the Node-RED path in Home Assistant
+            _LOGGER.info(f"Saving Node-RED file to {dest_path}")
             await download_file(file_url, dest_path, session)
-            break  # Assuming only one flows.json
 
     _LOGGER.info("Starting merge of strømpriser flow.")
     await merge_strømpriser_flow(session)
@@ -186,20 +194,18 @@ async def update_files(session: aiohttp.ClientSession, hass: HomeAssistant):
             _LOGGER.info(f"Saving image file to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Get and download CUSTOM CARD files
+
+    # Get and download CUSTOM CARDS files
     radar_card_files = await get_files_from_github(CUSTOM_CARD_RADAR_URL, session)
-    for file_url in radar_card_files:
+    for file_url in  radar_card_files:
         if file_url:
             file_name = os.path.basename(file_url)
             dest_path = os.path.join(CUSTOM_CARD_RADAR_PATH, file_name)
-            _LOGGER.info(f"Saving custom card file to {dest_path}")
+            _LOGGER.info(f"Saving card files to {dest_path}")
             await download_file(file_url, dest_path, session)
 
-    # Restart Node-RED after updating flows
-    await restart_node_red(hass)
 
 async def get_latest_version(session: aiohttp.ClientSession):
-    """Fetch the latest version information from GitHub."""
     try:
         cache_buster = f"?nocache={str(time.time())}"
         async with session.get(VERSION_URL + cache_buster) as response:
@@ -225,7 +231,6 @@ async def get_latest_version(session: aiohttp.ClientSession):
         return "unknown"
 
 async def check_for_update(session: aiohttp.ClientSession, current_version: str):
-    """Check if an update is available by comparing versions."""
     try:
         latest_version = await get_latest_version(session)
         _LOGGER.debug(f"Current version: {current_version}, Latest version: {latest_version}")
@@ -238,7 +243,6 @@ async def check_for_update(session: aiohttp.ClientSession, current_version: str)
         return False, "unknown"
 
 async def update_manifest_version(latest_version: str):
-    """Update the version in the manifest file."""
     manifest_file = "/config/custom_components/smartiupdater/manifest.json"
     try:
         async with aiofiles.open(manifest_file, 'r+') as file:
@@ -251,85 +255,62 @@ async def update_manifest_version(latest_version: str):
     except Exception as e:
         _LOGGER.error(f"Error updating manifest file: {str(e)}")
 
+# Implement the merge function for Node-RED flows
 async def merge_strømpriser_flow(session: aiohttp.ClientSession):
-    """Merge the 'Strømpriser' flow into the existing Node-RED flows."""
-    strømpriser_file_url = NODE_RED_FLOW_FILE  # Use the Node-RED flows.json file
+    strømpriser_file_url = NODE_RED_PATH  # Use the Node-RED path for merging
 
-    # Ensure the flows.json file exists
+    # Check if the file exists, if not create it with an empty list
     if not os.path.exists(strømpriser_file_url):
         _LOGGER.error(f"The file {strømpriser_file_url} does not exist. Creating a new one.")
         async with aiofiles.open(strømpriser_file_url, 'w') as file:
             await file.write(json.dumps([]))  # Initialize with an empty list
+        return  # You might want to return here, or continue based on your logic
 
     log_file_size(strømpriser_file_url, "Before writing")
 
     try:
-        # Read the existing flows.json
+        # Read the existing flows.json from the local temporary path
         async with aiofiles.open(strømpriser_file_url, 'r') as file:
             existing_flows = json.loads(await file.read())
 
         # Fetch the new strømpriser flow from GitHub
         strømpriser_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
-        strømpriser_flow = None
         for file_url in strømpriser_files:
-            if "strompriser.json" in file_url or "strømpriser.json" in file_url:
+            if "flows.json" in file_url:
                 async with session.get(file_url) as response:
                     response.raise_for_status()
+
                     response_text = await response.text()
-                    _LOGGER.debug(f"Fetched strømpriser flow content: {response_text[:200]}")
+                    _LOGGER.debug(f"Fetched flows.json raw content: {response_text[:200]}")
+
                     try:
-                        strømpriser_flow = json.loads(response_text)
+                        new_flows = json.loads(response_text)
                     except json.JSONDecodeError as e:
                         _LOGGER.error(f"Failed to decode JSON from response: {e}, response content: {response_text[:200]}")
                         return
-                break
 
-        if strømpriser_flow:
-            _LOGGER.debug("Found strømpriser flow.")
-        else:
-            _LOGGER.error("No strømpriser flow found in the fetched data.")
-            return
+                strømpriser_flow = next((flow for flow in new_flows if flow.get('label') == 'Strømpriser'), None)
 
-        # Remove any existing 'Strømpriser' flow
-        existing_flows = [flow for flow in existing_flows if flow.get('label') != 'Strømpriser']
+                if strømpriser_flow:
+                    _LOGGER.debug(f"Found strømpriser flow: {strømpriser_flow}")
+                else:
+                    _LOGGER.error("No strømpriser flow found in the fetched data.")
+                    return
 
-        # Merge the strømpriser flow
-        if isinstance(strømpriser_flow, list):
-            existing_flows.extend(strømpriser_flow)
-        else:
-            existing_flows.append(strømpriser_flow)
+                updated_flows = [
+                    flow if flow.get('label') != 'Strømpriser' else strømpriser_flow
+                    for flow in existing_flows
+                ]
 
-        # Write back to flows.json
-        async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
-            await file.write(json.dumps(existing_flows, indent=4))
-            await file.flush()  # Ensure all data is written to disk
-            _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
-            _LOGGER.debug(f"Final updated flows content: {json.dumps(existing_flows, indent=4)}")
+                if not any(flow.get('label') == 'Strømpriser' for flow in updated_flows):
+                    updated_flows.append(strømpriser_flow)
 
+                async with aiofiles.open(strømpriser_file_url, 'w', encoding='utf-8') as file:
+                    await file.write(json.dumps(updated_flows, indent=4))
+                    await file.flush()  # Ensure all data is written to disk
+                    _LOGGER.info(f"Merged strømpriser flow successfully into {strømpriser_file_url}.")
+                    _LOGGER.debug(f"Final updated flows content: {json.dumps(updated_flows, indent=4)}")
+        
         log_file_size(strømpriser_file_url, "After writing")
     except Exception as e:
         _LOGGER.error(f"Error merging strømpriser flow: {str(e)}")
-
-async def restart_node_red(hass: HomeAssistant):
-    """Restart the Node-RED add-on in Home Assistant."""
-    _LOGGER.info("Restarting Node-RED add-on.")
-    try:
-        await hass.services.async_call('hassio', 'addon_restart', {
-            'addon': 'a0d7b954_nodered'  # Replace with your actual Node-RED add-on ID
-        })
-        _LOGGER.info("Node-RED add-on restarted successfully.")
-    except Exception as e:
-        _LOGGER.error(f"Failed to restart Node-RED add-on: {e}")
-
-# Example of async_setup function in __init__.py
-async def async_setup(hass: HomeAssistant, config):
-    """Set up the SmartiUpdater integration."""
-    session = aiohttp.ClientSession()
-
-    # Optionally, you can check for updates first
-    # current_version = '1.0.0'  # Replace with your current version
-    # needs_update, latest_version = await check_for_update(session, current_version)
-    # if needs_update:
-    await update_files(session, hass)
-    await session.close()
-    return True
