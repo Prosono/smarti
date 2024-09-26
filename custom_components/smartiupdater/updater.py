@@ -27,7 +27,7 @@ THEMES_PATH = "/config/themes/smarti_themes/"
 DASHBOARDS_PATH = "/config/dashboards/"
 SMARTIUPDATER_PATH = "/config/custom_components/smartiupdater/"
 IMAGES_PATH = "/config/www/images/smarti_images"
-NODE_RED_PATH = "/config/node-red-flows/"
+NODE_RED_PATH = "/shared/node-red-flows/"
 CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
 _LOGGER = logging.getLogger(__name__)
