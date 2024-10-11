@@ -121,7 +121,7 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
-async def update_files(session: aiohttp.ClientSession, selected_updates: list)):
+async def update_files(session: aiohttp.ClientSession, selected_updates: list):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
