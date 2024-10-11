@@ -121,7 +121,7 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
-async def update_files(session: aiohttp.ClientSession):
+async def update_files(session: aiohttp.ClientSession, selected_updates: list)):
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
@@ -140,13 +140,14 @@ async def update_files(session: aiohttp.ClientSession):
             await download_file(file_url, dest_path, session)
 
     # Get and download dashboard files
-    dashboard_files = await get_files_from_github(DASHBOARDS_URL, session)
-    for file_url in dashboard_files:
-        if file_url:
-            file_name = os.path.basename(file_url)
-            dest_path = os.path.join(DASHBOARDS_PATH, file_name)
-            _LOGGER.info(f"Saving dashboard file to {dest_path}")
-            await download_file(file_url, dest_path, session)
+    if "dashboards" in selected_updates:
+        dashboard_files = await get_files_from_github(DASHBOARDS_URL, session)
+        for file_url in dashboard_files:
+            if file_url:
+                file_name = os.path.basename(file_url)
+                dest_path = os.path.join(DASHBOARDS_PATH, file_name)
+                _LOGGER.info(f"Saving dashboard file to {dest_path}")
+                await download_file(file_url, dest_path, session)
 
     # Get and download custom component files
     smartiupdater_files = await get_files_from_github(SMARTIUPDATER_URL, session)
@@ -158,16 +159,17 @@ async def update_files(session: aiohttp.ClientSession):
             await download_file(file_url, dest_path, session)
 
     # Download Node-RED files and log at each step
-    node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
-    for file_url in node_red_files:
-        if file_url:
-            file_name = os.path.basename(file_url)  # This should be 'flows.json'
-            dest_path = os.path.join(NODE_RED_PATH, file_name)  # Correctly append 'flows.json'
-            _LOGGER.info(f"Saving Node-RED file to {dest_path}")
-            await download_file(file_url, dest_path, session)
+    if "node_red" in selected_updates:    
+        node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
+        for file_url in node_red_files:
+            if file_url:
+                file_name = os.path.basename(file_url)  # This should be 'flows.json'
+                dest_path = os.path.join(NODE_RED_PATH, file_name)  # Correctly append 'flows.json'
+                _LOGGER.info(f"Saving Node-RED file to {dest_path}")
+                await download_file(file_url, dest_path, session)
 
-    _LOGGER.info("Starting merge of strømpriser flow.")
-    await merge_strømpriser_flow(session)
+        _LOGGER.info("Starting merge of strømpriser flow.")
+        await merge_strømpriser_flow(session)
 
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
