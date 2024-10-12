@@ -27,7 +27,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             update_available, latest_version = await check_for_update(session, current_version)
 
             if update_available:
-                await update_files(session)
+                config_data = entry.data  # Retrieve the configuration data
+                await update_files(session, config_data)  # Pass config_data to update_files
                 await update_manifest_version(latest_version)
                 hass.config_entries.async_update_entry(entry, version=latest_version)
                 persistent_notification.async_create(
