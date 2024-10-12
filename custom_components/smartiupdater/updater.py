@@ -140,7 +140,7 @@ async def update_files(session: aiohttp.ClientSession, selected_updates: list):
             await download_file(file_url, dest_path, session)
 
     # Get and download dashboard files
-    if "dashboards" in selected_updates:
+    if config_data.get("update_dashboards"):
         dashboard_files = await get_files_from_github(DASHBOARDS_URL, session)
         for file_url in dashboard_files:
             if file_url:
@@ -159,7 +159,7 @@ async def update_files(session: aiohttp.ClientSession, selected_updates: list):
             await download_file(file_url, dest_path, session)
 
     # Download Node-RED files and log at each step
-    if "node_red" in selected_updates:    
+    if config_data.get("update_node_red"):  
         node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
         for file_url in node_red_files:
             if file_url:
