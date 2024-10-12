@@ -159,7 +159,7 @@ async def update_files(session: aiohttp.ClientSession, config_data: dict):
             await download_file(file_url, dest_path, session)
 
     # Download Node-RED files and log at each step
-    if config_data.get("update_node_red"):  
+    if config_data.get("update_node_red"):
         node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
         for file_url in node_red_files:
             if file_url:
