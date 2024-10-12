@@ -4,7 +4,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components import persistent_notification
 from .updater import update_files, check_for_update, update_manifest_version
-#Added comment her for testing
+
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "smarti"
@@ -16,9 +16,10 @@ async def async_setup(hass: HomeAssistant, config: dict):
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.info("Setting up SMARTi from config entry.")
 
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "update")
-    )
+    # Optionally, perform initial update
+    async with aiohttp.ClientSession() as session:
+        config_data = entry.data  # Retrieve configuration data
+        await update_files(session, config_data)
 
     async def update_service(call):
         _LOGGER.info("The SMARTi service was called.")
@@ -27,8 +28,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             update_available, latest_version = await check_for_update(session, current_version)
 
             if update_available:
-                config_data = entry.data  # Retrieve the configuration data
-                await update_files(session, config_data)  # Pass config_data to update_files
+                config_data = entry.data  # Retrieve configuration data
+                await update_files(session, config_data)
                 await update_manifest_version(latest_version)
                 hass.config_entries.async_update_entry(entry, version=latest_version)
                 persistent_notification.async_create(
@@ -46,6 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
                     notification_id="SMARTi"
                 )
 
+    # Register the update service
     hass.services.async_register(DOMAIN, "update", update_service)
     _LOGGER.info("SMARTi service registered successfully.")
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {}
@@ -55,8 +57,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.info("Unloading SMARTi config entry.")
 
-    await hass.config_entries.async_forward_entry_unload(entry, "update")
-
+    # Remove the update service
     if hass.services.has_service(DOMAIN, "update"):
         hass.services.async_remove(DOMAIN, "update")
 
