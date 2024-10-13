@@ -263,7 +263,7 @@ sidebar:
                   - color: black
                 card:
                   - font-size: 13px
-                  - height: 150px
+                  - height: 100px
                   - width: 100px
                   - background-color: rgba(0, 0, 0, 0)
                 img_cell:
@@ -815,6 +815,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -1121,365 +1123,12 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
           - condition: screen
             media_query: '(min-width: 0px) and (max-width: 767px)'
-      - type: horizontal-stack
-        cards:
-          - type: conditional
-            conditions:
-              - condition: numeric_state
-                entity: sensor.active_motion_sensors
-                above: 0
-            card:
-              type: custom:button-card
-              icon: mdi:motion-sensor
-              entity: sensor.active_motion_sensors
-              show_name: false
-              styles:
-                card:
-                  - padding: 4px
-                  - background: none
-                  - border-radius: 40px
-                  - border: 0
-                  - overflow: visible
-                img_cell:
-                  - width: 40px
-                  - height: 40px
-                  - background: var(--primary-color)
-                  - border-radius: 100%
-                icon:
-                  - width: 22px
-                  - height: 22px
-                  - color: '#ffc107'
-                  - margin-top: 8px
-                custom_fields:
-                  badge:
-                    - background-color: '#ffc107'
-                    - color: black
-                    - border-radius: 50%
-                    - width: 16px
-                    - height: 16px
-                    - display: flex
-                    - align-items: center
-                    - justify-content: center
-                    - position: absolute
-                    - top: 0px
-                    - right: 0px
-                    - font-size: 12px
-                    - font-weight: bold
-              custom_fields:
-                badge: |
-                  [[[
-                    return states['sensor.active_motion_sensors'].state;
-                  ]]]
-          - type: conditional
-            conditions:
-              - condition: numeric_state
-                entity: sensor.active_lights
-                above: 0
-            card:
-              type: custom:button-card
-              icon: mdi:lightbulb
-              entity: sensor.active_lights
-              show_name: false
-              styles:
-                card:
-                  - padding: 4px
-                  - background: none
-                  - border-radius: 40px
-                  - border: 0
-                  - overflow: visible
-                img_cell:
-                  - width: 40px
-                  - height: 40px
-                  - background: rgba(255, 193, 7, 0.2)
-                  - border-radius: 100%
-                icon:
-                  - width: 22px
-                  - height: 22px
-                  - color: '#ffc107'
-                  - margin-top: 8px
-                custom_fields:
-                  badge:
-                    - background-color: '#ffc107'
-                    - color: black
-                    - border-radius: 50%
-                    - width: 16px
-                    - height: 16px
-                    - display: flex
-                    - align-items: center
-                    - justify-content: center
-                    - position: absolute
-                    - top: 0px
-                    - right: 0px
-                    - font-size: 12px
-                    - font-weight: bold
-              custom_fields:
-                badge: |
-                  [[[
-                    return states['sensor.active_lights'].state;
-                  ]]]
-          - type: conditional
-            conditions:
-              - condition: numeric_state
-                entity: sensor.active_doors
-                above: 0
-            card:
-              type: custom:button-card
-              icon: mdi:door-open
-              entity: sensor.active_doors
-              show_name: false
-              styles:
-                card:
-                  - padding: 4px
-                  - background: none
-                  - border-radius: 40px
-                  - border: 0
-                  - overflow: visible
-                img_cell:
-                  - width: 40px
-                  - height: 40px
-                  - background: rgba(255, 193, 7, 0.2)
-                  - border-radius: 100%
-                icon:
-                  - width: 22px
-                  - height: 22px
-                  - color: '#ffc107'
-                  - margin-top: 8px
-                custom_fields:
-                  badge:
-                    - background-color: '#ffc107'
-                    - color: black
-                    - border-radius: 50%
-                    - width: 16px
-                    - height: 16px
-                    - display: flex
-                    - align-items: center
-                    - justify-content: center
-                    - position: absolute
-                    - top: 0px
-                    - right: 0px
-                    - font-size: 12px
-                    - font-weight: bold
-              custom_fields:
-                badge: |
-                  [[[
-                    return states['sensor.active_doors'].state;
-                  ]]]
-          - type: custom:button-card
-            icon: mdi:lightbulb
-            entity: sensor.active_lights
-            show_name: false
-            styles:
-              card:
-                - padding: 4px
-                - background: none
-                - border-radius: 40px
-                - border: 0
-                - overflow: visible
-              img_cell:
-                - width: 40px
-                - height: 40px
-                - background: rgba(255, 193, 7, 0.2)
-                - border-radius: 100%
-              icon:
-                - width: 22px
-                - height: 22px
-                - color: '#ffc107'
-                - margin-top: 8px
-              custom_fields:
-                badge:
-                  - background-color: '#ffc107'
-                  - color: black
-                  - border-radius: 50%
-                  - width: 16px
-                  - height: 16px
-                  - display: flex
-                  - align-items: center
-                  - justify-content: center
-                  - position: absolute
-                  - top: 0px
-                  - right: 0px
-                  - font-size: 12px
-                  - font-weight: bold
-            custom_fields:
-              badge: |
-                [[[
-                  return states['sensor.active_lights'].state;
-                ]]]
-          - type: custom:button-card
-            icon: mdi:lightbulb
-            entity: sensor.active_lights
-            show_name: false
-            styles:
-              card:
-                - padding: 4px
-                - background: none
-                - border-radius: 40px
-                - border: 0
-                - overflow: visible
-              img_cell:
-                - width: 40px
-                - height: 40px
-                - background: rgba(255, 193, 7, 0.2)
-                - border-radius: 100%
-              icon:
-                - width: 22px
-                - height: 22px
-                - color: '#ffc107'
-                - margin-top: 8px
-              custom_fields:
-                badge:
-                  - background-color: '#ffc107'
-                  - color: black
-                  - border-radius: 50%
-                  - width: 16px
-                  - height: 16px
-                  - display: flex
-                  - align-items: center
-                  - justify-content: center
-                  - position: absolute
-                  - top: 0px
-                  - right: 0px
-                  - font-size: 12px
-                  - font-weight: bold
-            custom_fields:
-              badge: |
-                [[[
-                  return states['sensor.active_lights'].state;
-                ]]]
-          - type: custom:button-card
-            icon: mdi:lightbulb
-            entity: sensor.active_lights
-            show_name: false
-            styles:
-              card:
-                - padding: 4px
-                - background: none
-                - border-radius: 40px
-                - border: 0
-                - overflow: visible
-              img_cell:
-                - width: 40px
-                - height: 40px
-                - background: rgba(255, 193, 7, 0.2)
-                - border-radius: 100%
-              icon:
-                - width: 22px
-                - height: 22px
-                - color: '#ffc107'
-                - margin-top: 8px
-              custom_fields:
-                badge:
-                  - background-color: '#ffc107'
-                  - color: black
-                  - border-radius: 50%
-                  - width: 16px
-                  - height: 16px
-                  - display: flex
-                  - align-items: center
-                  - justify-content: center
-                  - position: absolute
-                  - top: 0px
-                  - right: 0px
-                  - font-size: 12px
-                  - font-weight: bold
-            custom_fields:
-              badge: |
-                [[[
-                  return states['sensor.active_lights'].state;
-                ]]]
-          - type: custom:button-card
-            icon: mdi:lightbulb
-            entity: sensor.active_lights
-            show_name: false
-            styles:
-              card:
-                - padding: 4px
-                - background: none
-                - border-radius: 40px
-                - border: 0
-                - overflow: visible
-              img_cell:
-                - width: 40px
-                - height: 40px
-                - background: rgba(255, 193, 7, 0.2)
-                - border-radius: 100%
-              icon:
-                - width: 22px
-                - height: 22px
-                - color: '#ffc107'
-                - margin-top: 8px
-              custom_fields:
-                badge:
-                  - background-color: '#ffc107'
-                  - color: black
-                  - border-radius: 50%
-                  - width: 16px
-                  - height: 16px
-                  - display: flex
-                  - align-items: center
-                  - justify-content: center
-                  - position: absolute
-                  - top: 0px
-                  - right: 0px
-                  - font-size: 12px
-                  - font-weight: bold
-            custom_fields:
-              badge: |
-                [[[
-                  return states['sensor.active_lights'].state;
-                ]]] 
-          - type: custom:button-card
-            icon: mdi:lightbulb
-            entity: sensor.active_lights
-            show_name: false
-            styles:
-              card:
-                - padding: 4px
-                - background: none
-                - border-radius: 40px
-                - border: 0
-                - overflow: visible
-              img_cell:
-                - width: 40px
-                - height: 40px
-                - background: rgba(255, 193, 7, 0.2)
-                - border-radius: 100%
-              icon:
-                - width: 22px
-                - height: 22px
-                - color: '#ffc107'
-                - margin-top: 8px
-              custom_fields:
-                badge:
-                  - background-color: '#ffc107'
-                  - color: black
-                  - border-radius: 50%
-                  - width: 16px
-                  - height: 16px
-                  - display: flex
-                  - align-items: center
-                  - justify-content: center
-                  - position: absolute
-                  - top: 0px
-                  - right: 0px
-                  - font-size: 12px
-                  - font-weight: bold
-            custom_fields:
-              badge: |
-                [[[
-                  return states['sensor.active_lights'].state;
-                ]]]        
-        visibility:
-          - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
-        view_layout:
-          grid-area: three
       - type: custom:mushroom-chips-card
         chips:
           - type: spacer
@@ -1509,6 +1158,12 @@ views:
         conditions:
           - condition: screen
             media_query: '(min-width: 768px)'
+          - condition: state
+            entity: sensor.strompris_effektiv_denne_time
+            state_not: unavailable
+          - condition: state
+            entity: sensor.strompris_effektiv_denne_time
+            state_not: unknown
         card:
           type: custom:mod-card
           card_mod:
@@ -1705,8 +1360,135 @@ views:
                       padding: 0 !important;
                       margin: 0 !important;
                     }
+      - type: conditional
+        conditions:
+          - condition: screen
+            media_query: '(min-width: 0px) and (max-width: 767px)'
+          - condition: state
+            entity: sensor.strompris_effektiv_denne_time
+            state_not: unavailable
+          - condition: state
+            entity: sensor.strompris_effektiv_denne_time
+            state_not: unknown
+        card:
+          type: custom:mod-card
+          card_mod:
+            style:
+              .: |
+                ha-card {
+                  --ha-card-border-width: 0.5px;
+                  --ha-card-border-radius: 20px;
+                  --ha-card-background: transparent;
+                }           
+          card:
+            type: horizontal-stack
+            cards:
+              - type: custom:flex-horseshoe-card
+                entities:
+                  - entity: sensor.strompris_effektiv_denne_time
+                    decimals: 1
+                    name: Strømpriser
+                    unit: kr/kw
+                  - entity: sensor.strompris_nettleie_denne_time
+                    decimals: 1
+                    unit: kr nettleie
+                    icon: mdi:chart-bar
+                    name: nettleie
+                  - entity: sensor.nordpool_kwh_krsand_nok_3_10_025
+                    decimals: 1
+                    unit: NOK
+                    icon: mdi:gauge
+                    name: ''
+                show:
+                  horseshoe_style: lineargradient
+                layout:
+                  hlines:
+                    - id: 0
+                      xpos: 50
+                      ypos: 42
+                      length: 70
+                      styles:
+                        - stroke: var(--primary-text-color);
+                        - stroke-width: 5;
+                        - stroke-linecap: round;
+                        - opacity: 0.7;
+                  states:
+                    - id: 0
+                      entity_index: 0
+                      xpos: 50
+                      ypos: 34
+                      styles:
+                        - font-size: 2em;
+                    - id: 1
+                      entity_index: 1
+                      xpos: 40
+                      ypos: 57
+                      styles:
+                        - text-anchor: start;
+                        - font-size: 1em;
+                    - id: 2
+                      entity_index: 2
+                      xpos: 40
+                      ypos: 72
+                      styles:
+                        - text-anchor: start;
+                        - font-size: 1em;
+                  icons:
+                    - id: 0
+                      entity_index: 1
+                      xpos: 37
+                      ypos: 57
+                      align: end
+                      size: 0.5
+                    - id: 1
+                      entity_index: 2
+                      xpos: 37
+                      ypos: 72
+                      align: end
+                      size: 0.5
+                  names:
+                    - id: 0
+                      entity_index: 0
+                      xpos: 50
+                      ypos: 95
+                horseshoe_scale:
+                  min: -10
+                  max: 30
+                color_stops:
+                  '0': '#51ce22'
+                  '1': '#51ce22'
+                  '5': '#c0392b'
+                card_mod:
+                  style: |
+                    :host {
+                      height: 200px !important;
+                      width: 200px !important;
+                    }
+                    ha-card {
+                      width: 100% !important;
+                      height: 100%;
+                      padding: 0 !important;
+                      margin: 0 !important;
+                    }
+      - type: custom:bubble-card
+        card_type: separator
+        icon: mdi:weather-cloudy
+        styles: >
+          .bubble-line {
+            background: var(--primary-color);
+            opacity: 1;
+          }
+
+          ${card.querySelector('.bubble-name').innerText = "It's currently " +
+          hass.states['weather.forecast_home'].state}
+
+          ${icon.setAttribute("icon",
+          getWeatherIcon(hass.states['weather.forecast_home'].state))}
       - type: custom:gap-card
         height: 25
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
       - type: conditional
@@ -1736,6 +1518,9 @@ views:
               - attributes:
                   label: Rom
                   icon: mdi:cube-unfolded
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
                 type: conditional
                 conditions:
                   - condition: screen
@@ -1792,6 +1577,7 @@ views:
                   icon: mdi:human-male-female-child
                   isFadingIndicator: true
                   isMinWidthIndicator: true
+                  stacked: true
                 card:
                   type: vertical-stack
                   cards:
@@ -1824,6 +1610,9 @@ views:
               - attributes:
                   label: Batterioversikt
                   icon: mdi:battery
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
                 card:
                   type: custom:vertical-stack-in-card
                   cards:
@@ -1898,9 +1687,8 @@ views:
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
-                                    background-color: black;
+                                    background-color: var(--secondary-color);
                                     padding: 4px;
-                                    border-radius: 5px;
                                   }
 
                                   bar-card-value {
@@ -1911,11 +1699,11 @@ views:
                                     display: flex;
                                     justify-content: right;
                                     align-items: right;
-                                    background-color: black;
+                                    background-color: var(--secondary-color);
                                     padding: 15px;
                                     padding-left: 60px;
                                     margin-right: 20px;
-                                    border-radius: 10px;
+                                    border-radius: 20px;
                                     width: 40px;
                                   }
 
@@ -1930,6 +1718,9 @@ views:
                                     {% if states(config.entity) == 'unavailable' or states(config.entity) == 'none' or states(config.entity) == 'unknown'%}
                                       var(--primary-color) !important;
                                       --card-mod-icon: mdi:bug !important;
+                                    {% elif states(config.entity) == 'unknown' %}
+                                      var(--primary-color) !important;
+                                      --card-mod-icon: mdi:bug !important;                            
                                     {% elif states(config.entity) == 'full' %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery !important;                              
@@ -1948,323 +1739,37 @@ views:
                                     {% elif states(config.entity) == 'Charging' or states(config.entity) == 'charging' %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:bug !important;                            
-                                    {% elif states(config.entity) | int <= 10 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 10 %}
                                       #ff0026 !important;
                                       --card-mod-icon: mdi:battery-10 !important;
-                                    {% elif states(config.entity) | int <= 20 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 20 %}
                                       #ff4d00 !important;
                                       --card-mod-icon: mdi:battery-20 !important;
-                                    {% elif states(config.entity) | int <= 30 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 30 %}
                                       #ff9900 !important;
                                       --card-mod-icon: mdi:battery-30 !important;
-                                    {% elif states(config.entity) | int <= 40 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 40 %}
                                       #ffcc00 !important;
                                       --card-mod-icon: mdi:battery-40 !important;
-                                    {% elif states(config.entity) | int <= 50 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 50 %}
                                       #e7fc03 !important;
                                       --card-mod-icon: mdi:battery-50 !important;
-                                    {% elif states(config.entity) | int <= 60 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 60 %}
                                       #aaff00 !important;
                                       --card-mod-icon: mdi:battery-60 !important;
-                                    {% elif states(config.entity) | int <= 70 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 70 %}
                                       #aaff00 !important;
                                       --card-mod-icon: mdi:battery-70 !important;
-                                    {% elif states(config.entity) | int <= 80 %}
-                                      #22c402 !important;
-                                      --card-mod-icon: mdi:battery-80 !important;                            
-                                    {% elif states(config.entity) | int <= 90 %}
-                                      #22c402 !important;
-                                      --card-mod-icon: mdi:battery-90 !important;
-                                    {% elif states(config.entity) | int <= 100 %}
-                                      #22c402 !important;
-                                      --card-mod-icon: mdi:battery !important;                              
-                                    {% endif %}
-                                  }
-
-                                  bar-card-row ha-icon {
-                                    color: color-mix(in srgb, var(--bar-color) 100%, transparent);
-                                    margin-top: 15px;
-                                    width: 70px !important;
-                                    height: 70px !important;
-                                    border-radius: 15px;
-                                    display: flex;
-                                    justify-content: center !important;
-                                    align-items: center !important;
-                                    --mdc-icon-size: calc(100% - 6px);
-                                  }
-
-                                  ha-card {
-                                    padding: 0px !important;
-                                    margin: -2px !important;
-                                    height: 90px;
-                                    border-width: 0px;
-                                    background: none;
-                                    --ha-card-box-shadow: 0px;
-                                  }
-                        exclude:
-                          - entity_id: sensor.active_battery_devices_list
-                          - entity_id: sensor.active_low_battery_devices_count
-                      sort:
-                        method: state
-                        numeric: true
-                        ignore_case: false
-                        reverse: false
-                      show_empty: true
-                      card_param: cards
-      - type: conditional
-        conditions:
-          - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
-        card:
-          type: custom:mod-card
-          card_mod:
-            style:
-              .: |
-                ha-card {
-                  --ha-card-border-width: 0.5px;
-                  --ha-card-border-radius: 20px;
-                  --ha-card-background: transparent;
-                } 
-              tabbed-card $:
-                mwc-tab:
-                  $: |
-                    .mdc-tab--active {
-                      background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
-                      border-radius: 5px 5px 0px 0px;
-                    }
-                    mwc-tab:hover {
-                      --mdc-theme-primary: red;
-                      --mdc-tab-color-default: red;
-                        }
-                      
-          card:
-            type: custom:tabbed-card
-            tabs:
-              - attributes:
-                  label: Rom
-                  icon: mdi:cube-unfolded
-                type: conditional
-                conditions:
-                  - condition: screen
-                    media_query: '(min-width: 768px)'
-                card:
-                  type: custom:auto-entities
-                  card:
-                    type: grid
-                    columns: 1
-                    square: false
-                    style:
-                      background-color: var(--primary-color)
-                  card_param: cards
-                  filter:
-                    template: |-
-                      {% for AREA in areas() -%}
-                        {{
-                          {
-                            'type': 'area',
-                            'area': AREA,
-                            'show_camera': 'true',
-                            'camera_view': 'live',
-                            'sensor_classes': [
-                              'temperature',
-                              'humidity',
-                              'energy',
-                              'illuminance',
-                              'aqi'
-                              'battery',
-                              'voltage',
-                              'power_factor',
-                              'apparent_power',
-                              'data_rate',
-                              'co',
-                              'co2',
-                              'date',
-                              'signal_strength',
-                              'volume',
-                              'wind_speed',
-                              'water',
-                            ],
-                            'alert_classes': [
-                              'motion',
-                              'moisture',
-                              'smoke',
-                              'gas',
-                              ],
-                          }
-                        }}
-                        {%- if not loop.last %},{% endif %}
-                      {%- endfor %}
-              - attributes:
-                  label: Brukere
-                  icon: mdi:human-male-female-child
-                  isFadingIndicator: true
-                  isMinWidthIndicator: true
-                card:
-                  type: vertical-stack
-                  cards:
-                    - type: custom:auto-entities
-                      card:
-                        type: glance
-                        show_name: true
-                        show_icon: true
-                        show_state: true
-                      filter:
-                        include:
-                          - entity_id: person.*
-                            options:
-                              type: custom:mini-card
-                        exclude:
-                          - entity_id: person.smarti
-                    - type: custom:auto-entities
-                      card:
-                        type: map
-                        aspect_ratio: '21:9'
-                        default_zoom: 12
-                      filter:
-                        include:
-                          - domain: person
-                            options:
-                              secondary_info: last-changed
-                        exclude:
-                          - entity_id: person.administrator
-                          - entity_id: person.smarti
-              - attributes:
-                  label: Batterioversikt
-                  icon: mdi:battery
-                card:
-                  type: custom:vertical-stack-in-card
-                  cards:
-                    - type: custom:mushroom-chips-card
-                      chips:
-                        - type: template
-                          entity: null
-                          icon: mdi:battery
-                          icon_color: green
-                          content: Batterier
-                          card_mod:
-                            style: |
-                              ha-card {
-                                background: transparent;
-                                border-style: none;
-                              }
-                    - type: custom:auto-entities
-                      card:
-                        type: custom:stack-in-card
-                        card_mod:
-                          style: |
-                            ha-card {
-                              padding-top: 5px;
-                              padding-bottom: 0px;
-                              border-width: 0px;
-                              background: none;
-                              --ha-card-box-shadow: 0px;
-                            }
-                      filter:
-                        include:
-                          - entity_id: sensor.*batter*
-                            options:
-                              type: custom:bar-card
-                              card_mod:
-                                style: >
-                                  bar-card-currentbar, bar-card-backgroundbar {
-                                    border-radius: 12px !important;
-                                    height: 70px !important;
-                                    margin-top: -8px !important;
-                                    width: 100%;
-                                    right: 0.5%;
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                  }
-
-                                  ha-icon {
-                                    position: relative;
-                                    padding: 0px;
-                                    border-radius: 50%;
-                                    display: flex;
-                                    justify-content: center !important;
-                                    align-items: center !important;
-                                    --mdc-icon-size: calc(100% - 6px);
-                                    right: 4px;
-                                  }
-
-                                  bar-card-row, ha-icon {
-                                    color: color-mix(in srgb, var(--bar-color) 100%, transparent) !important;
-                                    background: color-mix(in srgb, var(--bar-color) 20%, transparent);
-                                  }
-
-                                  bar-card-indicator {
-                                    color: color-mix(in srgb, var(--bar-color) 100%, transparent) !important;
-                                    top: -18px;
-                                  }
-
-                                  bar-card-name {
-                                    margin-top: auto !important;
-                                    left: 0px;
-                                    color: white;
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    background-color: black;
-                                    padding: 4px;
-                                    border-radius: 5px;
-                                  }
-
-                                  bar-card-value {
-                                    margin-top: auto !important;
-                                    font-size: 16px;
-                                    width: 0px;
-                                    color: white;
-                                    display: flex;
-                                    justify-content: right;
-                                    align-items: right;
-                                    background-color: black;
-                                    padding: 15px;
-                                    padding-left: 60px;
-                                    margin-right: 20px;
-                                    border-radius: 10px;
-                                    width: 40px;
-                                  }
-
-                                  ha-card {
-                                    margin: -4px 0px !important;
-                                    height: 90px;
-                                  }
-
-                                  bar-card-row bar-card-currentbar, ha-icon,
-                                  bar-card-backgroundbar {
-                                    --bar-color:
-                                    {% if states(config.entity) == 'unavailable' or states(config.entity) == 'none' %}
-                                      MediumSeaGreen !important;
-                                      --card-mod-icon: mdi:bug !important;
-                                    {% elif states(config.entity) | int <= 10 %}
-                                      #ff0026 !important;
-                                      --card-mod-icon: mdi:battery-10 !important;
-                                    {% elif states(config.entity) | int <= 20 %}
-                                      #ff4d00 !important;
-                                      --card-mod-icon: mdi:battery-20 !important;
-                                    {% elif states(config.entity) | int <= 30 %}
-                                      #ff9900 !important;
-                                      --card-mod-icon: mdi:battery-30 !important;
-                                    {% elif states(config.entity) | int <= 40 %}
-                                      #ffcc00 !important;
-                                      --card-mod-icon: mdi:battery-40 !important;
-                                    {% elif states(config.entity) | int <= 50 %}
-                                      #e7fc03 !important;
-                                      --card-mod-icon: mdi:battery-50 !important;
-                                    {% elif states(config.entity) | int <= 60 %}
-                                      #aaff00 !important;
-                                      --card-mod-icon: mdi:battery-60 !important;
-                                    {% elif states(config.entity) | int <= 70 %}
-                                      #aaff00 !important;
-                                      --card-mod-icon: mdi:battery-70 !important;
-                                    {% elif states(config.entity) | int <= 80 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 80 %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery-80 !important;
-                                    {% elif states(config.entity) | int <= 90 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 90 %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery-90 !important;
-                                    {% elif states(config.entity) | int <= 100 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 100 %}
+                                      #22c402 !important;
+                                      --card-mod-icon: mdi:battery !important;
+                                    {% else %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery !important;
                                     {% endif %}
@@ -2300,6 +1805,17 @@ views:
                         reverse: false
                       show_empty: true
                       card_param: cards
+              - attributes:
+                  label: Kalender
+                  icon: mdi:calendar
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
+                card:
+                  type: calendar
+                  entities:
+                    - calendar.kalender
+                    - calendar.familiekalender
       - type: conditional
         conditions:
           - condition: screen
@@ -2327,6 +1843,9 @@ views:
               - attributes:
                   label: Rom
                   icon: mdi:cube-unfolded
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
                 type: conditional
                 conditions:
                   - condition: screen
@@ -2383,6 +1902,7 @@ views:
                   icon: mdi:human-male-female-child
                   isFadingIndicator: true
                   isMinWidthIndicator: true
+                  stacked: true
                 card:
                   type: vertical-stack
                   cards:
@@ -2415,6 +1935,9 @@ views:
               - attributes:
                   label: Batterioversikt
                   icon: mdi:battery
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
                 card:
                   type: custom:vertical-stack-in-card
                   cards:
@@ -2521,6 +2044,9 @@ views:
                                     {% if states(config.entity) == 'unavailable' or states(config.entity) == 'none' or states(config.entity) == 'unknown'%}
                                       var(--primary-color) !important;
                                       --card-mod-icon: mdi:bug !important;
+                                    {% elif states(config.entity) == 'unknown' %}
+                                      var(--primary-color) !important;
+                                      --card-mod-icon: mdi:bug !important;                            
                                     {% elif states(config.entity) == 'full' %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery !important;                              
@@ -2539,36 +2065,39 @@ views:
                                     {% elif states(config.entity) == 'Charging' or states(config.entity) == 'charging' %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:bug !important;                            
-                                    {% elif states(config.entity) | int <= 10 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 10 %}
                                       #ff0026 !important;
                                       --card-mod-icon: mdi:battery-10 !important;
-                                    {% elif states(config.entity) | int <= 20 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 20 %}
                                       #ff4d00 !important;
                                       --card-mod-icon: mdi:battery-20 !important;
-                                    {% elif states(config.entity) | int <= 30 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 30 %}
                                       #ff9900 !important;
                                       --card-mod-icon: mdi:battery-30 !important;
-                                    {% elif states(config.entity) | int <= 40 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 40 %}
                                       #ffcc00 !important;
                                       --card-mod-icon: mdi:battery-40 !important;
-                                    {% elif states(config.entity) | int <= 50 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 50 %}
                                       #e7fc03 !important;
                                       --card-mod-icon: mdi:battery-50 !important;
-                                    {% elif states(config.entity) | int <= 60 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 60 %}
                                       #aaff00 !important;
                                       --card-mod-icon: mdi:battery-60 !important;
-                                    {% elif states(config.entity) | int <= 70 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 70 %}
                                       #aaff00 !important;
                                       --card-mod-icon: mdi:battery-70 !important;
-                                    {% elif states(config.entity) | int <= 80 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 80 %}
                                       #22c402 !important;
-                                      --card-mod-icon: mdi:battery-80 !important;                            
-                                    {% elif states(config.entity) | int <= 90 %}
+                                      --card-mod-icon: mdi:battery-80 !important;
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 90 %}
                                       #22c402 !important;
                                       --card-mod-icon: mdi:battery-90 !important;
-                                    {% elif states(config.entity) | int <= 100 %}
+                                    {% elif states(config.entity) | is_number and states(config.entity) | int <= 100 %}
                                       #22c402 !important;
-                                      --card-mod-icon: mdi:battery !important;                              
+                                      --card-mod-icon: mdi:battery !important;
+                                    {% else %}
+                                      #22c402 !important;
+                                      --card-mod-icon: mdi:battery !important;
                                     {% endif %}
                                   }
 
@@ -2602,9 +2131,20 @@ views:
                         reverse: false
                       show_empty: true
                       card_param: cards
+              - attributes:
+                  label: Kalender
+                  icon: mdi:calendar
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                  stacked: true
+                card:
+                  type: calendar
+                  entities:
+                    - calendar.kalender
+                    - calendar.familiekalender
     type: custom:horizontal-layout
     background: {}
-  - title: Rom
+  - title: Vær
     path: rooms
     icon: mdi:cube-unfolded
     type: custom:horizontal-layout
@@ -3423,7 +2963,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -3443,6 +2983,29 @@ views:
       - type: conditional
         conditions:
           - condition: screen
+            media_query: '(min-width: 0px)'
+        card:
+          type: custom:mod-card
+          card_mod:
+            style:
+              .: |
+                ha-card {
+                  --ha-card-border-width: 0.5px;
+                  --ha-card-border-radius: 20px;
+                  --ha-card-background: transparent;
+                }           
+          card:
+            type: horizontal-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-title-card
+                    title: Vær
+                    subtitle: Værvarsel og værradar
+                    alignment: center
+      - type: conditional
+        conditions:
+          - condition: screen
             media_query: '(min-width: 768px)'
         card:
           type: custom:mod-card
@@ -3457,103 +3020,69 @@ views:
           card:
             type: horizontal-stack
             cards:
-              - type: custom:flex-horseshoe-card
-                entities:
-                  - entity: sensor.forecast_temperature
-                    decimals: 1
-                    name: Nåværende Ute
-                    unit: °C
-                    icon: mdi:thermometer
-                  - entity: sensor.forecast_humidity
-                    decimals: null
-                    unit: '%'
-                    icon: mdi:water-percent
-                    name: Gjenstående
-                  - entity: sensor.forecast_pressure
-                    decimals: 0
-                    unit: null
-                    icon: mdi:gauge
-                    name: Brukt
-                show:
-                  horseshoe_style: lineargradient
-                layout:
-                  hlines:
-                    - id: 0
-                      xpos: 50
-                      ypos: 42
-                      length: 70
-                      styles:
-                        - stroke: var(--primary-text-color);
-                        - stroke-width: 3;
-                        - stroke-linecap: round;
-                        - opacity: 0.7;
-                  states:
-                    - id: 0
-                      entity_index: 0
-                      xpos: 50
-                      ypos: 34
-                      styles:
-                        - font-size: 3em;
-                    - id: 1
-                      entity_index: 1
-                      xpos: 40
-                      ypos: 57
-                      styles:
-                        - text-anchor: start;
-                        - font-size: 2em;
-                    - id: 2
-                      entity_index: 2
-                      xpos: 40
-                      ypos: 72
-                      styles:
-                        - text-anchor: start;
-                        - font-size: 2em;
-                  icons:
-                    - id: 0
-                      entity_index: 1
-                      xpos: 37
-                      ypos: 57
-                      align: end
-                      size: 1.3
-                    - id: 1
-                      entity_index: 2
-                      xpos: 37
-                      ypos: 72
-                      align: end
-                      size: 1.3
-                  names:
-                    - id: 0
-                      entity_index: 0
-                      xpos: 50
-                      ypos: 95
-                horseshoe_scale:
-                  min: -30
-                  max: 50
-                color_stops:
-                  '0': var(--primary-color)
-                  '20': var(--accent-color)
-                card_mod:
-                  style: |
-                    :host {
-                      height: 200px !important;
-                      width: 200px !important;
-                      display: flex !important;
-                      align-items: center;
-                      justify-content: center;
-                    }
-                    ha-card {
-                      height: 100% !important;
-                      width: 100% !important;
-                      padding: 0 !important;
-                      margin: 0 !important;
-                    }
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-title-card
-                    title: Vær
-                    subtitle: Værvarsel og værradar
-                    alignment: center
-              - type: custom:gap-card
+              - type: custom:clock-weather-card
+                entity: weather.forecast_home
+                sun_entity: sun.sun
+                weather_icon_type: line
+                animated_icon: true
+                forecast_rows: 5
+                locale: en-GB
+                time_pattern: HH:mm
+                time_format: 24
+                date_pattern: ccc, d.MM.yy
+                hide_today_section: false
+                hide_forecast_section: false
+                show_humidity: false
+                hide_clock: true
+                hide_date: false
+                hourly_forecast: false
+                use_browser_time: false
+                time_zone: null
+                show_decimal: false
+                apparent_sensor: sensor.real_feel_temperature
+                aqi_sensor: sensor.air_quality_index
+              - type: custom:horizon-card
+      - type: conditional
+        conditions:
+          - condition: screen
+            media_query: '(min-width: 0px) and (max-width: 767px)'
+        card:
+          type: custom:mod-card
+          card_mod:
+            style:
+              .: |
+                ha-card {
+                  --ha-card-border-width: 0.5px;
+                  --ha-card-border-radius: 20px;
+                  --ha-card-background: transparent;
+                }           
+          card:
+            type: vertical-stack
+            cards:
+              - type: custom:clock-weather-card
+                entity: weather.forecast_home
+                sun_entity: sun.sun
+                weather_icon_type: line
+                animated_icon: true
+                forecast_rows: 5
+                locale: en-GB
+                time_pattern: HH:mm
+                time_format: 24
+                date_pattern: ccc, d.MM.yy
+                hide_today_section: false
+                hide_forecast_section: false
+                show_humidity: false
+                hide_clock: true
+                hide_date: false
+                hourly_forecast: false
+                use_browser_time: false
+                time_zone: null
+                show_decimal: false
+                apparent_sensor: sensor.real_feel_temperature
+                aqi_sensor: sensor.air_quality_index
+              - type: custom:horizon-card
+      - type: custom:gap-card
+        height: 25
       - type: custom:mod-card
         card_mod:
           style:
@@ -3657,27 +3186,28 @@ views:
               card:
                 type: vertical-stack
                 cards:
-                  - type: iframe
-                    url: >-
-                      https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=7&overlay=wind&product=ecmwf&level=surface&lat=58.723&lon=7.625
-                    aspect_ratio: 50%
-      - type: custom:weather-radar-card
-        frame_count: 10
-        center_latitude: 58.101
-        marker_longitude: 7.964
-        show_marker: true
-        show_range: true
-        show_zoom: true
-        show_recenter: true
-        show_playback: true
-        zoom_level: 8
-        card_title: awdas
-        center_longitude: 7.964
-        map_style: Dark
-        show_scale: false
-        static_map: false
-        square_map: false
-        extra_labels: false
+                  - type: custom:config-template-card
+                    entities:
+                      - zone.home
+                    card:
+                      type: iframe
+                      url: >-
+                        ${'https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=9&overlay=wind&product=ecmwf&level=surface&lat='
+                        + states['zone.home'].attributes.latitude + '&lon=' +
+                        states['zone.home'].attributes.longitude + '&detailLat='
+                        + states['zone.home'].attributes.latitude +
+                        '&detailLon=' + states['zone.home'].attributes.longitude
+                        + '&marker=true'}
+                      aspect_ratio: 50%
+                  - type: custom:weather-radar-card
+                    card_title: Regnradar
+                    map_style: Dark
+                    zoom_level: 10
+                    show_marker: true
+                    show_scale: false
+                    show_zoom: true
+                    show_range: false
+                    show_playback: false
     background: {}
   - title: Lyskontroll
     path: lights
@@ -4497,7 +4027,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -4602,14 +4132,20 @@ views:
                               | list -%}
                           {%- for light in lights %}
                             {
-                              'type': 'custom:mushroom-light-card',
+                              'type': 'custom:mushroom-light-card',              
                               'entity': '{{ light.entity_id }}',
                               'use_light_color': 'true',
                               'show_brightness_control': 'true',
                               'show_color_control': 'true',
                               'collapsible_controls': 'false',
-                              'show_color_temp_control': 'true'
+                              'show_color_temp_control': 'true',
+                              'styles': {
+                              'card': [
+                                { 'border-radius': '20px'},
+                              ],
+                            },
                             }
+                            
                             {%- if not loop.last %},{% endif %}
                           {%- endfor %}
                           {%- if not loop.last %},{% endif %}
@@ -4649,34 +4185,12 @@ views:
                         }}},
                       {% else %} 
 
-                      {%- for scene in scenes  -%} {{{ 'type':
-                      'custom:button-card',
-                          'entity': scene.entity_id,
-                          'icon': 'mdi:play-circle-outline',
-                          'show_icon': true,
-                          'show_name': true,
-                          'tap_action': {
-                            'action': 'call-service',
-                            'service': 'scene.turn_on',
-                            'service_data': {
-                              'entity_id': scene.entity_id
-                            }
-                          },
-                          'styles': {
-                            'card': [
-                              { 'height': '100px'},
-                              { 'padding': '5px'},
-                              { 'margin-top': '10px'},
-                              { 'max-height:': '150px'},
-                              { 'border-radius': '20px'},
-                            ],
-                            'icon': [
-                              { 'color': 'var(--accent-color)'},                        
-                            ],
-                            'name': [
-                              { 'color': 'var(--secondary-color)'},
-                            ],
-                          }
+                      {%- for scene in scenes  -%}  {{{ 
+                        'type': 'custom:bubble-card',
+                        'card_type': 'button',
+                        'entity': scene.entity_id,
+                        'icon': 'mdi:play',
+                        'show_state': 'true'
                       }}},   {%- endfor %} {%- endif %}
                     exclude:
                       - hidden_by: '*'
@@ -5502,7 +5016,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -5634,7 +5148,7 @@ views:
           tabs:
             - attributes:
                 label: Klimakontroll
-                icon: mdi:fan
+                icon: mdi:home-thermometer
               card:
                 type: custom:mod-card
                 card:
@@ -5686,8 +5200,12 @@ views:
                             },
                             {
                             
-                             'type': 'custom:hui-element',
-                              'card_type': 'horizontal-stack',
+                             "type": "custom:layout-card",
+                              "layout_type": "grid",
+                              "layout": {
+                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                "grid-gap": "0px"
+                              },
                               'cards': [
                                 {%- for device in states.climate
                                    | selectattr('entity_id', 'in', climate_filter)
@@ -5704,6 +5222,8 @@ views:
                           {%- endfor %}
                         ]
                       {% endif %}
+                    exclude:
+                      - hidden_by: '*'
             - attributes:
                 label: Temperatur & fuktighet
                 icon: mdi:thermometer
@@ -5762,8 +5282,12 @@ views:
                               'background_color': 'var(--primary-color)',
                             },
                             {
-                              'type': 'custom:hui-element',
-                              'card_type': 'horizontal-stack',
+                              "type": "custom:layout-card",
+                              "layout_type": "grid",
+                              "layout": {
+                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                "grid-gap": "0px"
+                              },
                               'cards': [
                                 {%- for sensor in states.sensor
                                    | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
@@ -5983,7 +5507,7 @@ views:
                   exclude:
                     - hidden_by: '*'
             - attributes:
-                label: Lufktfuktiere
+                label: Lufktfuktere
                 icon: mdi:air-humidifier
               card:
                 type: custom:mod-card
@@ -6033,6 +5557,82 @@ views:
                                 'entity': '{{ humidifier.entity_id }}'
                               }{%- if not loop.last %},{% endif %}
                             {%- endfor %}
+                            {%- if not loop.last %},{% endif %}
+                          {%- endfor %}
+                        ]
+                      {% endif %}
+                  exclude:
+                    - hidden_by: '*'
+            - attributes:
+                label: Vifter
+                icon: mdi:fan
+              card:
+                type: custom:mod-card
+                card:
+                  type: custom:auto-entities
+                  card:
+                    title: Vifter
+                    type: entities
+                  filter:
+                    template: >-
+                      {% set area_filter = ['area1', 'area2'] %} {% set
+                      fan_filter = states.fan | map(attribute='entity_id') |
+                      list %} {% set areas = states.fan
+                        | map(attribute='entity_id')
+                        | map('area_name') | unique | reject('none') 
+                        | reject('in', area_filter)
+                        | list %}
+
+                      {% if areas | length == 0 %}
+                        [
+                          {
+                            'type': 'custom:button-text-card',
+                            'title': 'No fans found',
+                            'subtitle':'Check if any devices are under "Unassigned devices"',
+                            'icon': 'mdi:fan-off',
+                            'background_color': 'var(--primary-color)',
+                          }
+                        ]
+                      {% else %}
+                        [
+                          {%- for area in areas %}
+                            {
+                              'type': 'custom:button-card',
+                              'styles': {
+                                'card': [
+                                  { 'height': '5px'},
+                                  { 'max-height': '10px'},
+                                  { 'padding': '0'},
+                                  { 'margin': '0'},
+                                  { 'background-color': 'var(--primary-color)'}
+                                ]
+                              }
+                            },
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': '{{ area }}',
+                              'icon': 'mdi:fan',
+                              'background_color': 'var(--primary-color)',
+                            },
+                            {
+                             "type": "custom:layout-card",
+                              "layout_type": "grid",
+                              "layout": {
+                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                "grid-gap": "0px"
+                              },
+                              'cards': [
+                                {%- for device in states.fan
+                                   | selectattr('entity_id', 'in', fan_filter)
+                                   | selectattr('entity_id', 'in', area_entities(area)) %}
+                                  {
+                                    'type': 'fan',
+                                    'entity': '{{ device.entity_id }}',
+                                    'name': '{{ device.attributes.friendly_name }}'
+                                  }{% if not loop.last %},{% endif %}
+                                {%- endfor %}
+                              ]
+                            }
                             {%- if not loop.last %},{% endif %}
                           {%- endfor %}
                         ]
@@ -6860,7 +6460,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -6933,10 +6533,11 @@ views:
                         {
                           'type': 'custom:button-text-card',
                           'title': 'Ingen mediaspillere funnet',
-                          'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                          'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
                           'icon': 'mdi:chat-question',
                           'background_color': 'var(--primary-color)'
-                        }
+                        },
+                        
                       ]
                     {% else %}
                       [
@@ -6960,17 +6561,36 @@ views:
                             'background_color': 'var(--primary-color)'
                           },
                           {
-                            'type': 'custom:hui-element',
-                            'card_type': 'horizontal-stack',
-                            'cards': [
+                            "type": "custom:layout-card",
+                            "layout_type": "grid",
+                            "layout": {
+                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                              "grid-gap": "0px"
+                            },
+                            "cards": [
                               {%- for device in states.media_player
                                   | selectattr('entity_id', 'in', media_filter)
                                   | selectattr('entity_id', 'in', area_entities(area)) %}
                                 {
-                                  'type': 'custom:mushroom-media-player-card',
-                                  'volume_controls': ['volume_mute', 'volume_set', 'volume_buttons'],
-                                  'media_controls': ['on_off', 'shuffle', 'previous', 'play_pause_stop', 'next', 'repeat'],
-                                  'entity': '{{ device.entity_id }}'
+
+                                  'type': 'custom:bubble-card',
+                                  'card_type': 'media-player',
+                                  'name': '{{ device.entity_id.name }}',
+                                  'entity': '{{ device.entity_id }}',
+                                  'show_state': 'true',
+                                  'show_last_updated': 'true',
+                                  'show_attribute': 'true',
+                                  'attribute': 'assumed_state',
+                                  'card_layout': 'large',
+                                  'scrolling_effect': 'false',
+                                  'show_icon': 'true',
+                                  'force_icon': 'true',
+                                  'show_name': 'false',
+                                  'show_last_changed': 'true',
+                                  'tap_action': {
+                                    'action': 'toggle'
+                                  },
+
                                 }{% if not loop.last %},{% endif %}
                               {%- endfor %}
                             ]
@@ -6993,35 +6613,80 @@ views:
                     type: entities
                   filter:
                     template: >-
-                      {% set area_filter = ['area1','area2'] %} {% set filter =
-                      ['switch.switch1','switch.switch2'] %} {%- set areas =
-                      states.switch | rejectattr('entity_id', 'in', filter) |
-                      map(attribute='entity_id') | map('area_name') | unique |
-                      reject('none')  | reject('in', area_filter)      | list
-                      -%}      
+                      {% set area_filter = ['area1', 'area2'] %} {% set filter =
+                      ['switch.switch1', 'switch.switch2'] %}
 
-                      {%- for area in areas  -%} {% set switches = states.switch
-                      | rejectattr('entity_id', 'in', filter) |
-                      selectattr('entity_id', 'in', area_entities(area))  | list
-                      -%}
+                      {%- set areas = states.switch
+                        | rejectattr('entity_id', 'in', filter)
+                        | map(attribute='entity_id')
+                        | map('area_name')
+                        | unique
+                        | reject('none')
+                        | reject('in', area_filter)
+                        | list -%}
 
-                        {{{ 'type': 'custom:button-text-card',
-                            'title': area,
-                            'icon': 'mdi:toggle-switch',
-                            'background_color': 'var(--primary-color)',
-                        }}},
-                        
-                        {%- for switch in switches  -%}
-                            {{{ 'type': 'custom:mushroom-entity-card',              
-                                'entity': switch.entity_id,
-                                'show_icon': 'true',
-                                'show_name': 'true',
-                                'show_state': 'true'
-                                }}},
-
-                        {%- endfor %}{%- endfor %}                    
-                    exclude:
-                      - hidden_by: '*'
+                      {% if areas | length == 0 %}
+                        [
+                          {
+                            "type": "custom:button-text-card",
+                            "title": "Ingen brytere funnet",
+                            "subtitle": "Ingen tilgjengelige brytere i dette området",
+                            "icon": "mdi:toggle-switch-off",
+                            "background_color": "var(--primary-color)"
+                          }
+                        ]
+                      {% else %}
+                        [
+                          {%- for area in areas %}
+                             { 'type': 'custom:button-card',
+                              'styles': {
+                                'card': [
+                                  { 'height': '5px' },
+                                  { 'max-height': '10px' },
+                                  { 'padding': '0' },
+                                  { 'margin': '0' },
+                                  { 'background-color': 'var(--primary-color)' }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "custom:button-text-card",
+                              "title": "{{ area }}",
+                              "icon": "mdi:toggle-switch",
+                              "background_color": "var(--primary-color)"
+                            },
+                            {
+                              "type": "custom:layout-card",
+                              "layout_type": "grid",
+                              "layout": {
+                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                "grid-gap": "0px"
+                              },
+                              "cards": [
+                                {%- set switches = states.switch 
+                                  | rejectattr('entity_id', 'in', filter)
+                                  | selectattr('entity_id', 'in', area_entities(area)) 
+                                  | list -%}
+                                  
+                                {%- for switch in switches -%}
+                                  {
+                                    "type": "custom:bubble-card",
+                                    "card_type": "button",
+                                    "button_type": "switch",
+                                    "force_icon": "true",
+                                    "show_last_changed": "true",
+                                    "show_attribute": "true",
+                                    "card_layout": "normal",
+                                    "entity": "{{ switch.entity_id }}"
+                                  }{%- if not loop.last %},{% endif %}
+                                {%- endfor %}
+                              ]
+                            }{%- if not loop.last %},{% endif %}
+                          {%- endfor %}
+                        ]
+                      {% endif %}
+                  exclude:
+                    - hidden_by: '*'
             - attributes:
                 label: Støvsugere
                 icon: mdi:robot-vacuum
@@ -7134,11 +6799,11 @@ views:
                                     | selectattr('entity_id', 'in', vacuum_filter)
                                     | selectattr('entity_id', 'in', area_entities(area)) %}
                                   {
-                                    'type': 'custom:mushroom-cover-card',
+                                    'type': 'custom:bubble-card',
+                                    'card_type': 'cover',
                                     'entity': '{{ cover.entity_id }}',
-                                    'show_position_control': 'true',
-                                    'show_tilt_position_control': 'false',
-                                    'show_buttons_control': 'true'
+                                    'icon_open': 'mdi:roller-shade',
+                                    'icon_close': 'mdi:roller-shade-closed'
                                   }{% if not loop.last %},{% endif %}
                                 {%- endfor %}
                               ]
@@ -7149,6 +6814,36 @@ views:
                       {% endif %}
                   exclude:
                     - hidden_by: '*'
+            - attributes:
+                label: Unassigned
+                icon: mdi:chat-question
+              card:
+                type: custom:auto-entities
+                card:
+                  type: entities
+                  title: Entities Not Assigned to an Area
+                  show_header_toggle: false
+                filter:
+                  include:
+                    - domain: light
+                      not:
+                        area: '*'
+                    - domain: fan
+                      not:
+                        area: '*'
+                    - domain: switch
+                      not:
+                        area: '*'
+                    - domain: lock
+                      not:
+                        area: '*'
+                    - domain: sensor
+                      attributes:
+                        device_class: temperature
+                      not:
+                        area: '*'
+                  exclude:
+                    - domain: group
     background: {}
   - title: Sikkerhet
     path: cameras
@@ -7960,7 +7655,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -8025,12 +7720,6 @@ views:
                         use_clear_icon: true
                         name: Alarm
                         button_scale_actions: 1.5
-                        card_mod:
-                          style:
-                            .: |
-                              ha-card {
-                                --ha-card-background: var(--primary-disabeled-color);
-                              }
                       - type: horizontal-stack
                         cards:
                           - type: custom:mushroom-chips-card
@@ -8134,9 +7823,13 @@ views:
                                 'background_color': 'var(--primary-color)'
                               },
 
-                              {
-                                'type': 'custom:hui-element',
-                                'card_type': 'horizontal-stack',
+                              {                       
+                                  "type": "custom:layout-card",
+                                  "layout_type": "grid",
+                                  "layout": {
+                                    "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                    "grid-gap": "0px"
+                                  },
                                 'cards': [
                                   {%- for sensor in states.binary_sensor
                                      | selectattr('attributes.device_class', 'in', ['door', 'window'])
@@ -8144,7 +7837,7 @@ views:
                                      | selectattr('entity_id', 'in', area_entities(area)) %}
                                     {
                                       'type': 'custom:mushroom-entity-card',
-                                      'entity': '{{ sensor.entity_id }}'
+                                      'entity': '{{ sensor.entity_id }}',
                                     }{% if not loop.last %},{% endif %}
                                   {%- endfor %}
                                 ]
@@ -9118,7 +8811,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -9196,6 +8889,16 @@ views:
             }
       - type: custom:gap-card
         height: 25
+      - type: energy-date-selection
+        card_mod:
+          style:
+            .: |
+              ha-card {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+              }
       - type: custom:mod-card
         card_mod:
           style:
@@ -9221,16 +8924,6 @@ views:
               card:
                 type: vertical-stack
                 cards:
-                  - type: energy-date-selection
-                    card_mod:
-                      style:
-                        .: |
-                          ha-card {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            flex-direction: column;
-                          }
                   - type: energy-distribution
                     link_dashboard: false
                   - type: custom:tabbed-card
@@ -9307,7 +9000,7 @@ views:
                       navigation_path: /energy
                     layout: vertical
             - attributes:
-                label: Frobruksstatistikk
+                label: Forbruksstatistikk
                 icon: mdi:autorenew
               card:
                 type: vertical-stack
@@ -9372,12 +9065,14 @@ views:
                           - id: powersaver
                             opposite: true
                             decimals: 0
+                            min: 0
+                            max: 1
                             apex_config:
                               tickAmount: 7
                               labels:
-                                show: false
+                                show: true
                               legend:
-                                - show: false
+                                - show: true
                         series:
                           - entity: sensor.strompris_effektiv
                             name: Effektiv Strømpris
@@ -9556,15 +9251,6 @@ views:
                               floating: false
                               forceNiceScale: true
                               extend_to: end
-                            - id: usage
-                              show: true
-                              min: sensor.dynamic_power_min
-                              max: sensor.dynamic_power_max
-                              tickAmount: 6
-                              decimalsInFloat: 0
-                              floating: false
-                              forceNiceScale: true
-                              extend_to: end
                             - id: powersaver
                               show: false
                               decimalsInFloat: 0
@@ -9595,13 +9281,15 @@ views:
                             show:
                               legend_value: true
                           - entity: sensor.powersaver_payload
-                            data_generator: |
-
-                              return entity.attributes.hours.map((entry) => {
-
-                                return [new Date(entry.start), entry.onOff];
-
-                              });
+                            data_generator: >
+                              if (entity.attributes.hours &&
+                              entity.attributes.hours.length > 0) {
+                                return entity.attributes.hours.map((entry) => {
+                                  return [new Date(entry.start), entry.onOff ? 1 : 0];
+                                });
+                              } else {
+                                return [];
+                              }
                             yaxis_id: powersaver
                             name: Power Saver
                             type: area
@@ -9795,90 +9483,99 @@ views:
                             name: Frobruk nåværende time
                             icon: mdi:chart-bell-curve-cumulative
                             icon_color: primary
-            - attributes:
-                label: Instillinger for strøm
-                icon: mdi:lightning-bolt
-              card:
-                type: vertical-stack
-                cards:
-                  - type: vertical-stack
-                    cards:
-                      - type: custom:gap-card
-                      - type: horizontal-stack
-                        cards:
-                          - type: custom:mushroom-select-card
-                            entity: input_select.home_power_measurement_device
-                            icon_color: primary
-                            primary_info: name
-                            secondary_info: last-changed
-                            name: Strømmålerliste
-                          - type: custom:mushroom-template-card
-                            primary: Klikk for å oppdatere strømmålerlisten
-                            secondary: >
-                              Sist Oppdatert: {% set last_triggered =
-                              state_attr('automation.update_power_measurement_device_list',
-                              'last_triggered') %} {% if last_triggered %}
-                                {% set time_diff = (now() - last_triggered).total_seconds() %}
-                                {% if time_diff < 60 %}
-                                  {{ time_diff | round }} seconds ago
-                                {% elif time_diff < 3600 %}
-                                  {{ (time_diff / 60) | round }} minutes ago
-                                {% elif time_diff < 86400 %}
-                                  {{ (time_diff / 3600) | round }} hours ago
-                                {% else %}
-                                  {{ (time_diff / 86400) | round }} days ago
-                                {% endif %}
-                              {% else %}
-                                Never triggered
-                              {% endif %}
-                            icon: mdi:lightning-bolt
-                            badge_icon: mdi:update
-                            badge_color: primary
-                            tap_action:
-                              action: call-service
-                              service: automation.trigger
-                              service_data:
-                                entity_id: >-
-                                  automation.update_power_measurement_device_list
-                            fill_container: true
-                            layout: vertical
-                            card_mod:
-                              style: |
-                                ha-card {
-                                  --ha-card-background: var(--ha-card-background) !important;
-                                }
-                      - type: custom:mushroom-select-card
-                        entity: input_select.frequency_hz
-                        icon_color: primary
-                        primary_info: name
-                        secondary_info: last-changed
-                        name: Frekvens (Hz)
-                      - type: custom:mushroom-select-card
-                        entity: input_select.phases_selection
-                        icon_color: primary
-                        primary_info: name
-                        secondary_info: last-changed
-                        name: Faser
-                      - type: custom:mushroom-select-card
-                        entity: input_select.main_fuse_size
-                        icon_color: primary
-                        primary_info: name
-                        secondary_info: last-changed
-                        name: Hovedsikring (A)
-                      - type: custom:mushroom-select-card
-                        entity: input_select.voltage_level
-                        icon_color: primary
-                        primary_info: name
-                        secondary_info: last-changed
-                        name: Spenningsnivå (V)
-                      - type: custom:mushroom-select-card
-                        entity: input_select.stromsoner
-                        name: Strømsone
-                        icon_color: primary
-                        primary_info: name
-                      - type: custom:mushroom-select-card
-                        entity: input_select.nettselskap
-                        icon_color: primary
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Pris i dag + Forbruk + Powersaver
+        now:
+          show: true
+          label: Nå
+        graph_span: 2d
+        span:
+          start: day
+        apex_config:
+          chart:
+            height: 400px
+          stroke:
+            width: 2
+          dataLabels:
+            enabled: true
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 1
+              inverseColors: true
+              opacityFrom: 0.8
+              opacityTo: 0.2
+          legend:
+            show: true
+          yaxis:
+            - id: price
+              show: true
+              min: 0
+              max: 2.5
+              tickAmount: 6
+              opposite: true
+              decimalsInFloat: 1
+              floating: false
+              forceNiceScale: true
+              extend_to: end
+            - id: usage
+              decimalsInFloat: 0
+              show: true
+              min: 0
+              forceNiceScale: true
+            - id: powersaver
+              show: false
+              decimalsInFloat: 0
+              floating: false
+              extend_to: now
+        series:
+          - entity: sensor.strompris_effektiv
+            yaxis_id: price
+            extend_to: now
+            name: Faktisk strømpris
+            type: area
+            curve: stepline
+            color: tomato
+            float_precision: 2
+            show:
+              legend_value: false
+            data_generator: |
+              return entity.attributes.hours.map((entry) => {
+                return [new Date(entry.start), entry.price];
+              });
+          - entity: sensor.dynamic_power_sensor
+            yaxis_id: usage
+            type: column
+            name: Forbruk
+            time_delta: +30m
+            group_by:
+              func: max
+            show:
+              legend_value: true
+          - entity: sensor.powersaver_payload
+            data_generator: |
+
+              return entity.attributes.hours.map((entry) => {
+
+                return [new Date(entry.start), entry.onOff];
+
+              });
+            yaxis_id: powersaver
+            name: Power Saver
+            type: area
+            color: rgb(0, 255, 0)
+            opacity: 0.1
+            stroke_width: 1
+            curve: stepline
+            group_by:
+              func: max
+            show:
+              legend_value: false
+              in_header: false
+              name_in_header: false
+              datalabels: false
     background: {}
   - title: Innstillinger - Enheter
     path: settings
@@ -10699,7 +10396,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -10833,28 +10530,101 @@ views:
       - type: custom:gap-card
         height: 25
       - type: custom:button-card
-        name: Legg til & administrer Zigbee enheter
-        show_icon: true
+        entity: switch.zigbee2mqtt_bridge_permit_join_3
+        name: Permit Join
         icon: mdi:zigbee
+        show_icon: true
         show_name: true
-        styles:
-          card:
-            - max-height: 100px
-            - justify-content: center
-            - align-items: center
-          icon:
-            - color: var(--primary-color)
-            - max-height: 50px
-            - max-width: 100px
-            - min-height: 20px
-            - min-width: 20px
-          name:
-            - color: var(--primary-color)
-            - font-size: 20px
-            - font-type: bold
+        show_state: true
         tap_action:
-          action: navigate
-          navigation_path: /45df7312_zigbee2mqtt/ingress
+          action: call-service
+          service: switch.toggle
+          service_data:
+            entity_id: switch.zigbee2mqtt_bridge_permit_join_3
+        state:
+          - value: 'on'
+            icon: mdi:zigbee
+            name: Permit Join Enabled
+            styles:
+              card:
+                - background-color: green
+              icon:
+                - color: white
+              name:
+                - color: white
+          - value: 'off'
+            icon: mdi:zigbee
+            name: Permit Join Disabled
+            styles:
+              card:
+                - background-color: red
+              icon:
+                - color: white
+              name:
+                - color: white
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            name: Administrer Zigbee enheter
+            show_icon: true
+            icon: mdi:zigbee
+            show_name: true
+            styles:
+              card:
+                - max-height: 100px
+                - justify-content: center
+                - align-items: center
+              icon:
+                - color: var(--primary-color)
+                - max-height: 50px
+                - max-width: 100px
+                - min-height: 20px
+                - min-width: 20px
+              name:
+                - color: var(--primary-color)
+                - font-size: 20px
+                - font-type: bold
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Administrer Zigbee enheter
+                  content:
+                    type: iframe
+                    url_path: /45df7312_zigbee2mqtt/ingress
+                    style: |
+                      iframe {
+                        width: 100%;
+                        height: 600px;
+                        border: none;
+                      }
+          - type: custom:button-card
+            name: Administrer MQTT
+            show_icon: true
+            icon: mdi:zigbee
+            show_name: true
+            styles:
+              card:
+                - max-height: 100px
+                - justify-content: center
+                - align-items: center
+              icon:
+                - color: var(--primary-color)
+                - max-height: 50px
+                - max-width: 100px
+                - min-height: 20px
+                - min-width: 20px
+              name:
+                - color: var(--primary-color)
+                - font-size: 20px
+                - font-type: bold
+            tap_action:
+              action: navigate
+              navigation_path: >-
+                /config/devices/dashboard?historyBack=1&config_entry=223a19d7a82fa51adcdedf3cf0a54b6b
+      - type: custom:gap-card
+        height: 25
       - type: custom:button-card
         name: Legg til & administrer Z-wave enheter
         show_icon: true
@@ -10926,6 +10696,9 @@ views:
           navigation_path: /config/integrations/integration/matter
       - type: custom:gap-card
         height: 25
+      - type: iframe
+        url: /config/dashboards/
+        aspect_ratio: 50%
     background: {}
   - title: Innstillinger
     path: settings2
@@ -11746,7 +11519,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
@@ -12021,7 +11794,87 @@ views:
                       style: |
                         ha-card {
                           --chip-background: var(--primary-text-color);
-                        }                
+                        } 
+                  - type: vertical-stack
+                    cards:
+                      - type: vertical-stack
+                        cards:
+                          - type: custom:gap-card
+                          - type: horizontal-stack
+                            cards:
+                              - type: custom:mushroom-select-card
+                                entity: input_select.home_power_measurement_device
+                                icon_color: primary
+                                primary_info: name
+                                secondary_info: last-changed
+                                name: Strømmålerliste
+                              - type: custom:mushroom-template-card
+                                primary: Klikk for å oppdatere strømmålerlisten
+                                secondary: >
+                                  Sist Oppdatert: {% set last_triggered =
+                                  state_attr('automation.update_power_measurement_device_list',
+                                  'last_triggered') %} {% if last_triggered %}
+                                    {% set time_diff = (now() - last_triggered).total_seconds() %}
+                                    {% if time_diff < 60 %}
+                                      {{ time_diff | round }} seconds ago
+                                    {% elif time_diff < 3600 %}
+                                      {{ (time_diff / 60) | round }} minutes ago
+                                    {% elif time_diff < 86400 %}
+                                      {{ (time_diff / 3600) | round }} hours ago
+                                    {% else %}
+                                      {{ (time_diff / 86400) | round }} days ago
+                                    {% endif %}
+                                  {% else %}
+                                    Never triggered
+                                  {% endif %}
+                                icon: mdi:lightning-bolt
+                                badge_icon: mdi:update
+                                badge_color: primary
+                                tap_action:
+                                  action: call-service
+                                  service: automation.trigger
+                                  service_data:
+                                    entity_id: >-
+                                      automation.update_power_measurement_device_list
+                                fill_container: true
+                                layout: vertical
+                                card_mod:
+                                  style: |
+                                    ha-card {
+                                      --ha-card-background: var(--ha-card-background) !important;
+                                    }
+                          - type: custom:mushroom-select-card
+                            entity: input_select.frequency_hz
+                            icon_color: primary
+                            primary_info: name
+                            secondary_info: last-changed
+                            name: Frekvens (Hz)
+                          - type: custom:mushroom-select-card
+                            entity: input_select.phases_selection
+                            icon_color: primary
+                            primary_info: name
+                            secondary_info: last-changed
+                            name: Faser
+                          - type: custom:mushroom-select-card
+                            entity: input_select.main_fuse_size
+                            icon_color: primary
+                            primary_info: name
+                            secondary_info: last-changed
+                            name: Hovedsikring (A)
+                          - type: custom:mushroom-select-card
+                            entity: input_select.voltage_level
+                            icon_color: primary
+                            primary_info: name
+                            secondary_info: last-changed
+                            name: Spenningsnivå (V)
+                          - type: custom:mushroom-select-card
+                            entity: input_select.stromsoner
+                            name: Strømsone
+                            icon_color: primary
+                            primary_info: name
+                          - type: custom:mushroom-select-card
+                            entity: input_select.nettselskap
+                            icon_color: primary
             - attributes:
                 label: Oppdateringer
                 icon: mdi:update
@@ -12901,7 +12754,7 @@ views:
                 }  
         visibility:
           - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
+            media_query: '(min-width: 0px)'
       - type: custom:gap-card
         height: 25
         visibility:
