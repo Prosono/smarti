@@ -31,3 +31,20 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     hass.data[DOMAIN].pop(entry.entry_id)
     return True
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """Handle migration of config entry if needed."""
+    _LOGGER.info(f"Migrating SMARTi entry from version {entry.version}")
+
+    # Define the current version of your integration
+    current_version = 1
+
+    if entry.version == current_version:
+        _LOGGER.info("No migration necessary")
+        return True
+
+    # Implement migration logic if needed
+    # For now, we'll assume no changes are needed and simply update the version
+    hass.config_entries.async_update_entry(entry, version=current_version)
+    _LOGGER.info(f"Migration to version {current_version} successful")
+    return True
