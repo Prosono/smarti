@@ -21,6 +21,7 @@ class SmartiUpdaterEntity(UpdateEntity):
         """Initialize the entity."""
         self.hass = hass
         self.entry = entry
+        self.config_data = entry.data  # Store config data
         self._attr_installed_version = entry.version
         self._attr_latest_version = None
         self._attr_release_url = "https://github.com/Prosono/smarti/releases"
@@ -45,16 +46,18 @@ class SmartiUpdaterEntity(UpdateEntity):
             update_available, latest_version = await check_for_update(session, self._attr_installed_version)
             _LOGGER.debug(f"Fetched latest version: {latest_version}")
             self._attr_latest_version = latest_version
-            self._available = update_available
-            self.async_write_ha_state()  # Update the entity state without triggering an install
+            self._attr_installed_version = self.entry.version
+            self._attr_available = True  # Set to True if entity is available
+            self.async_write_ha_state()  # Update the entity state
 
     async def async_install(self, version=None, backup=False):
         """Install the update when triggered by the user."""
         self._attr_in_progress = True
         self.async_write_ha_state()
         async with aiohttp.ClientSession() as session:
-            await update_files(session)  # Perform the update
+            await update_files(session, self.config_data)  # Pass config_data
             await update_manifest_version(self._attr_latest_version)
+            self.hass.config_entries.async_update_entry(self.entry, version=self._attr_latest_version)
         self._attr_installed_version = self._attr_latest_version
         self._attr_in_progress = False
         self.async_write_ha_state()
