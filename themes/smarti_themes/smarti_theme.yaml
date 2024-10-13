@@ -662,11 +662,11 @@ ________________________________________Common Base 4 (Do Not Use):
       card-background-color: "rgb(19,19,19)"
       rgb-card-background-color: "19,19,19"
 
-      ha-card-border-radius: 0
-      ha-config-card-border-radius: 0
-      ha-dialog-border-radius: 0
+      ha-card-border-radius: "20px"
+      ha-config-card-border-radius: "20px"
+      ha-dialog-border-radius: "20px"
       vertical-stack-card-margin: "1px 0px 1px 0px"
-      mush-control-border-radius: 0px
+      mush-control-border-radius: "20px"
       mdc-shape-small: 0
 
       mdc-button-raised-box-shadow: none
@@ -684,12 +684,12 @@ ________________________________________Common Base 4 (Do Not Use):
       card-background-color: "rgba(247,247,247)"
       rgb-card-background-color: "247,247,247"
 
-      ha-card-border-radius: 0
-      ha-config-card-border-radius: 0
-      ha-dialog-border-radius: 0
+      ha-card-border-radius: "20px"
+      ha-config-card-border-radius: "20px"
+      ha-dialog-border-radius: "20px"
       vertical-stack-card-margin: "1px 0px 1px 0px"
-      mush-control-border-radius: 0px
-      mdc-shape-small: 0
+      mush-control-border-radius: "20px"
+      mdc-shape-small: "20px"
 
       mdc-button-raised-box-shadow: none
       mdc-button-raised-box-shadow-hover: none
