@@ -121,7 +121,24 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
+def clear_directory(directory_path: str):
+    """Delete all files in the specified directory."""
+    try:
+        if os.path.exists(directory_path):
+            shutil.rmtree(directory_path)  # Remove the directory and all its contents
+            os.makedirs(directory_path)  # Recreate the directory after clearing it
+            _LOGGER.info(f"Cleared and recreated directory: {directory_path}")
+        else:
+            os.makedirs(directory_path)  # Create the directory if it doesn't exist
+            _LOGGER.info(f"Directory {directory_path} did not exist, so it was created.")
+    except Exception as e:
+        _LOGGER.error(f"Failed to clear directory {directory_path}: {str(e)}")        
+
 async def update_files(session: aiohttp.ClientSession, config_data: dict):
+    # Clear the packages and dashboards directories before downloading new files
+    clear_directory(PACKAGES_PATH)
+    clear_directory(DASHBOARDS_PATH)
+
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
     ensure_directory(SMARTIUPDATER_PATH)
