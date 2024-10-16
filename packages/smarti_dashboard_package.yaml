@@ -1,43 +1,10 @@
 lovelace:
   dashboards:
 
-    smarti-language-english: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi"
-      filename: dashboards/SMARTi_Language_English.yaml
-      icon: mdi:tablet-dashboard
-      show_in_sidebar: true
-
     smarti-language-norsk: # URL path with a hyphen
       mode: yaml
-      title: "SMARTi Lang-age Norsk"
+      title: "SMARTi Norsk"
       filename: dashboards/SMARTi_Language_Norsk.yaml
       show_in_sidebar: false
 
-    smarti-language-dansk: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi - Dansk"
-      filename: dashboards/SMARTi_Language_Dansk.yaml
-      icon: mdi:tablet-dashboard
-      show_in_sidebar: false      
-
-    smarti-language-deutsch: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi - Deutsch"
-      filename: dashboards/SMARTi_Language_Deutsch.yaml
-      icon: mdi:tablet-dashboard
-      show_in_sidebar: false   
-
-    smarti-language-svensk: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi - Svensk"
-      filename: dashboards/SMARTi_Language_Svensk.yaml
-      icon: mdi:tablet-dashboard
-      show_in_sidebar: false         
-
-    smarti-language-francais: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi - Francais"
-      filename: dashboards/SMARTi_Language_francais.yaml
-      icon: mdi:tablet-dashboard
-      show_in_sidebar: false            
+     
