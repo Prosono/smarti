@@ -10536,6 +10536,21 @@ views:
         show_icon: true
         show_name: true
         show_state: true
+        styles:
+          card:
+            - max-height: 100px
+            - justify-content: center
+            - align-items: center
+          icon:
+            - color: var(--primary-color)
+            - max-height: 50px
+            - max-width: 100px
+            - min-height: 20px
+            - min-width: 20px
+          name:
+            - color: var(--primary-color)
+            - font-size: 20px
+            - font-type: bold
         tap_action:
           action: call-service
           service: switch.toggle
@@ -10618,11 +10633,23 @@ views:
               name:
                 - color: var(--primary-color)
                 - font-size: 20px
-                - font-type: bold
+                - font-weight: bold
             tap_action:
-              action: navigate
-              navigation_path: >-
-                /config/devices/dashboard?historyBack=1&config_entry=223a19d7a82fa51adcdedf3cf0a54b6b
+              action: call-service
+              service: browser_mod.popup
+              service_data:
+                title: Administrer Zigbee enheter
+                size: fullscreen
+                content:
+                  type: iframe
+                  url: >-
+                    /config/devices/dashboard?historyBack=1&config_entry=223a19d7a82fa51adcdedf3cf0a54b6b
+                  style: |
+                    iframe {
+                      width: 100%;
+                      height: 600px;
+                      border: none;
+                    }
       - type: custom:gap-card
         height: 25
       - type: custom:button-card
@@ -10696,9 +10723,6 @@ views:
           navigation_path: /config/integrations/integration/matter
       - type: custom:gap-card
         height: 25
-      - type: iframe
-        url: /config/dashboards/
-        aspect_ratio: 50%
     background: {}
   - title: Innstillinger
     path: settings2
