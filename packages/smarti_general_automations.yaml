@@ -338,7 +338,7 @@ automation:
     input:
       timeofday_entity: 04:30:00
 - id: '1718353737319'
-  alias: Reset Hourly Energy Usage
+  alias: SMARTi Reset Hourly Energy Usage
   description: Resets the hourly energy usage calcualted by SMARTi
   trigger:
   - platform: time_pattern
@@ -526,7 +526,7 @@ automation:
     data:
       value: 0
 - id: '1718354467762'
-  alias: Update Current Hour Peak
+  alias: SMARTi - Update Current Hour Peak
   description: Updates the current hour peak value
   trigger:
   - platform: state
