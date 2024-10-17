@@ -139,8 +139,8 @@ async def clear_directory(directory_path: str):
 
 async def update_files(session: aiohttp.ClientSession, config_data: dict):
     # Clear the packages and dashboards directories before downloading new files
-    clear_directory(PACKAGES_PATH)
-    clear_directory(DASHBOARDS_PATH)
+    await clear_directory(PACKAGES_PATH)   # Await the coroutine
+    await clear_directory(DASHBOARDS_PATH) # Await the coroutine
 
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)
