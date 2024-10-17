@@ -11,6 +11,7 @@ input_select:
       - Lede
       - Linja
       - Tensio
+      - Noranett
 
   osnket_trinn:
     name: Ønsket trinn
@@ -126,7 +127,8 @@ sensor:
             'Glitre Nett': 155,
             'Lede': 262,
             'Linja': 275,
-            'Tensio': 144
+            'Tensio': 144,
+            'Noranett': 360
           } %}
           {{ prices.get(nettselskap, 0) }}
         unit_of_measurement: "NOK"
@@ -143,7 +145,8 @@ sensor:
             'Glitre Nett': 195,
             'Lede': 262,
             'Linja': 343,
-            'Tensio': 287
+            'Tensio': 287,
+            'Noranett': 510
           } %}
           {{ prices.get(nettselskap, 0) }}
         unit_of_measurement: "NOK"
@@ -160,7 +163,8 @@ sensor:
             'Glitre Nett': 335,
             'Lede': 449,
             'Linja': 411,
-            'Tensio': 520
+            'Tensio': 520,
+            'Noranett': 740
           } %}
           {{ prices.get(nettselskap, 0) }}
         unit_of_measurement: "NOK"
@@ -177,7 +181,8 @@ sensor:
             'Glitre Nett': 690,
             'Lede': 633,
             'Linja': 686,
-            'Tensio': 789
+            'Tensio': 789,
+            'Noranett': 860
           } %}
           {{ prices.get(nettselskap, 0) }}
         unit_of_measurement: "NOK"
@@ -194,7 +199,8 @@ sensor:
             'Glitre Nett': 900,
             'Lede': 819,
             'Linja': 824,
-            'Tensio': 1057
+            'Tensio': 1057,
+            'Noranett': 1030
           } %}
           {{ prices.get(nettselskap, 0) }}
         unit_of_measurement: "NOK"
