@@ -515,6 +515,14 @@ automation:
   action:
   - service: utility_meter.reset
     entity_id: utility_meter.hourly_energy_usage
+  - service: input_number.set_value
+    target:
+      entity_id: 
+        - input_number.peak_day_1
+        - input_number.peak_day_2
+        - input_number.peak_day_3
+    data:
+      value: 0
 - id: '1718354467762'
   alias: Update Current Hour Peak
   description: Updates the current hour peak value

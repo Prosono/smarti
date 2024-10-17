@@ -8,3 +8,8 @@ lovelace:
       show_in_sidebar: false
 
      
+    smarti-language-english: # URL path with a hyphen
+      mode: yaml
+      title: "SMARTi English"
+      filename: dashboards/SMARTi_Language_English.yaml
+      show_in_sidebar: false
