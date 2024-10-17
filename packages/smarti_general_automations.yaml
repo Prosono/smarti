@@ -380,7 +380,7 @@ automation:
   - service: homeassistant.update_entity
     entity_id: sensor.current_energy_level
 - id: '1718354077935'
-  alias: Calculate Remaining Energy
+  alias: SMARTi Calculate Remaining Energy
   description: Updates the remaining energy for the hours not to break the user limit
   trigger:
   - platform: state
@@ -389,38 +389,40 @@ automation:
   - service: homeassistant.update_entity
     entity_id: sensor.remaining_energy
 - id: '1718354278151'
-  alias: Check Hourly Energy Usage and Alert
-  description: Checks the hourly energy usage against the set value and the peaks
-    and alerts if you are at risk of overstepping the limit
+  alias: SMARTi Check Hourly Energy Usage and Alert
+  description: Checks the hourly energy usage against the set value and the peaks and alerts if you are at risk of overstepping the limit
   trigger:
   - platform: state
     entity_id: input_number.daily_highest_hour
   condition:
   - condition: template
-    value_template: '{% set peak_day_1 = states(''input_number.peak_day_1'') | float
-      %} {% set peak_day_2 = states(''input_number.peak_day_2'') | float %} {% set
-      peak_day_3 = states(''input_number.peak_day_3'') | float %} {% set daily_highest_hour
-      = states(''input_number.daily_highest_hour'') | float %} {% set target_energy
-      = states(''input_number.energy_target'') | float %} {% set average_peak = (peak_day_1
-      + peak_day_2 + peak_day_3) / 3 %} {{ daily_highest_hour > target_energy or average_peak
-      > target_energy }}
+    value_template: >
+      {% set peak_day_1 = states('input_number.peak_day_1') | float(0) %}
+      {% set peak_day_2 = states('input_number.peak_day_2') | float(0) %}
+      {% set peak_day_3 = states('input_number.peak_day_3') | float(0) %}
+      {% set daily_highest_hour = states('input_number.daily_highest_hour') | float(0) %}
+      {% set target_energy = states('input_number.energy_target') | float(0) %}
+      {% set average_peak = (peak_day_1 + peak_day_2 + peak_day_3) / 3 %}
 
-      '
+      {{ (daily_highest_hour > target_energy) or (average_peak > target_energy) }}
+  
   action:
   - service: persistent_notification.create
     data_template:
       title: Energy Alert
-      message: "{% set peak_day_1 = states('input_number.peak_day_1') | float %} {%
-        set peak_day_2 = states('input_number.peak_day_2') | float %} {% set peak_day_3
-        = states('input_number.peak_day_3') | float %} {% set daily_highest_hour =
-        states('input_number.daily_highest_hour') | float %} {% set target_energy
-        = states('input_number.energy_target') | float %} {% set average_peak = (peak_day_1
-        + peak_day_2 + peak_day_3) / 3 %} {% if daily_highest_hour > target_energy
-        %}\n  Daily highest hourly energy usage of {{ daily_highest_hour }} kWh has
-        exceeded the target energy level of {{ target_energy }} kWh.\n{% elif average_peak
-        > target_energy %}\n  The average energy usage over the last 3 days of {{
-        average_peak }} kWh has exceeded the target energy level of {{ target_energy
-        }} kWh.\n{% endif %}\n"
+      message: >
+        {% set peak_day_1 = states('input_number.peak_day_1') | float(0) %}
+        {% set peak_day_2 = states('input_number.peak_day_2') | float(0) %}
+        {% set peak_day_3 = states('input_number.peak_day_3') | float(0) %}
+        {% set daily_highest_hour = states('input_number.daily_highest_hour') | float(0) %}
+        {% set target_energy = states('input_number.energy_target') | float(0) %}
+        {% set average_peak = (peak_day_1 + peak_day_2 + peak_day_3) / 3 %}
+
+        {% if daily_highest_hour > target_energy %}
+          Daily highest hourly energy usage of {{ daily_highest_hour }} kWh has exceeded the target energy level of {{ target_energy }} kWh.
+        {% elif average_peak > target_energy %}
+          The average energy usage over the last 3 days of {{ average_peak }} kWh has exceeded the target energy level of {{ target_energy }} kWh.
+        {% endif %}
 - id: '1718354347241'
   alias: SMARTi Store Daily Peak and Update Monthly Peaks
   description: Stores the daily peaks and updates the monthly peaks
