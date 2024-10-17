@@ -9251,6 +9251,11 @@ views:
                               floating: false
                               forceNiceScale: true
                               extend_to: end
+                            - id: usage
+                              decimalsInFloat: 0
+                              show: true
+                              min: 0
+                              forceNiceScale: true
                             - id: powersaver
                               show: false
                               decimalsInFloat: 0
@@ -9281,15 +9286,13 @@ views:
                             show:
                               legend_value: true
                           - entity: sensor.powersaver_payload
-                            data_generator: >
-                              if (entity.attributes.hours &&
-                              entity.attributes.hours.length > 0) {
-                                return entity.attributes.hours.map((entry) => {
-                                  return [new Date(entry.start), entry.onOff ? 1 : 0];
-                                });
-                              } else {
-                                return [];
-                              }
+                            data_generator: |
+
+                              return entity.attributes.hours.map((entry) => {
+
+                                return [new Date(entry.start), entry.onOff];
+
+                              });
                             yaxis_id: powersaver
                             name: Power Saver
                             type: area
@@ -9483,99 +9486,6 @@ views:
                             name: Frobruk nåværende time
                             icon: mdi:chart-bell-curve-cumulative
                             icon_color: primary
-      - type: custom:apexcharts-card
-        header:
-          show: true
-          title: Pris i dag + Forbruk + Powersaver
-        now:
-          show: true
-          label: Nå
-        graph_span: 2d
-        span:
-          start: day
-        apex_config:
-          chart:
-            height: 400px
-          stroke:
-            width: 2
-          dataLabels:
-            enabled: true
-          fill:
-            type: gradient
-            gradient:
-              shadeIntensity: 1
-              inverseColors: true
-              opacityFrom: 0.8
-              opacityTo: 0.2
-          legend:
-            show: true
-          yaxis:
-            - id: price
-              show: true
-              min: 0
-              max: 2.5
-              tickAmount: 6
-              opposite: true
-              decimalsInFloat: 1
-              floating: false
-              forceNiceScale: true
-              extend_to: end
-            - id: usage
-              decimalsInFloat: 0
-              show: true
-              min: 0
-              forceNiceScale: true
-            - id: powersaver
-              show: false
-              decimalsInFloat: 0
-              floating: false
-              extend_to: now
-        series:
-          - entity: sensor.strompris_effektiv
-            yaxis_id: price
-            extend_to: now
-            name: Faktisk strømpris
-            type: area
-            curve: stepline
-            color: tomato
-            float_precision: 2
-            show:
-              legend_value: false
-            data_generator: |
-              return entity.attributes.hours.map((entry) => {
-                return [new Date(entry.start), entry.price];
-              });
-          - entity: sensor.dynamic_power_sensor
-            yaxis_id: usage
-            type: column
-            name: Forbruk
-            time_delta: +30m
-            group_by:
-              func: max
-            show:
-              legend_value: true
-          - entity: sensor.powersaver_payload
-            data_generator: |
-
-              return entity.attributes.hours.map((entry) => {
-
-                return [new Date(entry.start), entry.onOff];
-
-              });
-            yaxis_id: powersaver
-            name: Power Saver
-            type: area
-            color: rgb(0, 255, 0)
-            opacity: 0.1
-            stroke_width: 1
-            curve: stepline
-            group_by:
-              func: max
-            show:
-              legend_value: false
-              in_header: false
-              name_in_header: false
-              datalabels: false
     background: {}
   - title: Innstillinger - Enheter
     path: settings
