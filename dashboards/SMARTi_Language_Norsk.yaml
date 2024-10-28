@@ -11677,7 +11677,7 @@ views:
                                 primary: Klikk for å oppdatere strømmålerlisten
                                 secondary: >
                                   Sist Oppdatert: {% set last_triggered =
-                                  state_attr('automation.update_power_measurement_device_list',
+                                  state_attr('automation.smarti_update_power_measurement_device_list',
                                   'last_triggered') %} {% if last_triggered %}
                                     {% set time_diff = (now() - last_triggered).total_seconds() %}
                                     {% if time_diff < 60 %}
@@ -11700,7 +11700,7 @@ views:
                                   service: automation.trigger
                                   service_data:
                                     entity_id: >-
-                                      automation.update_power_measurement_device_list
+                                      automation.smarti_update_power_measurement_device_list
                                 fill_container: true
                                 layout: vertical
                                 card_mod:
