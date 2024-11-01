@@ -32,6 +32,19 @@ IMAGES_PATH = "/config/www/images/smarti_images"
 NODE_RED_PATH = "/share/node-red-flows/"
 CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
+FILES_TO_DELETE = [
+    "smarti_custom_cards_package.yaml", 
+    "smarti_dashboard_package.yaml", 
+    "smarti_dynamic_power_sensor_package.yaml",
+    "smarti_general_automations.yaml", 
+    "smarti_general_package.yaml", 
+    "smarti_location_package.yaml",
+    "smarti_navbar_package.yaml", 
+    "smarti_power_control_package.yaml", 
+    "smarti_template_sensors.yaml",
+    "smarti_weather_package.yaml"
+]
+
 _LOGGER = logging.getLogger(__name__)
 
 def log_file_size(filepath: str, description: str):
@@ -123,6 +136,19 @@ def ensure_directory(path: str):
     except Exception as e:
         _LOGGER.error(f"Error creating directory {path}: {str(e)}")
 
+
+async def clear_specific_files(directory: str, files_to_delete: list):
+    """Delete only specific files in the given directory."""
+    for filename in files_to_delete:
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            async with aiofiles.open(file_path, 'r'):
+                await aiofiles.os.remove(file_path)
+                _LOGGER.info(f"Deleted file: {file_path}")
+        else:
+            _LOGGER.info(f"File {file_path} does not exist or is not a file.")
+
+
 async def clear_directory(directory_path: str):
     """Delete all files in the specified directory asynchronously."""
     try:
@@ -139,7 +165,8 @@ async def clear_directory(directory_path: str):
 
 async def update_files(session: aiohttp.ClientSession, config_data: dict):
     # Clear the packages and dashboards directories before downloading new files
-    await clear_directory(PACKAGES_PATH)   # Await the coroutine
+    #await clear_directory(PACKAGES_PATH)   # Await the coroutine
+    await clear_specific_files(PACKAGES_PATH, FILES_TO_DELETE)
     await clear_directory(DASHBOARDS_PATH) # Await the coroutine
 
     ensure_directory(PACKAGES_PATH)
