@@ -42,7 +42,8 @@ FILES_TO_DELETE = [
     "smarti_navbar_package.yaml", 
     "smarti_power_control_package.yaml", 
     "smarti_template_sensors.yaml",
-    "smarti_weather_package.yaml"
+    "smarti_weather_package.yaml",
+    "smarti_powerflow.yaml"
 ]
 
 _LOGGER = logging.getLogger(__name__)
