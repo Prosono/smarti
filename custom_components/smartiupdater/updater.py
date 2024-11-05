@@ -209,17 +209,17 @@ async def update_files(session: aiohttp.ClientSession, config_data: dict):
             await download_file(file_url, dest_path, session)
 
     # Download Node-RED files and log at each step
-    if config_data.get("update_node_red"):
-        node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
-        for file_url in node_red_files:
-            if file_url:
-                file_name = os.path.basename(file_url)  # This should be 'flows.json'
-                dest_path = os.path.join(NODE_RED_PATH, file_name)  # Correctly append 'flows.json'
-                _LOGGER.info(f"Saving Node-RED file to {dest_path}")
-                await download_file(file_url, dest_path, session)
+ #   if config_data.get("update_node_red"):
+ #       node_red_files = await get_files_from_github(NODE_RED_FLOW_URL, session)
+ #       for file_url in node_red_files:
+ #           if file_url:
+ #               file_name = os.path.basename(file_url)  # This should be 'flows.json'
+ #               dest_path = os.path.join(NODE_RED_PATH, file_name)  # Correctly append 'flows.json'
+ #               _LOGGER.info(f"Saving Node-RED file to {dest_path}")
+ #               await download_file(file_url, dest_path, session)
 
-        _LOGGER.info("Starting merge of strømpriser flow.")
-        await merge_strømpriser_flow(session)
+#        _LOGGER.info("Starting merge of strømpriser flow.")
+#        await merge_strømpriser_flow(session)
 
     # Get and download Themes files
     themes_files = await get_files_from_github(THEMES_URL, session)
