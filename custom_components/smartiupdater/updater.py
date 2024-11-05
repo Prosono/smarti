@@ -146,9 +146,8 @@ async def clear_specific_files(directory: str, files_to_delete: list):
     for filename in files_to_delete:
         file_path = os.path.join(directory, filename)
         if os.path.isfile(file_path):
-            async with aiofiles.open(file_path, 'r'):
-                await aiofiles.os.remove(file_path)
-                _LOGGER.info(f"Deleted file: {file_path}")
+            await asyncio.to_thread(os.remove, file_path)
+            _LOGGER.info(f"Deleted file: {file_path}")
         else:
             _LOGGER.info(f"File {file_path} does not exist or is not a file.")
 
