@@ -5,52 +5,47 @@ sensor:
         friendly_name: "Forecast Temperature"
         unit_of_measurement: "°C"
         value_template: "{{ state_attr('weather.forecast_home', 'temperature') }}"
-        
+
       forecast_dew_point:
         friendly_name: "Forecast Dew Point"
         unit_of_measurement: "°C"
         value_template: "{{ state_attr('weather.forecast_home', 'dew_point') }}"
-        
+
       forecast_humidity:
         friendly_name: "Forecast Humidity"
         unit_of_measurement: "%"
         value_template: "{{ state_attr('weather.forecast_home', 'humidity') }}"
-        
+
       forecast_cloud_coverage:
         friendly_name: "Forecast Cloud Coverage"
         unit_of_measurement: "%"
         value_template: "{{ state_attr('weather.forecast_home', 'cloud_coverage') }}"
-        
+
       forecast_pressure:
         friendly_name: "Forecast Pressure"
         unit_of_measurement: "hPa"
         value_template: "{{ state_attr('weather.forecast_home', 'pressure') }}"
-        
+
       forecast_wind_bearing:
         friendly_name: "Forecast Wind Bearing"
         unit_of_measurement: "°"
         value_template: "{{ state_attr('weather.forecast_home', 'wind_bearing') }}"
-        
+
       forecast_wind_gust_speed:
         friendly_name: "Forecast Wind Gust Speed"
         unit_of_measurement: "km/h"
         value_template: "{{ state_attr('weather.forecast_home', 'wind_gust_speed') }}"
-        
+
       forecast_wind_speed:
         friendly_name: "Forecast Wind Speed"
         unit_of_measurement: "km/h"
         value_template: "{{ state_attr('weather.forecast_home', 'wind_speed') }}"
-        
-      forecast_visibility:
-        friendly_name: "Forecast Visibility"
-        unit_of_measurement: "km"
-        value_template: "{{ state_attr('weather.forecast_home', 'visibility_unit') }}"
-        
+
       forecast_precipitation:
         friendly_name: "Forecast Precipitation"
         unit_of_measurement: "mm"
         value_template: "{{ state_attr('weather.forecast_home', 'precipitation_unit') }}"
-        
+
       forecast_attribution:
         friendly_name: "Forecast Attribution"
         value_template: "{{ state_attr('weather.forecast_home', 'attribution') }}"

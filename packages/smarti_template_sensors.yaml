@@ -2,19 +2,41 @@ template:
   - sensor:
       - name: "SMARTi Max Temperature"
         unit_of_measurement: "°C"
+        availability: >
+          {% set temp_sensors = states.sensor
+            | selectattr('attributes.unit_of_measurement', 'in', ['°C', 'C'])
+            | selectattr('state', 'is_number')
+            | list %}
+          {{ temp_sensors | length > 0 }}
         state: >
-          {% set temp_sensors = expand('group.all_temperature_sensors') | selectattr('state', 'is_number') | map(attribute='state') | map('float') %}
-          {% if temp_sensors | length > 0 %}
-            {{ temp_sensors | max }}
+          {% if not is_state('sensor.smarti_max_temperature', 'unavailable') %}
+            {% set temp_values = states.sensor
+              | selectattr('attributes.unit_of_measurement', 'in', ['°C', 'C'])
+              | selectattr('state', 'is_number')
+              | map(attribute='state')
+              | map('float')
+              | list %}
+            {{ temp_values | max }}
           {% else %}
-            Unknown
+            unavailable
           {% endif %}
       - name: "SMARTi Min Temperature"
         unit_of_measurement: "°C"
+        availability: >
+          {% set temp_sensors = states.sensor
+            | selectattr('attributes.unit_of_measurement', 'in', ['°C', 'C'])
+            | selectattr('state', 'is_number')
+            | list %}
+          {{ temp_sensors | length > 0 }}
         state: >
-          {% set temp_sensors = expand('group.all_temperature_sensors') | selectattr('state', 'is_number') | map(attribute='state') | map('float') %}
-          {% if temp_sensors | length > 0 %}
-            {{ temp_sensors | min }}
+          {% if not is_state('sensor.smarti_min_temperature', 'unavailable') %}
+            {% set temp_values = states.sensor
+              | selectattr('attributes.unit_of_measurement', 'in', ['°C', 'C'])
+              | selectattr('state', 'is_number')
+              | map(attribute='state')
+              | map('float')
+              | list %}
+            {{ temp_values | min }}
           {% else %}
-            Unknown
-          {% endif %}          
+            unavailable
+          {% endif %}

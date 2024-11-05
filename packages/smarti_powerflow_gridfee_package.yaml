@@ -1,3 +1,45 @@
+input_boolean:
+  device_turned_off_1:
+    name: Device Turned Off 1
+  device_turned_off_2:
+    name: Device Turned Off 2
+  device_turned_off_3:
+    name: Device Turned Off 3
+  device_turned_off_4:
+    name: Device Turned Off 4
+  device_turned_off_5:
+    name: Device Turned Off 5
+  device_turned_off_6:
+    name: Device Turned Off 6
+  device_turned_off_7:
+    name: Device Turned Off 7
+  device_turned_off_8:
+    name: Device Turned Off 8
+  device_turned_off_9:
+    name: Device Turned Off 9
+  device_turned_off_10:
+    name: Device Turned Off 10
+  device_turned_off_11:
+    name: Device Turned Off 11
+  device_turned_off_12:
+    name: Device Turned Off 12
+  device_turned_off_13:
+    name: Device Turned Off 13
+  device_turned_off_14:
+    name: Device Turned Off 14
+  device_turned_off_15:
+    name: Device Turned Off 15
+  device_turned_off_16:
+    name: Device Turned Off 16
+  device_turned_off_17:
+    name: Device Turned Off 17
+  device_turned_off_18:
+    name: Device Turned Off 18
+  device_turned_off_19:
+    name: Device Turned Off 19
+  device_turned_off_20:
+    name: Device Turned Off 20
+
 input_select:
   # Dropdowns for adding new devices to categories
   new_category_1_device:
@@ -73,6 +115,47 @@ input_text:
   category_3_devices:
     name: Devices in Category 3
     max: 255
+
+  hvac_mode_1:
+    name: HVAC Mode 1
+  hvac_mode_2:
+    name: HVAC Mode 2
+  hvac_mode_3:
+    name: HVAC Mode 3
+  hvac_mode_4:
+    name: HVAC Mode 4
+  hvac_mode_5:
+    name: HVAC Mode 5
+  hvac_mode_6:
+    name: HVAC Mode 6
+  hvac_mode_7:
+    name: HVAC Mode 7
+  hvac_mode_8:
+    name: HVAC Mode 8
+  hvac_mode_9:
+    name: HVAC Mode 9
+  hvac_mode_10:
+    name: HVAC Mode 10
+  hvac_mode_11:
+    name: HVAC Mode 11
+  hvac_mode_12:
+    name: HVAC Mode 12
+  hvac_mode_13:
+    name: HVAC Mode 13
+  hvac_mode_14:
+    name: HVAC Mode 14
+  hvac_mode_15:
+    name: HVAC Mode 15
+  hvac_mode_16:
+    name: HVAC Mode 16
+  hvac_mode_17:
+    name: HVAC Mode 17
+  hvac_mode_18:
+    name: HVAC Mode 18
+  hvac_mode_19:
+    name: HVAC Mode 19
+  hvac_mode_20:
+    name: HVAC Mode 20
 
 template:
   - sensor:
@@ -555,3 +638,56 @@ automation:
             {% else %}
               {{ current_text.split(',') | list }}
             {% endif %}
+
+calculate_power_gap_to_turn_on:
+  - alias: Turn On Devices After Power Gap Is Resolved
+    trigger:
+      - platform: template
+        value_template: "{{ states('sensor.dynamic_power_sensor') | float(0) < (states('input_number.energy_target') | float(0) * 1000) }}"
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.dynamic_power_sensor') | float(0) < (states('input_number.energy_target') | float(0) * 1000) }}"
+    action:
+      - variables:
+          category_1_devices: "{{ state_attr('input_select.category_1_devices', 'options') | select('!=', 'No devices added') | list }}"
+      - repeat:
+          count: 20
+          sequence:
+            - variables:
+                entity_id: "{{ category_1_devices[repeat.index - 1] if repeat.index - 1 < category_1_devices | length else None }}"
+                input_boolean_id: "input_boolean.device_turned_off_{{ repeat.index }}"
+
+            # Only proceed if the input boolean is on, indicating the device was turned off by the power management automation
+            - condition: state
+              entity_id: "{{ input_boolean_id }}"
+              state: "on"
+
+            # Choose action to turn device back on based on its type
+            - choose:
+                - conditions:
+                    - condition: template
+                      value_template: "{{ entity_id.startswith('climate.') }}"
+                  sequence:
+                    - service: climate.set_hvac_mode
+                      target:
+                        entity_id: "{{ entity_id }}"
+                      data:
+                        hvac_mode: "auto"
+
+                - conditions:
+                    - condition: template
+                      value_template: "{{ entity_id.startswith('switch.') }}"
+                  sequence:
+                    - service: homeassistant.turn_on
+                      target:
+                        entity_id: "{{ entity_id }}"
+
+            # Reset the input boolean to 'off' after turning the device back on
+            - service: input_boolean.turn_off
+              target:
+                entity_id: "{{ input_boolean_id }}"
+
+      - service: logbook.log
+        data:
+          name: "Power Management"
+          message: "Devices in Category 1 turned back on as power usage is within target."

@@ -100,7 +100,6 @@ input_number:
     step: 0.1
     mode: box
 
-
 utility_meter:
   hourly_energy_usage:
     source: sensor.energy_consumed
@@ -232,7 +231,6 @@ sensor:
 
       remaining_energy:
         value_template: >
-          {% set current_hourly_usage = states('sensor.hourly_energy_usage') | float(0) %}
+          {% set current_hourly_usage = states('utility_meter.hourly_energy_usage') | float(0) %}
           {% set target = states('input_number.energy_target') | float(0) %}
           {{ target - current_hourly_usage }}
-

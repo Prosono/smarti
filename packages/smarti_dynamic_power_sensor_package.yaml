@@ -2,7 +2,7 @@ template:
   - sensor:
       - name: "available_power_sensors_part1"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -12,7 +12,7 @@ template:
 
       - name: "available_power_sensors_part2"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -22,7 +22,7 @@ template:
 
       - name: "available_power_sensors_part3"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -32,7 +32,7 @@ template:
 
       - name: "available_power_sensors_part4"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -42,7 +42,7 @@ template:
 
       - name: "available_power_sensors_part5"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -52,7 +52,7 @@ template:
 
       - name: "available_power_sensors_part6"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -62,7 +62,7 @@ template:
 
       - name: "available_power_sensors_part7"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -72,7 +72,7 @@ template:
 
       - name: "available_power_sensors_part8"
         state: >
-          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_power_consumption', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.hourly_energy_usage', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
+          {%- set excluded_sensors = ['sensor.available_power_this_hour', 'sensor.dynamic_power_sensor', 'sensor.monthly_peak_energy', 'sensor.hourly_energy_consumed', 'sensor.dynamic_power_max', 'sensor.dynamic_power_min', 'sensor.energy_consumed', 'sensor.energy_used_this_hour', 'sensor.energy_estimate_this_hour', 'sensor.average_peak_hour_energy', 'sensor.energy_level_upper_threshold'] %}
           {%- set sensors = states.sensor
               | selectattr('attributes.unit_of_measurement', 'in', ['W', 'kWh'])
               | rejectattr('entity_id', 'in', excluded_sensors)
@@ -157,4 +157,3 @@ input_select:
     options:
       - None
     icon: mdi:flash
-
