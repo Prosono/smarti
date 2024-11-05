@@ -828,6 +828,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -930,171 +935,201 @@ views:
                   background-color: var(--primary-color);
                   position: sticky;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center0
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center0
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - color: var(--primary-color)
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Security
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - color: var(--primary-color)
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Security
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -1281,7 +1316,7 @@ views:
                     unit: kr nettleie
                     icon: mdi:chart-bar
                     name: nettleie
-                  - entity: sensor.nordpool_kwh_no5_nok_3_10_025
+                  - entity: sensor.nordpool_kwh_no2_nok_3_10_025
                     decimals: 2
                     unit: NOK
                     icon: mdi:gauge
@@ -1394,7 +1429,7 @@ views:
                     unit: kr nettleie
                     icon: mdi:chart-bar
                     name: nettleie
-                  - entity: sensor.nordpool_kwh_no4_nok_3_10_025
+                  - entity: sensor.nordpool_kwh_no2_nok_3_10_025
                     decimals: 1
                     unit: NOK
                     icon: mdi:gauge
@@ -1419,6 +1454,7 @@ views:
                       ypos: 34
                       styles:
                         - font-size: 2em;
+                        - font-size: calc(2em + 1vw);
                     - id: 1
                       entity_index: 1
                       xpos: 40
@@ -1426,6 +1462,7 @@ views:
                       styles:
                         - text-anchor: start;
                         - font-size: 1em;
+                        - font-size: calc(1em + 0.5vw);
                     - id: 2
                       entity_index: 2
                       xpos: 40
@@ -1433,19 +1470,20 @@ views:
                       styles:
                         - text-anchor: start;
                         - font-size: 1em;
+                        - font-size: calc(1em + 0.5vw);
                   icons:
                     - id: 0
                       entity_index: 1
                       xpos: 37
                       ypos: 57
                       align: end
-                      size: 0.5
+                      size: calc(0.5em + 1vw);
                     - id: 1
                       entity_index: 2
                       xpos: 37
                       ypos: 72
                       align: end
-                      size: 0.5
+                      size: calc(0.5em + 1vw);
                   names:
                     - id: 0
                       entity_index: 0
@@ -1798,6 +1836,13 @@ views:
                         exclude:
                           - entity_id: sensor.active_battery_devices_list
                           - entity_id: sensor.active_low_battery_devices_count
+                          - entity_id: sensor.active_battery_devices_list
+                          - entity_id: sensor.active_low_battery_devices_count
+                          - entity_id: '*phone*'
+                          - entity_id: '*browser*'
+                          - entity_id: '*watch*'
+                          - entity_id: '*pad*'
+                          - entity_id: '*tablet*'
                       sort:
                         method: state
                         numeric: true
@@ -1814,7 +1859,8 @@ views:
                 card:
                   type: calendar
                   entities:
-                    - calendar.calendar
+                    - calendar.kalender
+                    - calendar.familiekalender
       - type: conditional
         conditions:
           - condition: screen
@@ -2011,9 +2057,8 @@ views:
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
-                                    background-color: black;
+                                    background-color: var(--secondary-color);
                                     padding: 4px;
-                                    border-radius: 5px;
                                   }
 
                                   bar-card-value {
@@ -2024,11 +2069,11 @@ views:
                                     display: flex;
                                     justify-content: right;
                                     align-items: right;
-                                    background-color: black;
+                                    background-color: var(--secondary-color);
                                     padding: 15px;
                                     padding-left: 60px;
                                     margin-right: 20px;
-                                    border-radius: 10px;
+                                    border-radius: 20px;
                                     width: 40px;
                                   }
 
@@ -2123,6 +2168,13 @@ views:
                         exclude:
                           - entity_id: sensor.active_battery_devices_list
                           - entity_id: sensor.active_low_battery_devices_count
+                          - entity_id: sensor.active_battery_devices_list
+                          - entity_id: sensor.active_low_battery_devices_count
+                          - entity_id: '*phone*'
+                          - entity_id: '*browser*'
+                          - entity_id: '*watch*'
+                          - entity_id: '*pad*'
+                          - entity_id: '*tablet*'
                       sort:
                         method: state
                         numeric: true
@@ -2770,170 +2822,200 @@ views:
                   border-radius: 5px 5px 5px 15px;
 
                 }
-          - type: custom:button-card
-            name: Vær
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                  background-color: var(--primary-color);
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Vær
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                    background-color: var(--primary-color);
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Security
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Security
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -3835,169 +3917,199 @@ views:
                   border-radius: 5px 5px 5px 15px;
 
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
-                  background-color: var(--primary-color);
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Security
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
+                    background-color: var(--primary-color);
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Security
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -4820,173 +4932,203 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px; 
-                  background-color: var(--primary-color);     
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px; 
+                    background-color: var(--primary-color);     
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -6265,172 +6407,202 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;  
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                  background-color: var(--primary-color);  
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;  
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                    background-color: var(--primary-color);  
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -6843,6 +7015,7 @@ views:
                         area: '*'
                   exclude:
                     - domain: group
+                    - entity_id: '*screen*'
     background: {}
   - title: Sikkerhet
     path: cameras
@@ -7460,172 +7633,202 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;      
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                  background-color: var(--primary-color);          
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;      
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                    background-color: var(--primary-color);          
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -8617,171 +8820,201 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;      
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;          
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                  background-color: var(--primary-color);          
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;      
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;          
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                    background-color: var(--primary-color);          
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -9027,15 +9260,6 @@ views:
                             wide: true
                             show_names: true
                             show_icons: false
-                            visibility:
-                              - condition: state
-                                entity: sensor.dynamic_power_sensor
-                                state: ''
-                              - condition: or
-                                conditions:
-                                  - condition: state
-                                    entity: sensor.dynamic_power_sensor
-                                    state: unavailable
             - attributes:
                 label: Pris
                 icon: mdi:currency-usd
@@ -10121,171 +10345,201 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;      
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;          
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;         
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;      
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;          
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;         
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -10494,7 +10748,7 @@ views:
           action: navigate
           navigation_path: /a0d7b954_zwavejs2mqtt/ingress
       - type: custom:button-card
-        name: Legg til & administrer Wifi enheter
+        name: Legg til & administrer Wifi & Bluetooth enheter
         show_icon: true
         icon: mdi:wifi
         show_name: true
@@ -10516,29 +10770,6 @@ views:
         tap_action:
           action: navigate
           navigation_path: /config/integrations/dashboard
-      - type: custom:button-card
-        name: Legg til & administrer Bluetooth enheter
-        show_icon: true
-        icon: mdi:bluetooth
-        show_name: true
-        styles:
-          card:
-            - max-height: 100px
-            - justify-content: center
-            - align-items: center
-          icon:
-            - color: var(--primary-color)
-            - max-height: 50px
-            - max-width: 100px
-            - min-height: 20px
-            - min-width: 20px
-          name:
-            - color: var(--primary-color)
-            - font-size: 20px
-            - font-type: bold
-        tap_action:
-          action: navigate
-          navigation_path: /config/integrations/integration/bluetooth
       - type: custom:button-card
         name: Legg til & administrer Matter enheter
         show_icon: true
@@ -10564,6 +10795,30 @@ views:
           navigation_path: /config/integrations/integration/matter
       - type: custom:gap-card
         height: 25
+      - type: entities
+        entities:
+          - entity: input_boolean.show_climate_tab
+            name: Show Climate Tab
+      - type: entities
+        entities:
+          - entity: input_boolean.show_light_tab
+            name: Show Light Tab
+      - type: entities
+        entities:
+          - entity: input_boolean.show_misc_tab
+            name: Show Misc Tab
+      - type: entities
+        entities:
+          - entity: input_boolean.show_security_tab
+            name: Show Security Tab
+      - type: entities
+        entities:
+          - entity: input_boolean.show_weather_tab
+            name: Show Weather Tab
+      - type: entities
+        entities:
+          - entity: input_boolean.show_energy_tab
+            name: Show Energy Tab
     background: {}
   - title: Innstillinger
     path: settings2
@@ -11191,171 +11446,201 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;      
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;          
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;         
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;      
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;          
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;         
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -11677,7 +11962,7 @@ views:
                                 primary: Klikk for å oppdatere strømmålerlisten
                                 secondary: >
                                   Sist Oppdatert: {% set last_triggered =
-                                  state_attr('automation.smarti_update_power_measurement_device_list',
+                                  state_attr('automation.update_power_measurement_device_list',
                                   'last_triggered') %} {% if last_triggered %}
                                     {% set time_diff = (now() - last_triggered).total_seconds() %}
                                     {% if time_diff < 60 %}
@@ -11700,7 +11985,7 @@ views:
                                   service: automation.trigger
                                   service_data:
                                     entity_id: >-
-                                      automation.smarti_update_power_measurement_device_list
+                                      automation.update_power_measurement_device_list
                                 fill_container: true
                                 layout: vertical
                                 card_mod:
@@ -12426,171 +12711,201 @@ views:
                 ha-card {
                   border-radius: 5px 5px 5px 15px;
                 }
-          - type: custom:button-card
-            name: Rooms
-            show_icon: true
-            icon: mdi:weather-partly-cloudy
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: rooms#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;
-                }
-          - type: custom:button-card
-            name: Light Control
-            show_icon: true
-            icon: mdi:lightbulb-group
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            state:
-              - value: 'on'
-                styles:
-                  card:
-                    - background-color: '#FF7000'
-            tap_action:
-              action: navigate
-              navigation_path: lights#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;   
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_weather_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Rooms
+              show_icon: true
+              icon: mdi:weather-partly-cloudy
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: rooms#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_light_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Light Control
+              show_icon: true
+              icon: mdi:lightbulb-group
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              state:
+                - value: 'on'
+                  styles:
+                    card:
+                      - background-color: '#FF7000'
+              tap_action:
+                action: navigate
+                navigation_path: lights#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;   
 
-                }  
-          - type: custom:button-card
-            name: Heating Control
-            show_icon: true
-            icon: mdi:thermometer-water
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: heating#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;      
-                }
-          - type: custom:button-card
-            name: Multimedia
-            show_icon: true
-            icon: mdi:multimedia
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - color: black
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: multimedia#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;    
-                }
-          - type: custom:button-card
-            name: Cameras
-            show_icon: true
-            icon: mdi:shield
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: cameras#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;          
-                }
-          - type: custom:button-card
-            name: Power Control
-            show_icon: true
-            icon: mdi:lightning-bolt
-            show_name: false
-            styles:
-              card:
-                - max-height: 50px
-                - justify-content: center
-                - align-items: center
-              icon:
-                - max-height: 30px
-                - max-width: 30px
-                - min-height: 30px
-                - min-width: 20px
-                - color: var(--primary-color)
-              name:
-                - color: black
-            tap_action:
-              action: navigate
-              navigation_path: power#
-            card_mod:
-              style: |
-                ha-card {
-                  border-radius: 5px 5px 5px 5px;         
-                }
+                  }  
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_climate_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Heating Control
+              show_icon: true
+              icon: mdi:thermometer-water
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: heating#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;      
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_misc_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Multimedia
+              show_icon: true
+              icon: mdi:multimedia
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - color: black
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: multimedia#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;    
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_security_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Cameras
+              show_icon: true
+              icon: mdi:shield
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: cameras#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;          
+                  }
+          - type: conditional
+            conditions:
+              - entity: input_boolean.show_energy_tab
+                state: 'on'
+            card:
+              type: custom:button-card
+              name: Power Control
+              show_icon: true
+              icon: mdi:lightning-bolt
+              show_name: false
+              styles:
+                card:
+                  - max-height: 50px
+                  - justify-content: center
+                  - align-items: center
+                icon:
+                  - max-height: 30px
+                  - max-width: 30px
+                  - min-height: 30px
+                  - min-width: 20px
+                  - color: var(--primary-color)
+                name:
+                  - color: black
+              tap_action:
+                action: navigate
+                navigation_path: power#
+              card_mod:
+                style: |
+                  ha-card {
+                    border-radius: 5px 5px 5px 5px;         
+                  }
           - type: custom:button-card
             name: Settings
             show_icon: true
@@ -12848,7 +13163,7 @@ views:
                   - font-size: 20px
                   - font-type: bold
             - type: custom:uptime-card
-              entity: binary_sensor.8_8_8_8
+              entity: binary_sensor.internet
               hours_to_show: 96
               title_adaptive_color: true
               status_adaptive_color: true
