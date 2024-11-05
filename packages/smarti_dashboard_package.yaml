@@ -14,6 +14,12 @@ lovelace:
       filename: dashboards/SMARTi_Language_English.yaml
       show_in_sidebar: false
 
+    smarti-power-control: # URL path with a hyphen
+      mode: yaml
+      title: "SMARTi Power Control"
+      filename: dashboards/SMARTi_Power_Control_Page.yaml
+      show_in_sidebar: true
+
 
 input_boolean:
   show_energy_tab:
