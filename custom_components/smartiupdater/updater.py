@@ -32,7 +32,7 @@ IMAGES_PATH = "/config/www/images/smarti_images"
 #NODE_RED_PATH = "/share/node-red-flows/"
 CUSTOM_CARD_RADAR_PATH = "/config/www/community/weather-radar-card/"
 
-FILES_TO_DELETE = [
+PACKAGES_FILES_TO_DELETE = [
     "smarti_custom_cards_package.yaml", 
     "smarti_dashboard_package.yaml", 
     "smarti_dashboard_settings.yaml",
@@ -46,8 +46,14 @@ FILES_TO_DELETE = [
     "smarti_powerflow_gridfee_package.yaml",
     "smarti_template_sensors.yaml",
     "smarti_weather_package.yaml",
+    "smarti_translation_package.yaml",
     "smarti_powerflow_gridfee_automations"
 ]
+
+DASHBOARDS_FILES_TO_DELETE = {
+    "SMARTi_Language_Norsk.yaml",
+    "SMARTi_Language_English.yaml"
+}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -169,8 +175,9 @@ async def clear_directory(directory_path: str):
 async def update_files(session: aiohttp.ClientSession, config_data: dict):
     # Clear the packages and dashboards directories before downloading new files
     #await clear_directory(PACKAGES_PATH)   # Await the coroutine
-    await clear_specific_files(PACKAGES_PATH, FILES_TO_DELETE)
-    await clear_directory(DASHBOARDS_PATH) # Await the coroutine
+    await clear_specific_files(PACKAGES_PATH, PACKAGES_FILES_TO_DELETE)
+    await clear_specific_files(DASHBOARDS_PATH, DASHBOARDS_FILES_TO_DELETE)
+    #await clear_directory(DASHBOARDS_PATH) # Await the coroutine
 
     ensure_directory(PACKAGES_PATH)
     ensure_directory(DASHBOARDS_PATH)

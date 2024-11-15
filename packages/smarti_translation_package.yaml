@@ -1,0 +1,165 @@
+input_select:
+  language:
+    name: Language
+    options:
+      - English
+      - Norwegian
+      - German
+      - French
+    initial: English
+
+template:
+  - sensor:
+      # General names and expressions
+
+      # Sidebar
+      - name: "Home"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Hjem
+          {% elif is_state('input_select.language', 'French') %}
+            Accueil
+          {% elif is_state('input_select.language', 'German') %}
+            Startseite
+          {% else %}
+            Home
+          {% endif %}
+
+      - name: "Weather"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Vær
+          {% elif is_state('input_select.language', 'French') %}
+            Météo
+          {% elif is_state('input_select.language', 'German') %}
+            Wetter
+          {% else %}
+            Weather
+          {% endif %}
+
+      - name: "Light Control"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Lysstyring
+          {% elif is_state('input_select.language', 'French') %}
+            Contrôle de l'éclairage
+          {% elif is_state('input_select.language', 'German') %}
+            Lichtsteuerung
+          {% else %}
+            Light Control
+          {% endif %}
+
+      - name: "Climate Control"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Klimakontroll
+          {% elif is_state('input_select.language', 'French') %}
+            Contrôle du climat
+          {% elif is_state('input_select.language', 'German') %}
+            Klimasteuerung
+          {% else %}
+            Climate Control
+          {% endif %}
+
+      # General Text and Expressions
+      - name: "Grid Fee"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Nettleie
+          {% elif is_state('input_select.language', 'French') %}
+            Frais de réseau
+          {% elif is_state('input_select.language', 'German') %}
+            Netzgebühr
+          {% else %}
+            Grid Fee
+          {% endif %}
+
+      - name: "Electricity Price"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Strømpris
+          {% elif is_state('input_select.language', 'French') %}
+            Prix de l'électricité
+          {% elif is_state('input_select.language', 'German') %}
+            Strompreis
+          {% else %}
+            Electricity Price
+          {% endif %}
+
+      # Home Page
+      - name: "Home Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Hjem
+          {% elif is_state('input_select.language', 'French') %}
+            Accueil
+          {% elif is_state('input_select.language', 'German') %}
+            Startseite
+          {% else %}
+            Home
+          {% endif %}
+
+      - name: "Home Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Rom, brukere & batterioversikt
+          {% elif is_state('input_select.language', 'French') %}
+            Pièces, utilisateurs & aperçu des batteries
+          {% elif is_state('input_select.language', 'German') %}
+            Räume, Benutzer & Batterieübersicht
+          {% else %}
+            Rooms, users & battery overview
+          {% endif %}
+
+      # Weather Page
+
+      # All Tabbed cards
+
+      # Home Page Tab Desktop
+      - name: "Tabbed Card Home Page Room Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Rom
+          {% elif is_state('input_select.language', 'French') %}
+            Pièces
+          {% elif is_state('input_select.language', 'German') %}
+            Räume
+          {% else %}
+            Rooms
+          {% endif %}
+
+      - name: "Tabbed Card Home Page Users Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Brukere
+          {% elif is_state('input_select.language', 'French') %}
+            Utilisateurs
+          {% elif is_state('input_select.language', 'German') %}
+            Benutzer
+          {% else %}
+            Users
+          {% endif %}
+
+      - name: "Tabbed Card Home Page Batteries Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Batterioversikt
+          {% elif is_state('input_select.language', 'French') %}
+            Aperçu des batteries
+          {% elif is_state('input_select.language', 'German') %}
+            Batterieübersicht
+          {% else %}
+            Battery Overview
+          {% endif %}
+
+      - name: "Tabbed Card Home Page Calendar Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Kalender
+          {% elif is_state('input_select.language', 'French') %}
+            Calendrier
+          {% elif is_state('input_select.language', 'German') %}
+            Kalender
+          {% else %}
+            Calendar
+          {% endif %}
