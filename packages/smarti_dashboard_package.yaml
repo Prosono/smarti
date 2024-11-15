@@ -3,7 +3,7 @@ lovelace:
     smartiDash: # URL path with a hyphen
       mode: yaml
       title: "SMARTi Dash"
-      filename: dashboards/SMARTi.yaml
+      filename: dashboards/SMARTi_Dash.yaml
       show_in_sidebar: true
 
     smarti-power-control: # URL path with a hyphen
