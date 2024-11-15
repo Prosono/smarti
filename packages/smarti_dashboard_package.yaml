@@ -1,100 +1,13 @@
 lovelace:
   dashboards:
-
-    smarti-language-norsk: # URL path with a hyphen
+    smartiDash: # URL path with a hyphen
       mode: yaml
-      title: "SMARTi Norsk"
-      filename: dashboards/SMARTi_Language_Norsk.yaml
-      show_in_sidebar: false
-
-     
-    smarti-language-english: # URL path with a hyphen
-      mode: yaml
-      title: "SMARTi English"
-      filename: dashboards/SMARTi_Language_English.yaml
-      show_in_sidebar: false
+      title: "SMARTi Dash"
+      filename: dashboards/SMARTi.yaml
+      show_in_sidebar: true
 
     smarti-power-control: # URL path with a hyphen
       mode: yaml
       title: "SMARTi Power Control"
       filename: dashboards/SMARTi_Power_Control_Page.yaml
       show_in_sidebar: true
-
-
-input_boolean:
-  show_energy_tab:
-    name: Show Energy Tab
-    icon: mdi:flash
-
-  show_weather_tab:
-    name: Show Weather Tab
-    icon: mdi:weather-cloudy
-
-  show_light_tab:
-    name: Show Light Tab
-    icon: mdi:lightbulb
-
-  show_climate_tab:
-    name: Show Climate Tab
-    icon: mdi:thermometer
-
-  show_misc_tab:
-    name: Show Misc Tab
-    icon: mdi:dots-horizontal
-
-  show_security_tab:
-    name: Show Security Tab
-    icon: mdi:shield
-
-template:
-  - binary_sensor:
-      - name: "Has Air Quality"
-        state: "{{ states('air_quality') | count > 0 }}"
-      - name: "Has Motion Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'motion') | list | count > 0 }}"
-      - name: "Has Camera"
-        state: "{{ states.camera | count > 0 }}"
-      - name: "Has Climate"
-        state: "{{ states.climate | count > 0 }}"
-      - name: "Has Cover"
-        state: "{{ states.cover | count > 0 }}"
-      - name: "Has Fan"
-        state: "{{ states.fan | count > 0 }}"
-      - name: "Has Humidifier"
-        state: "{{ states.humidifier | count > 0 }}"
-      - name: "Has Lawn Mower"
-        state: "{{ states('vacuum') | selectattr('name', 'search', 'mower') | list | count > 0 }}"
-      - name: "Has Light"
-        state: "{{ states.light | count > 0 }}"
-      - name: "Has Lock"
-        state: "{{ states.lock | count > 0 }}"
-      - name: "Has Media Player"
-        state: "{{ states.media_player | count > 0 }}"
-      - name: "Has Remote"
-        state: "{{ states.remote | count > 0 }}"
-      - name: "Has Scene"
-        state: "{{ states.scene | count > 0 }}"
-      - name: "Has Siren"
-        state: "{{ states.switch | selectattr('attributes.device_class', '==', 'siren') | list | count > 0 }}"
-      - name: "Has Switch"
-        state: "{{ states.switch | count > 0 }}"
-      - name: "Has Vacuum"
-        state: "{{ states.vacuum | count > 0 }}"
-      - name: "Has Valve"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'valve') | list | count > 0 }}"
-      - name: "Has Water Heater"
-        state: "{{ states.water_heater | count > 0 }}"
-      - name: "Has Smoke Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'smoke') | list | count > 0 }}"
-      - name: "Has Gas Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'gas') | list | count > 0 }}"
-      - name: "Has Temperature Sensor"
-        state: "{{ states.sensor | selectattr('attributes.device_class', '==', 'temperature') | list | count > 0 }}"
-      - name: "Has Humidity Sensor"
-        state: "{{ states.sensor | selectattr('attributes.device_class', '==', 'humidity') | list | count > 0 }}"
-      - name: "Has Water Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'moisture') | list | count > 0 }}"
-      - name: "Has Door Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'door') | list | count > 0 }}"
-      - name: "Has Window Sensor"
-        state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'window') | list | count > 0 }}"
