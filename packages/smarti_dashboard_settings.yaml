@@ -75,3 +75,6 @@ template:
         state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'door') | list | count > 0 }}"
       - name: "Has Window Sensor"
         state: "{{ states.binary_sensor | selectattr('attributes.device_class', '==', 'window') | list | count > 0 }}"
+      - name: "Has Unassigned Devices"
+        state: >
+          {{ states | selectattr('attributes.area_id', '==', none) | list | count > 0 }}
