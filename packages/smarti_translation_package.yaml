@@ -6,6 +6,8 @@ input_select:
       - Norwegian
       - German
       - French
+      - Spanish
+      - Dutch
     initial: English
 
 template:
@@ -13,7 +15,7 @@ template:
       # General names and expressions
 
       # Sidebar
-      - name: "Home"
+      - name: "Sidebar Home"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Hjem
@@ -21,11 +23,15 @@ template:
             Accueil
           {% elif is_state('input_select.language', 'German') %}
             Startseite
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Inicio
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Thuis
           {% else %}
             Home
           {% endif %}
 
-      - name: "Weather"
+      - name: "Sidebar Weather"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Vær
@@ -33,11 +39,15 @@ template:
             Météo
           {% elif is_state('input_select.language', 'German') %}
             Wetter
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Clima
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Weer
           {% else %}
             Weather
           {% endif %}
 
-      - name: "Light Control"
+      - name: "Sidebar Light Control"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Lysstyring
@@ -45,11 +55,15 @@ template:
             Contrôle de l'éclairage
           {% elif is_state('input_select.language', 'German') %}
             Lichtsteuerung
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Control de luces
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Lichtbediening
           {% else %}
             Light Control
           {% endif %}
 
-      - name: "Climate Control"
+      - name: "Sidebar Climate Control"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Klimakontroll
@@ -57,12 +71,16 @@ template:
             Contrôle du climat
           {% elif is_state('input_select.language', 'German') %}
             Klimasteuerung
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Control climático
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Klimaatregeling
           {% else %}
             Climate Control
           {% endif %}
 
       # General Text and Expressions
-      - name: "Grid Fee"
+      - name: "Home Page Horseshoe Grid Fee"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Nettleie
@@ -70,11 +88,15 @@ template:
             Frais de réseau
           {% elif is_state('input_select.language', 'German') %}
             Netzgebühr
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Tarifa de red
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Netwerktarief
           {% else %}
             Grid Fee
           {% endif %}
 
-      - name: "Electricity Price"
+      - name: "Home Page Horseshoe Electricity Price"
         state: >
           {% if is_state('input_select.language', 'Norwegian') %}
             Strømpris
@@ -82,6 +104,10 @@ template:
             Prix de l'électricité
           {% elif is_state('input_select.language', 'German') %}
             Strompreis
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Precio de la electricidad
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Elektriciteitsprijs
           {% else %}
             Electricity Price
           {% endif %}
@@ -95,6 +121,10 @@ template:
             Accueil
           {% elif is_state('input_select.language', 'German') %}
             Startseite
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Inicio
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Thuis
           {% else %}
             Home
           {% endif %}
@@ -107,13 +137,46 @@ template:
             Pièces, utilisateurs & aperçu des batteries
           {% elif is_state('input_select.language', 'German') %}
             Räume, Benutzer & Batterieübersicht
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Habitaciones, usuarios y visión general de baterías
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Kamers, gebruikers en batterijoverzicht
           {% else %}
             Rooms, users & battery overview
           {% endif %}
 
       # Weather Page
+      - name: "Weather Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Vær
+          {% elif is_state('input_select.language', 'French') %}
+            Météo
+          {% elif is_state('input_select.language', 'German') %}
+            Wetter
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Clima
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Weer
+          {% else %}
+            Weather
+          {% endif %}
 
-      # All Tabbed cards
+      - name: "Weather Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Værvarsel og radar
+          {% elif is_state('input_select.language', 'French') %}
+            Prévisions météorologiques et radar
+          {% elif is_state('input_select.language', 'German') %}
+            Wettervorhersage und Radar
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Pronóstico del tiempo y radar
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Weersvoorspelling en radar
+          {% else %}
+            Weather forecast and radar
+          {% endif %}
 
       # Home Page Tab Desktop
       - name: "Tabbed Card Home Page Room Tab Desktop"
@@ -124,6 +187,10 @@ template:
             Pièces
           {% elif is_state('input_select.language', 'German') %}
             Räume
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Habitaciones
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Kamers
           {% else %}
             Rooms
           {% endif %}
@@ -136,6 +203,10 @@ template:
             Utilisateurs
           {% elif is_state('input_select.language', 'German') %}
             Benutzer
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Usuarios
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Gebruikers
           {% else %}
             Users
           {% endif %}
@@ -148,6 +219,10 @@ template:
             Aperçu des batteries
           {% elif is_state('input_select.language', 'German') %}
             Batterieübersicht
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Vista general de baterías
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Batterijoverzicht
           {% else %}
             Battery Overview
           {% endif %}
@@ -159,6 +234,10 @@ template:
           {% elif is_state('input_select.language', 'French') %}
             Calendrier
           {% elif is_state('input_select.language', 'German') %}
+            Kalender
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Calendario
+          {% elif is_state('input_select.language', 'Dutch') %}
             Kalender
           {% else %}
             Calendar
