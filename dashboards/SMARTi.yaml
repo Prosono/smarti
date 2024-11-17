@@ -3020,7 +3020,6 @@ views:
                         style: style2
                         type: hourly
                       animated_icons: true
-                      title: Time for time
               - attributes:
                   label: >-
                     ${states['sensor.tabbed_card_weather_page_weekly_tab_desktop'].state}
@@ -3069,7 +3068,6 @@ views:
                       units:
                         pressure: ''
                         speed: ''
-                      title: Ukentlig
               - attributes:
                   label: >-
                     ${states['sensor.tabbed_card_weather_page_weather_radar_tab_desktop'].state}
@@ -3095,7 +3093,6 @@ views:
                           '&marker=true'}
                         aspect_ratio: 50%
                     - type: custom:weather-radar-card
-                      card_title: Regnradar
                       map_style: Dark
                       zoom_level: 10
                       show_marker: true
@@ -3989,7 +3986,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -3998,216 +3994,154 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
+        card:
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_lights_page_lights_tab_desktop
+            - sensor.tabbed_card_lights_page_scenes_tab_desktop
+          card:
+            type: custom:mod-card
+            card_mod:
+              style:
+                .: |
+                  ha-card {
+                    --ha-card-border-width: 0.5px;
+                    --ha-card-border-radius: 20px;
+                    --ha-card-background: transparent;
+                  } 
+                tabbed-card $:
+                  mwc-tab:
+                    $: |
+                      .mdc-tab--active {
+                        background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
+                        border-radius: 5px 5px 0px 0px;
                       }
-        card:
-          type: custom:tabbed-card
-          tabs:
-            - attributes:
-                label: Lyskontroll
-                icon: mdi:lightbulb
-              card:
-                type: custom:auto-entities
-                card:
-                  title: Lys
-                  type: entities
-                filter:
-                  template: >-
-                    {% set area_filter = ['area1', 'area2'] %}  {% set filter =
-                    ['light.light1', 'light.light2'] %}
-
-                    {%- set areas = states.light
-                        | rejectattr('entity_id', 'in', filter)
-                        | map(attribute='entity_id')
-                        | map('area_name') | unique | reject('none')
-                        | reject('in', area_filter)
-                        | list -%}
-
-                    {% if areas | length == 0 %}
-                      [
-                        {
-                          'type': 'custom:button-text-card',
-                          'title': 'Ingen lys funnet',
-                          'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                          'icon': 'mdi:chat-question',
-                          'background_color': 'var(--primary-color)',
-                        }
-                      ]
-                    {% else %}
-                      [
-                        {%- for area in areas %}
-                          {
-                            'type': 'custom:button-card',
-                            'styles': {
-                              'card': [
-                                { 'height': '5px' },
-                                { 'max-height': '10px' },
-                                { 'padding': '0' },
-                                { 'margin': '0' },
-                                { 'background-color': 'var(--primary-color)' }
-                              ]
-                            }
-                          },
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': '{{ area }}',
-                            'icon': 'mdi:lightbulb',
-                            'background_color': 'var(--primary-color)',
-                          },
-                          {%- set lights = states.light
-                              | rejectattr('entity_id', 'in', filter)
-                              | selectattr('entity_id', 'in', area_entities(area))
-                              | list -%}
-                          {%- for light in lights %}
-                            {
-                              'type': 'custom:mushroom-light-card',              
-                              'entity': '{{ light.entity_id }}',
-                              'use_light_color': 'true',
-                              'show_brightness_control': 'true',
-                              'show_color_control': 'true',
-                              'collapsible_controls': 'false',
-                              'show_color_temp_control': 'true',
-                              'styles': {
-                              'card': [
-                                { 'border-radius': '20px'},
-                              ],
-                            },
-                            }
-                            
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                          {%- if not loop.last %},{% endif %}
-                        {%- endfor %}
-                      ]
-                    {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Scenekontroll
-                icon: mdi:movie
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Scener
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set filter = ['scene.scene1','scene.scene2'] %} {% set
-                      hidden_entities = states |
-                      selectattr('attributes.is_hidden', 'eq', true) |
-                      map(attribute='entity_id') | list %}
-
-                      {%- set scenes = states.scene
-                        | rejectattr('entity_id', 'in', filter)
-                        | rejectattr('entity_id', 'in', hidden_entities)
-                        | list -%}
-
-                      {% if scenes | length == 0 %}
-                        {{{ 'type': 'custom:button-text-card',
-                            'title': 'Ingen scener funnet',
-                            'subtitle' :'SMARTi finner ingen lagde scener',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)',
-                        }}},
-                      {% else %} 
-
-                      {%- for scene in scenes  -%}  {{{ 
-                        'type': 'custom:bubble-card',
-                        'card_type': 'button',
-                        'entity': scene.entity_id,
-                        'icon': 'mdi:play',
-                        'show_state': 'true'
-                      }}},   {%- endfor %} {%- endif %}
-                    exclude:
-                      - hidden_by: '*'
-      - type: custom:auto-entities
-        card:
-          title: Lys
-          type: entities
-        filter:
-          template: >-
-            {% set area_filter = ['area1', 'area2'] %} {% set filter =
-            ['light.light1', 'light.light2'] %}
-
-            {%- set areas = states.light
-                | rejectattr('entity_id', 'in', filter)
-                | map(attribute='entity_id')
-                | map('area_name') | unique | reject('none')
-                | reject('in', area_filter)
-                | list -%}
-
-            {% if areas | length == 0 %}
-              [
-                {
-                  'type': 'custom:button-text-card',
-                  'title': 'Ingen lys funnet',
-                  'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                  'icon': 'mdi:chat-question',
-                  'background_color': 'var(--primary-color)'
-                }
-              ]
-            {% else %}
-              [
-                {%- for area in areas %}
-                  {
-                    'type': 'custom:button-card',
-                    'styles': {
-                      'card': [
-                        { 'height': '5px' },
-                        { 'max-height': '10px' },
-                        { 'padding': '0' },
-                        { 'margin': '0' },
-                        { 'background-color': 'var(--primary-color)' }
-                      ]
-                    }
-                  },
-                  {
-                    'type': 'custom:button-text-card',
-                    'title': '{{ area }}',
-                    'icon': 'mdi:lightbulb',
-                    'background_color': 'var(--primary-color)'
-                  },
-                  {
-                    "type": "custom:layout-card",
-                    "layout_type": "grid",
-                    "layout": {
-                      "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                      "grid-gap": "0px"
-                    },
-                    "cards": [
-                      {%- set lights = states.light
-                          | rejectattr('entity_id', 'in', filter)
-                          | selectattr('entity_id', 'in', area_entities(area))
-                          | list -%}
-                      {%- for light in lights %}
-                        {
-                          'type': 'custom:mushroom-light-card',
-                          'entity': '{{ light.entity_id }}',
-                          'use_light_color': 'true',
-                          'show_brightness_control': 'true',
-                          'show_color_control': 'true',
-                          'collapsible_controls': 'false',
-                          'show_color_temp_control': 'true',
-                          'styles': {
-                            'card': [
-                              { 'border-radius': '20px' }
-                            ]
+                      mwc-tab:hover {
+                        --mdc-theme-primary: red;
+                        --mdc-tab-color-default: red;
                           }
-                        }
-                        {%- if not loop.last %},{% endif %}
-                      {%- endfor %}
-                    ]
-                  }
-                  {%- if not loop.last %},{% endif %}
-                {%- endfor %}
-              ]
-            {% endif %}
-        exclude:
-          - hidden_by: '*'
+            card:
+              type: custom:tabbed-card
+              tabs:
+                - attributes:
+                    label: >-
+                      ${states['sensor.tabbed_card_lights_page_lights_tab_desktop'].state}
+                    icon: mdi:lightbulb
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %}  {% set
+                        filter = ['light.light1', 'light.light2'] %}
+
+                        {%- set areas = states.light
+                            | rejectattr('entity_id', 'in', filter)
+                            | map(attribute='entity_id')
+                            | map('area_name') | unique | reject('none')
+                            | reject('in', area_filter)
+                            | list -%}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'Ingen lys funnet',
+                              'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)',
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {
+                                'type': 'custom:button-card',
+                                'styles': {
+                                  'card': [
+                                    { 'height': '5px' },
+                                    { 'max-height': '10px' },
+                                    { 'padding': '0' },
+                                    { 'margin': '0' },
+                                    { 'background-color': 'var(--primary-color)' }
+                                  ]
+                                }
+                              },
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:lightbulb',
+                                'background_color': 'var(--primary-color)',
+                              },
+                              {%- set lights = states.light
+                                  | rejectattr('entity_id', 'in', filter)
+                                  | selectattr('entity_id', 'in', area_entities(area))
+                                  | list -%}
+                              {%- for light in lights %}
+                                {
+                                  'type': 'custom:mushroom-light-card',              
+                                  'entity': '{{ light.entity_id }}',
+                                  'use_light_color': 'true',
+                                  'show_brightness_control': 'true',
+                                  'show_color_control': 'true',
+                                  'collapsible_controls': 'false',
+                                  'show_color_temp_control': 'true',
+                                  'styles': {
+                                  'card': [
+                                    { 'border-radius': '20px'},
+                                  ],
+                                },
+                                }
+                                
+                                {%- if not loop.last %},{% endif %}
+                              {%- endfor %}
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                      exclude:
+                        - hidden_by: '*'
+                - attributes:
+                    label: >-
+                      ${states['sensor.tabbed_card_lights_page_scenes_tab_desktop'].state}
+                    icon: mdi:movie
+                  card:
+                    type: custom:mod-card
+                    card:
+                      type: custom:auto-entities
+                      card:
+                        type: entities
+                      filter:
+                        template: >-
+                          {% set filter = ['scene.scene1','scene.scene2'] %} {%
+                          set hidden_entities = states |
+                          selectattr('attributes.is_hidden', 'eq', true) |
+                          map(attribute='entity_id') | list %}
+
+                          {%- set scenes = states.scene
+                            | rejectattr('entity_id', 'in', filter)
+                            | rejectattr('entity_id', 'in', hidden_entities)
+                            | list -%}
+
+                          {% if scenes | length == 0 %}
+                            {{{ 'type': 'custom:button-text-card',
+                                'title': 'Ingen scener funnet',
+                                'subtitle' :'SMARTi finner ingen lagde scener',
+                                'icon': 'mdi:chat-question',
+                                'background_color': 'var(--primary-color)',
+                            }}},
+                          {% else %} 
+
+                          {%- for scene in scenes  -%}  {{{ 
+                            'type': 'custom:bubble-card',
+                            'card_type': 'button',
+                            'entity': scene.entity_id,
+                            'icon': 'mdi:play',
+                            'show_state': 'true'
+                          }}},   {%- endfor %} {%- endif %}
+                        exclude:
+                          - hidden_by: '*'
     background: {}
   - title: Klimakontroll
     path: heating
@@ -5097,7 +5031,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -5106,72 +5039,77 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
-                  }
-                        
         card:
-          type: custom:tabbed-card
-          options:
-            defaultTabIndex: 0
-          tabs:
-            - attributes:
-                label: Temperatur
-                icon: mdi:thermometer
-              card:
-                type: custom:auto-entities
-                card:
-                  type: custom:mini-graph-card
-                  name: Temperaturgraf - siste 36 timer
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_climate_fans_tab_desktop
+            - sensor.tabbed_card_climate_humidifiers_tab_desktop
+            - sensor.tabbed_card_climate_page_comfort_tab_desktop
+            - >-
+              sensor.tabbed_card_climate_page_temperature_and_humidity_tab_desktop
+            - sensor.tabbed_card_climate_page_thermostats_and_acs_tab_desktop
+            - sensor.tabbed_card_climate_water_sensors_tab_desktop
+          card:
+            type: custom:tabbed-card
+            options:
+              defaultTabIndex: 0
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_page_temperature_graph_tab_desktop'].state}
                   icon: mdi:thermometer
-                  chart_type: line
-                  period: hour
-                  aggregate_func: avg
-                  points_per_hour: 2
-                  days_to_show: 1.5
-                  line_width: 0.75
-                  show:
-                    fill: false
-                    labels: true
-                    labels_secondary: false
-                    legend: false
-                    x_axis: true
-                    y_axis: true
-                filter:
-                  include:
-                    - domain: sensor
-                      attributes:
-                        device_class: temperature
-                  exclude:
-                    - entity_id: sensor.system_monitor_processor_temperature
-                    - entity_id: sensor.temperatur_max
-                    - entity_id: sensor.temperature_min
-            - attributes:
-                label: Fuktighet
-                icon: mdi:water-percent
-              card:
-                type: custom:auto-entities
                 card:
-                  type: custom:mini-graph-card
-                  name: Fuktighetsgraf - siste 36 timer
+                  type: custom:auto-entities
+                  card:
+                    type: custom:mini-graph-card
+                    icon: mdi:thermometer
+                    chart_type: line
+                    period: hour
+                    aggregate_func: avg
+                    points_per_hour: 2
+                    days_to_show: 1.5
+                    line_width: 0.75
+                    show:
+                      fill: false
+                      labels: true
+                      labels_secondary: false
+                      legend: false
+                      x_axis: true
+                      y_axis: true
+                  filter:
+                    include:
+                      - domain: sensor
+                        attributes:
+                          device_class: temperature
+                    exclude:
+                      - entity_id: sensor.system_monitor_processor_temperature
+                      - entity_id: sensor.temperatur_max
+                      - entity_id: sensor.temperature_min
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_page_humidity_graph_tab_desktop'].state}
                   icon: mdi:water-percent
-                  chart_type: line
-                  period: hour
-                  days_to_show: 1.5
-                  line_width: 0.75
-                  show:
-                    fill: false
-                    labels: true
-                    labels_secondary: false
-                    legend: false
-                    x_axis: true
-                    y_axis: true
-                filter:
-                  include:
-                    - domain: sensor
-                      attributes:
-                        device_class: humidity
+                card:
+                  type: custom:auto-entities
+                  card:
+                    type: custom:mini-graph-card
+                    icon: mdi:water-percent
+                    chart_type: line
+                    period: hour
+                    days_to_show: 1.5
+                    line_width: 0.75
+                    show:
+                      fill: false
+                      labels: true
+                      labels_secondary: false
+                      legend: false
+                      x_axis: true
+                      y_axis: true
+                  filter:
+                    include:
+                      - domain: sensor
+                        attributes:
+                          device_class: humidity
       - type: custom:mod-card
         card_mod:
           style:
@@ -5179,7 +5117,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -5188,219 +5125,116 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
-                      }
-                    
         card:
-          type: custom:tabbed-card
-          tabs:
-            - attributes:
-                label: Klimakontroll
-                icon: mdi:home-thermometer
-              card:
-                type: custom:mod-card
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_climate_fans_tab_desktop
+            - sensor.tabbed_card_climate_humidifiers_tab_desktop
+            - sensor.tabbed_card_climate_page_comfort_tab_desktop
+            - >-
+              sensor.tabbed_card_climate_page_temperature_and_humidity_tab_desktop
+            - sensor.tabbed_card_climate_page_thermostats_and_acs_tab_desktop
+            - sensor.tabbed_card_climate_water_sensors_tab_desktop
+          card:
+            type: custom:tabbed-card
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_page_thermostats_and_acs_tab_desktop'].state}
+                  icon: mdi:home-thermometer
                 card:
-                  type: custom:auto-entities
+                  type: custom:mod-card
                   card:
-                    title: Klima
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set
-                      climate_filter = states.climate |
-                      map(attribute='entity_id') | list %} {% set areas =
-                      states.climate
-                        | map(attribute='entity_id')
-                        | map('area_name') | unique | reject('none') 
-                        | reject('in', area_filter)
-                        | list %}
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set
+                        climate_filter = states.climate |
+                        map(attribute='entity_id') | list %} {% set areas =
+                        states.climate
+                          | map(attribute='entity_id')
+                          | map('area_name') | unique | reject('none') 
+                          | reject('in', area_filter)
+                          | list %}
 
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'Ingen klimaenheter funnet',
-                            'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)',
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {
-                                'type': 'custom:button-card',
-                                'styles': {
-                                  'card': [
-                                    { 'height': '5px'},
-                                    { 'max-height': '10px'},
-                                    { 'padding': '0'},
-                                    { 'margin': '0'},
-                                    { 'background-color': 'var(--primary-color)'}
-                                  ]
-                                }
-                              },
+                        {% if areas | length == 0 %}
+                          [
                             {
                               'type': 'custom:button-text-card',
-                              'title': '{{ area }}',
-                              'icon': 'mdi:air-conditioner',
+                              'title': 'Ingen klimaenheter funnet',
+                              'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
                               'background_color': 'var(--primary-color)',
-                            },
-                            {
-                            
-                             "type": "custom:layout-card",
-                              "layout_type": "grid",
-                              "layout": {
-                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                                "grid-gap": "0px"
-                              },
-                              'cards': [
-                                {%- for device in states.climate
-                                   | selectattr('entity_id', 'in', climate_filter)
-                                   | selectattr('entity_id', 'in', area_entities(area)) %}
-                                  {
-                                    'type': 'thermostat',
-                                    'entity': '{{ device.entity_id }}',
-                                    'name': '{{ device.attributes.friendly_name }}'
-                                  }{% if not loop.last %},{% endif %}
-                                {%- endfor %}
-                              ]
                             }
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                    exclude:
-                      - hidden_by: '*'
-            - attributes:
-                label: Temperatur & fuktighet
-                icon: mdi:thermometer
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Temperatur- og fuktighetsvedier
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set
-                      temp_filter = ['sensor.temperature_sensor_1',
-                      'sensor.temperature_sensor_2'] %} {% set humid_filter =
-                      ['sensor.humidity_sensor_1', 'sensor.humidity_sensor_2']
-                      %}
-
-                      {%- set areas = states.sensor
-                        | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
-                        | rejectattr('entity_id', 'in', temp_filter + humid_filter)
-                        | map(attribute='entity_id')
-                        | map('area_name') | unique | reject('none')
-                        | reject('in', area_filter)
-                        | list -%}
-
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'No temperature or humidity sensors found',
-                            'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)',
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {
-                                'type': 'custom:button-card',
-                                'styles': {
-                                  'card': [
-                                    { 'height': '5px'},
-                                    { 'max-height': '10px'},
-                                    { 'padding': '0'},
-                                    { 'margin': '0'},
-                                    { 'background-color': 'var(--primary-color)'}
-                                  ]
-                                }
-                              },
-                            {
-                              'type': 'custom:button-text-card',
-                              'title': '{{ area }}',
-                              'icon': 'mdi:thermometer-water',
-                              'background_color': 'var(--primary-color)',
-                            },
-                            {
-                              "type": "custom:layout-card",
-                              "layout_type": "grid",
-                              "layout": {
-                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                                "grid-gap": "0px"
-                              },
-                              'cards': [
-                                {%- for sensor in states.sensor
-                                   | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
-                                   | rejectattr('entity_id', 'in', temp_filter + humid_filter)
-                                   | selectattr('entity_id', 'in', area_entities(area)) %}
-                                  {
-                                    'type': 'custom:mini-graph-card',
-                                    'animate': 'true',
-                                    'height': '40',
-                                    'entities': ['{{ sensor.entity_id }}'],
-                                    'line_width': '2',
-                                    'font_size': '100',
-                                    'show': {
-                                      'labels': 'true',
-                                      'fill': 'true',
-                                    },
-                                    'points_per_hour': '2',
-                                    {% if sensor.attributes.device_class == 'temperature' %}
-                                    'color_thresholds': [
-                                      { 'value': '0', 'color': '#007BFF' },
-                                      { 'value': '15', 'color': '#00CC00' },
-                                      { 'value': '20', 'color': '#FFD700' },
-                                      { 'value': '25', 'color': '#FF8C00' },
-                                      { 'value': '30', 'color': '#FF0000' }          
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {
+                                  'type': 'custom:button-card',
+                                  'styles': {
+                                    'card': [
+                                      { 'height': '5px'},
+                                      { 'max-height': '10px'},
+                                      { 'padding': '0'},
+                                      { 'margin': '0'},
+                                      { 'background-color': 'var(--primary-color)'}
                                     ]
-                                    {% elif sensor.attributes.device_class == 'humidity' %}
-                                    'color_thresholds': [
-                                      { 'value': '0', 'color': '#007BFF' },
-                                      { 'value': '30', 'color': '#00CC00' },
-                                      { 'value': '50', 'color': '#FFD700' },
-                                      { 'value': '70', 'color': '#FF8C00' },
-                                      { 'value': '90', 'color': '#FF0000' }
-                                    ]
-                                    {% endif %}
-                                  }{% if not loop.last %},{% endif %}
-                                {%- endfor %}
-                              ]
-                            }
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                    exclude:
-                      - hidden_by: '*'
-            - attributes:
-                label: Komfort
-                icon: mdi:home-thermometer-outline
-              card:
-                type: custom:mod-card
+                                  }
+                                },
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:air-conditioner',
+                                'background_color': 'var(--primary-color)',
+                              },
+                              {
+                              
+                               "type": "custom:layout-card",
+                                "layout_type": "grid",
+                                "layout": {
+                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                  "grid-gap": "0px"
+                                },
+                                'cards': [
+                                  {%- for device in states.climate
+                                     | selectattr('entity_id', 'in', climate_filter)
+                                     | selectattr('entity_id', 'in', area_entities(area)) %}
+                                    {
+                                      'type': 'thermostat',
+                                      'entity': '{{ device.entity_id }}',
+                                      'name': '{{ device.attributes.friendly_name }}'
+                                    }{% if not loop.last %},{% endif %}
+                                  {%- endfor %}
+                                ]
+                              }
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                      exclude:
+                        - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_page_temperature_and_humidity_tab_desktop'].state}
+                  icon: mdi:thermometer
                 card:
-                  type: custom:auto-entities
+                  type: custom:mod-card
                   card:
-                    title: Komfortskalering
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set
-                      temp_filter = ['sensor.temperature_sensor_1',
-                      'sensor.temperature_sensor_2'] %} {% set humid_filter =
-                      ['sensor.humidity_sensor_1', 'sensor.humidity_sensor_2']
-                      %}
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set
+                        temp_filter = ['sensor.temperature_sensor_1',
+                        'sensor.temperature_sensor_2'] %} {% set humid_filter =
+                        ['sensor.humidity_sensor_1', 'sensor.humidity_sensor_2']
+                        %}
 
-                      {%- set areas = states.sensor
+                        {%- set areas = states.sensor
                           | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
                           | rejectattr('entity_id', 'in', temp_filter + humid_filter)
                           | map(attribute='entity_id')
@@ -5408,31 +5242,224 @@ views:
                           | reject('in', area_filter)
                           | list -%}
 
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'Ingen sensorer funnet',
-                            'subtitle':'Kortet krever både temperatur og fuktighetsverdi for et område"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)',
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {% set temperatures = states.sensor
-                                | selectattr('attributes.device_class', 'eq', 'temperature')
-                                | rejectattr('entity_id', 'in', temp_filter)
-                                | selectattr('entity_id', 'in', area_entities(area))
-                                | list -%}
-                            {% set humidities = states.sensor
-                                | selectattr('attributes.device_class', 'eq', 'humidity')
-                                | rejectattr('entity_id', 'in', humid_filter)
-                                | selectattr('entity_id', 'in', area_entities(area))
-                                | list -%}
-                            
-                            {%- if temperatures and humidities -%}
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'No temperature or humidity sensors found',
+                              'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)',
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {
+                                  'type': 'custom:button-card',
+                                  'styles': {
+                                    'card': [
+                                      { 'height': '5px'},
+                                      { 'max-height': '10px'},
+                                      { 'padding': '0'},
+                                      { 'margin': '0'},
+                                      { 'background-color': 'var(--primary-color)'}
+                                    ]
+                                  }
+                                },
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:thermometer-water',
+                                'background_color': 'var(--primary-color)',
+                              },
+                              {
+                                "type": "custom:layout-card",
+                                "layout_type": "grid",
+                                "layout": {
+                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                  "grid-gap": "0px"
+                                },
+                                'cards': [
+                                  {%- for sensor in states.sensor
+                                     | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
+                                     | rejectattr('entity_id', 'in', temp_filter + humid_filter)
+                                     | selectattr('entity_id', 'in', area_entities(area)) %}
+                                    {
+                                      'type': 'custom:mini-graph-card',
+                                      'animate': 'true',
+                                      'height': '40',
+                                      'entities': ['{{ sensor.entity_id }}'],
+                                      'line_width': '2',
+                                      'font_size': '100',
+                                      'show': {
+                                        'labels': 'true',
+                                        'fill': 'true',
+                                      },
+                                      'points_per_hour': '2',
+                                      {% if sensor.attributes.device_class == 'temperature' %}
+                                      'color_thresholds': [
+                                        { 'value': '0', 'color': '#007BFF' },
+                                        { 'value': '15', 'color': '#00CC00' },
+                                        { 'value': '20', 'color': '#FFD700' },
+                                        { 'value': '25', 'color': '#FF8C00' },
+                                        { 'value': '30', 'color': '#FF0000' }          
+                                      ]
+                                      {% elif sensor.attributes.device_class == 'humidity' %}
+                                      'color_thresholds': [
+                                        { 'value': '0', 'color': '#007BFF' },
+                                        { 'value': '30', 'color': '#00CC00' },
+                                        { 'value': '50', 'color': '#FFD700' },
+                                        { 'value': '70', 'color': '#FF8C00' },
+                                        { 'value': '90', 'color': '#FF0000' }
+                                      ]
+                                      {% endif %}
+                                    }{% if not loop.last %},{% endif %}
+                                  {%- endfor %}
+                                ]
+                              }
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                      exclude:
+                        - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_page_comfort_tab_desktop'].state}
+                  icon: mdi:home-thermometer-outline
+                card:
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set
+                        temp_filter = ['sensor.temperature_sensor_1',
+                        'sensor.temperature_sensor_2'] %} {% set humid_filter =
+                        ['sensor.humidity_sensor_1', 'sensor.humidity_sensor_2']
+                        %}
+
+                        {%- set areas = states.sensor
+                            | selectattr('attributes.device_class', 'in', ['temperature', 'humidity'])
+                            | rejectattr('entity_id', 'in', temp_filter + humid_filter)
+                            | map(attribute='entity_id')
+                            | map('area_name') | unique | reject('none')
+                            | reject('in', area_filter)
+                            | list -%}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'Ingen sensorer funnet',
+                              'subtitle':'Kortet krever både temperatur og fuktighetsverdi for et område"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)',
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {% set temperatures = states.sensor
+                                  | selectattr('attributes.device_class', 'eq', 'temperature')
+                                  | rejectattr('entity_id', 'in', temp_filter)
+                                  | selectattr('entity_id', 'in', area_entities(area))
+                                  | list -%}
+                              {% set humidities = states.sensor
+                                  | selectattr('attributes.device_class', 'eq', 'humidity')
+                                  | rejectattr('entity_id', 'in', humid_filter)
+                                  | selectattr('entity_id', 'in', area_entities(area))
+                                  | list -%}
+                              
+                              {%- if temperatures and humidities -%}
+                                {
+                                  'type': 'custom:button-card',
+                                  'styles': {
+                                    'card': [
+                                      { 'height': '5px' },
+                                      { 'max-height': '10px' },
+                                      { 'padding': '0' },
+                                      { 'margin': '0' },
+                                      { 'background-color': 'var(--primary-color)' }
+                                    ]
+                                  }
+                                },
+                                {
+                                  'type': 'custom:button-text-card',
+                                  'title': '{{ area }}',
+                                  'icon': 'mdi:thermometer',
+                                  'background_color': 'var(--primary-color)',
+                                },
+                                {
+                                  'type': 'custom:hui-element',
+                                  'card_type': 'horizontal-stack',
+                                  'cards': [
+                                    {
+                                      'type': 'custom:comfortable-environment-card',
+                                      'temperature_sensor': '{{ temperatures[0].entity_id }}',
+                                      'humidity_sensor': '{{ humidities[0].entity_id }}',
+                                      'name': '{{ area }}',
+                                      'room_name': '{{ area }}',
+                                      'show_index': 'ALL',
+                                      'styles': {
+                                        'card': [
+                                          { 'height': '70px' },
+                                          { 'padding': '5px' },
+                                          { 'margin-top': '50px' },
+                                          { 'max-height': '70px' },
+                                          { 'border-radius': '20px' },
+                                          { 'transition': 'transform 0.3s ease' }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                                {%- if not loop.last %},{% endif %}
+                              {%- endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_water_sensors_tab_desktop'].state}
+                  icon: mdi:water
+                card:
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set
+                        moisture_filter = states.binary_sensor
+                            | selectattr('attributes.device_class', 'eq', 'moisture')
+                            | map(attribute='entity_id') | list %}
+                        {% set areas = states.binary_sensor
+                            | selectattr('attributes.device_class', 'eq', 'moisture')
+                            | map(attribute='entity_id')
+                            | map('area_name') | unique | reject('none')
+                            | reject('in', area_filter)
+                            | list %}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'Ingen vanndetektorer funnet',
+                              'subtitle':'Undersøk om enheten ligger under "ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)'
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
                               {
                                 'type': 'custom:button-card',
                                 'styles': {
@@ -5448,247 +5475,162 @@ views:
                               {
                                 'type': 'custom:button-text-card',
                                 'title': '{{ area }}',
-                                'icon': 'mdi:thermometer',
-                                'background_color': 'var(--primary-color)',
+                                'icon': 'mdi:eye-circle-outline',
+                                'background_color': 'var(--primary-color)'
                               },
                               {
                                 'type': 'custom:hui-element',
                                 'card_type': 'horizontal-stack',
                                 'cards': [
-                                  {
-                                    'type': 'custom:comfortable-environment-card',
-                                    'temperature_sensor': '{{ temperatures[0].entity_id }}',
-                                    'humidity_sensor': '{{ humidities[0].entity_id }}',
-                                    'name': '{{ area }}',
-                                    'room_name': '{{ area }}',
-                                    'show_index': 'ALL',
-                                    'styles': {
-                                      'card': [
-                                        { 'height': '70px' },
-                                        { 'padding': '5px' },
-                                        { 'margin-top': '50px' },
-                                        { 'max-height': '70px' },
-                                        { 'border-radius': '20px' },
-                                        { 'transition': 'transform 0.3s ease' }
-                                      ]
-                                    }
-                                  }
+                                  {%- for sensor in states.binary_sensor
+                                      | selectattr('entity_id', 'in', moisture_filter)
+                                      | selectattr('entity_id', 'in', area_entities(area)) %}
+                                    {
+                                      'type': 'custom:mushroom-entity-card',
+                                      'entity': '{{ sensor.entity_id }}'
+                                    }{% if not loop.last %},{% endif %}
+                                  {%- endfor %}
                                 ]
                               }
                               {%- if not loop.last %},{% endif %}
-                            {%- endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Vann
-                icon: mdi:water
-              card:
-                type: custom:mod-card
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_humidifiers_tab_desktop'].state}
+                  icon: mdi:air-humidifier
                 card:
-                  type: custom:auto-entities
+                  type: custom:mod-card
                   card:
-                    title: Vanndetektorer
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set
-                      moisture_filter = states.binary_sensor
-                          | selectattr('attributes.device_class', 'eq', 'moisture')
-                          | map(attribute='entity_id') | list %}
-                      {% set areas = states.binary_sensor
-                          | selectattr('attributes.device_class', 'eq', 'moisture')
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: |-
+                        {% set humidifier_filter = states.humidifier
+                            | map(attribute='entity_id') | list %}
+
+                        {%- set areas = states.humidifier
+                            | map(attribute='entity_id')
+                            | map('area_name') | unique | reject('none')
+                            | reject('in', area_filter)
+                            | list -%}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'Ingen luftfuktere funnet',
+                              'subtitle':'Undersøk om enheten ligger under "ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)'
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {% set humidifiers = states.humidifier
+                                  | selectattr('entity_id', 'in', humidifier_filter)
+                                  | selectattr('entity_id', 'in', area_entities(area))
+                                  | list -%}
+
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:air-humidifier',
+                                'background_color': 'var(--primary-color)'
+                              },
+                              {%- for humidifier in humidifiers %}
+                                {
+                                  'type': 'custom:mushroom-humidifier-card',
+                                  'entity': '{{ humidifier.entity_id }}'
+                                }{%- if not loop.last %},{% endif %}
+                              {%- endfor %}
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_climate_fans_tab_desktop'].state}
+                  icon: mdi:fan
+                card:
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set
+                        fan_filter = states.fan | map(attribute='entity_id') |
+                        list %} {% set areas = states.fan
                           | map(attribute='entity_id')
-                          | map('area_name') | unique | reject('none')
+                          | map('area_name') | unique | reject('none') 
                           | reject('in', area_filter)
                           | list %}
 
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'Ingen vanndetektorer funnet',
-                            'subtitle':'Undersøk om enheten ligger under "ikke tildelte enheter"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)'
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {
-                              'type': 'custom:button-card',
-                              'styles': {
-                                'card': [
-                                  { 'height': '5px' },
-                                  { 'max-height': '10px' },
-                                  { 'padding': '0' },
-                                  { 'margin': '0' },
-                                  { 'background-color': 'var(--primary-color)' }
-                                ]
-                              }
-                            },
+                        {% if areas | length == 0 %}
+                          [
                             {
                               'type': 'custom:button-text-card',
-                              'title': '{{ area }}',
-                              'icon': 'mdi:eye-circle-outline',
-                              'background_color': 'var(--primary-color)'
-                            },
-                            {
-                              'type': 'custom:hui-element',
-                              'card_type': 'horizontal-stack',
-                              'cards': [
-                                {%- for sensor in states.binary_sensor
-                                    | selectattr('entity_id', 'in', moisture_filter)
-                                    | selectattr('entity_id', 'in', area_entities(area)) %}
-                                  {
-                                    'type': 'custom:mushroom-entity-card',
-                                    'entity': '{{ sensor.entity_id }}'
-                                  }{% if not loop.last %},{% endif %}
-                                {%- endfor %}
-                              ]
-                            }
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Lufktfuktere
-                icon: mdi:air-humidifier
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Luftfuktere
-                    type: entities
-                  filter:
-                    template: |-
-                      {% set humidifier_filter = states.humidifier
-                          | map(attribute='entity_id') | list %}
-
-                      {%- set areas = states.humidifier
-                          | map(attribute='entity_id')
-                          | map('area_name') | unique | reject('none')
-                          | reject('in', area_filter)
-                          | list -%}
-
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'Ingen luftfuktere funnet',
-                            'subtitle':'Undersøk om enheten ligger under "ikke tildelte enheter"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)'
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {% set humidifiers = states.humidifier
-                                | selectattr('entity_id', 'in', humidifier_filter)
-                                | selectattr('entity_id', 'in', area_entities(area))
-                                | list -%}
-
-                            {
-                              'type': 'custom:button-text-card',
-                              'title': '{{ area }}',
-                              'icon': 'mdi:air-humidifier',
-                              'background_color': 'var(--primary-color)'
-                            },
-                            {%- for humidifier in humidifiers %}
-                              {
-                                'type': 'custom:mushroom-humidifier-card',
-                                'entity': '{{ humidifier.entity_id }}'
-                              }{%- if not loop.last %},{% endif %}
-                            {%- endfor %}
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Vifter
-                icon: mdi:fan
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Vifter
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set
-                      fan_filter = states.fan | map(attribute='entity_id') |
-                      list %} {% set areas = states.fan
-                        | map(attribute='entity_id')
-                        | map('area_name') | unique | reject('none') 
-                        | reject('in', area_filter)
-                        | list %}
-
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': 'No fans found',
-                            'subtitle':'Check if any devices are under "Unassigned devices"',
-                            'icon': 'mdi:fan-off',
-                            'background_color': 'var(--primary-color)',
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                            {
-                              'type': 'custom:button-card',
-                              'styles': {
-                                'card': [
-                                  { 'height': '5px'},
-                                  { 'max-height': '10px'},
-                                  { 'padding': '0'},
-                                  { 'margin': '0'},
-                                  { 'background-color': 'var(--primary-color)'}
-                                ]
-                              }
-                            },
-                            {
-                              'type': 'custom:button-text-card',
-                              'title': '{{ area }}',
-                              'icon': 'mdi:fan',
+                              'title': 'No fans found',
+                              'subtitle':'Check if any devices are under "Unassigned devices"',
+                              'icon': 'mdi:fan-off',
                               'background_color': 'var(--primary-color)',
-                            },
-                            {
-                             "type": "custom:layout-card",
-                              "layout_type": "grid",
-                              "layout": {
-                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                                "grid-gap": "0px"
-                              },
-                              'cards': [
-                                {%- for device in states.fan
-                                   | selectattr('entity_id', 'in', fan_filter)
-                                   | selectattr('entity_id', 'in', area_entities(area)) %}
-                                  {
-                                    'type': 'fan',
-                                    'entity': '{{ device.entity_id }}',
-                                    'name': '{{ device.attributes.friendly_name }}'
-                                  }{% if not loop.last %},{% endif %}
-                                {%- endfor %}
-                              ]
                             }
-                            {%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                  exclude:
-                    - hidden_by: '*'
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {
+                                'type': 'custom:button-card',
+                                'styles': {
+                                  'card': [
+                                    { 'height': '5px'},
+                                    { 'max-height': '10px'},
+                                    { 'padding': '0'},
+                                    { 'margin': '0'},
+                                    { 'background-color': 'var(--primary-color)'}
+                                  ]
+                                }
+                              },
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:fan',
+                                'background_color': 'var(--primary-color)',
+                              },
+                              {
+                               "type": "custom:layout-card",
+                                "layout_type": "grid",
+                                "layout": {
+                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                  "grid-gap": "0px"
+                                },
+                                'cards': [
+                                  {%- for device in states.fan
+                                     | selectattr('entity_id', 'in', fan_filter)
+                                     | selectattr('entity_id', 'in', area_entities(area)) %}
+                                    {
+                                      'type': 'fan',
+                                      'entity': '{{ device.entity_id }}',
+                                      'name': '{{ device.attributes.friendly_name }}'
+                                    }{% if not loop.last %},{% endif %}
+                                  {%- endfor %}
+                                ]
+                              }
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
     background: {}
   - title: Diverse
     path: multimedia
@@ -6577,7 +6519,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -6586,257 +6527,34 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
-                      }
-                    
         card:
-          type: custom:tabbed-card
-          tabs:
-            - attributes:
-                label: Multimedia
-                icon: mdi:multimedia
-              card:
-                type: custom:auto-entities
-                card:
-                  title: Mediaspillere
-                  type: entities
-                filter:
-                  template: >-
-                    {% set area_filter = ['area1', 'area2'] %}
-
-                    {# Filter for media player devices #} {% set media_filter =
-                    states.media_player | map(attribute='entity_id') | list %}
-
-                    {%- set areas = states.media_player
-                      | map(attribute='entity_id')
-                      | map('area_name') | unique | reject('none') 
-                      | reject('in', area_filter)
-                      | list -%}
-
-                    {% if areas | length == 0 %}
-                      [
-                        {
-                          'type': 'custom:button-text-card',
-                          'title': 'Ingen mediaspillere funnet',
-                          'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                          'icon': 'mdi:chat-question',
-                          'background_color': 'var(--primary-color)'
-                        },
-                      ]
-                    {% else %}
-                      [
-                        {%- for area in areas %}
-                          {
-                            'type': 'custom:button-card',
-                            'styles': {
-                              'card': [
-                                { 'height': '5px' },
-                                { 'max-height': '10px' },
-                                { 'padding': '0' },
-                                { 'margin': '0' },
-                                { 'background-color': 'var(--primary-color)' }
-                              ]
-                            }
-                          },
-                          {
-                            'type': 'custom:button-text-card',
-                            'title': '{{ area }}',
-                            'icon': 'mdi:multimedia',
-                            'background_color': 'var(--primary-color)'
-                          },
-                          {
-                            "type": "custom:layout-card",
-                            "layout_type": "grid",
-                            "layout": {
-                              "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                              "grid-gap": "0px"
-                            },
-                            "cards": [
-                              {%- for device in states.media_player
-                                  | selectattr('entity_id', 'in', media_filter)
-                                  | selectattr('entity_id', 'in', area_entities(area)) %}
-                                {
-                                  'type': 'custom:bubble-card',
-                                  'card_type': 'media-player',
-                                  'name': '{{ device.name }}',  {# <-- Use device.name #}
-                                  'entity': '{{ device.entity_id }}',
-                                  'show_state': 'true',
-                                  'show_last_updated': 'true',
-                                  'show_attribute': 'true',
-                                  'attribute': 'assumed_state',
-                                  'card_layout': 'large',
-                                  'scrolling_effect': 'false',
-                                  'show_icon': 'true',
-                                  'force_icon': 'true',
-                                  'show_name': 'false',
-                                  'show_last_changed': 'true',
-                                  'tap_action': {
-                                    'action': 'toggle'
-                                  },
-                                }{% if not loop.last %},{% endif %}
-                              {%- endfor %}
-                            ]
-                          }
-                          {%- if not loop.last %},{% endif %}
-                        {%- endfor %}
-                      ]
-                    {% endif %}
-            - attributes:
-                label: Brytere
-                icon: mdi:dip-switch
-              card:
-                type: custom:mod-card
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_misc_covers_tab_desktop
+            - sensor.tabbed_card_misc_multimedia_tab_desktop
+            - sensor.tabbed_card_misc_switches_tab_desktop
+            - sensor.tabbed_card_misc_unassigned_tab_desktop
+            - sensor.tabbed_card_misc_vacuums_tab_desktop
+          card:
+            type: custom:tabbed-card
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_misc_multimedia_tab_desktop'].state}
+                  icon: mdi:multimedia
                 card:
                   type: custom:auto-entities
                   card:
-                    title: Bryterkontroll
-                    type: entities
-                  filter:
-                    template: >-
-                      {% set area_filter = ['area1', 'area2'] %} {% set filter =
-                      ['switch.switch1', 'switch.switch2'] %}
-
-                      {%- set areas = states.switch
-                        | rejectattr('entity_id', 'in', filter)
-                        | map(attribute='entity_id')
-                        | map('area_name')
-                        | unique
-                        | reject('none')
-                        | reject('in', area_filter)
-                        | list -%}
-
-                      {% if areas | length == 0 %}
-                        [
-                          {
-                            "type": "custom:button-text-card",
-                            "title": "Ingen brytere funnet",
-                            "subtitle": "Ingen tilgjengelige brytere i dette området",
-                            "icon": "mdi:toggle-switch-off",
-                            "background_color": "var(--primary-color)"
-                          }
-                        ]
-                      {% else %}
-                        [
-                          {%- for area in areas %}
-                             { 'type': 'custom:button-card',
-                              'styles': {
-                                'card': [
-                                  { 'height': '5px' },
-                                  { 'max-height': '10px' },
-                                  { 'padding': '0' },
-                                  { 'margin': '0' },
-                                  { 'background-color': 'var(--primary-color)' }
-                                ]
-                              }
-                            },
-                            {
-                              "type": "custom:button-text-card",
-                              "title": "{{ area }}",
-                              "icon": "mdi:toggle-switch",
-                              "background_color": "var(--primary-color)"
-                            },
-                            {
-                              "type": "custom:layout-card",
-                              "layout_type": "grid",
-                              "layout": {
-                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                                "grid-gap": "0px"
-                              },
-                              "cards": [
-                                {%- set switches = states.switch 
-                                  | rejectattr('entity_id', 'in', filter)
-                                  | selectattr('entity_id', 'in', area_entities(area)) 
-                                  | list -%}
-                                  
-                                {%- for switch in switches -%}
-                                  {
-                                    "type": "custom:bubble-card",
-                                    "card_type": "button",
-                                    "button_type": "switch",
-                                    "force_icon": "true",
-                                    "show_last_changed": "true",
-                                    "show_attribute": "true",
-                                    "card_layout": "normal",
-                                    "entity": "{{ switch.entity_id }}"
-                                  }{%- if not loop.last %},{% endif %}
-                                {%- endfor %}
-                              ]
-                            }{%- if not loop.last %},{% endif %}
-                          {%- endfor %}
-                        ]
-                      {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Støvsugere
-                icon: mdi:robot-vacuum
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Støvsugere
                     type: entities
                   filter:
                     template: >-
                       {% set area_filter = ['area1', 'area2'] %}
 
-                      {# Filter for vacuum devices #} {% set vacuum_filter =
-                      states.vacuum | map(attribute='entity_id') | list %}
+                      {# Filter for media player devices #} {% set media_filter
+                      = states.media_player | map(attribute='entity_id') | list
+                      %}
 
-                      {%- set areas = states.vacuum
-                        | map(attribute='entity_id')
-                        | map('area_name') | unique | reject('none') 
-                        | reject('in', area_filter)
-                        | list -%}
-
-                      {% if areas | length == 0 %}
-                        {{{ 'type': 'custom:button-text-card',
-                            'title': 'Ingen støvsugere funnet',
-                            'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                            'icon': 'mdi:chat-question',
-                            'background_color': 'var(--primary-color)',
-                        }}},
-                      {% else %}   
-
-                      {%- for area in areas -%}
-                        {% set vacuums = states.vacuum
-                          | selectattr('entity_id', 'in', vacuum_filter)
-                          | selectattr('entity_id', 'in', area_entities(area)) | list -%}
-
-                              {{{ 'type': 'custom:button-text-card',
-                                  'title': area,
-                                  'icon': 'mdi:robot-vacuum',
-                                  'background_color': 'var(--primary-color)',
-                              }}},
-
-                        {%- for vacuum in vacuums -%}
-                          {{{ 'type': 'custom:mushroom-vacuum-card',
-                              'entity': vacuum.entity_id }}},
-                        {%- endfor %}
-                      {%- endfor %} {%- endif %}
-                    exclude:
-                      - hidden_by: '*'
-            - attributes:
-                label: Persienner & rullgardiner
-                icon: mdi:window-shutter
-              card:
-                type: custom:mod-card
-                card:
-                  type: custom:auto-entities
-                  card:
-                    title: Persienne- og rullgardinkontroll
-                    type: entities
-                  filter:
-                    template: |-
-                      {% set area_filter = ['area1', 'area2'] %}
-
-                      {# Filter for cover devices #} {% set vacuum_filter =
-                      states.cover | map(attribute='entity_id') | list %}
-
-                      {%- set areas = states.cover
+                      {%- set areas = states.media_player
                         | map(attribute='entity_id')
                         | map('area_name') | unique | reject('none') 
                         | reject('in', area_filter)
@@ -6846,11 +6564,11 @@ views:
                         [
                           {
                             'type': 'custom:button-text-card',
-                            'title': 'Ingen persienner eller rullgardiner funnet',
-                            'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                            'title': 'Ingen mediaspillere funnet',
+                            'subtitle': 'Undersøk om enheten ligger under "Ikke tildelte enheter"',
                             'icon': 'mdi:chat-question',
                             'background_color': 'var(--primary-color)'
-                          }
+                          },
                         ]
                       {% else %}
                         [
@@ -6870,22 +6588,38 @@ views:
                             {
                               'type': 'custom:button-text-card',
                               'title': '{{ area }}',
-                              'icon': 'mdi:window-shutter',
+                              'icon': 'mdi:multimedia',
                               'background_color': 'var(--primary-color)'
                             },
                             {
-                              'type': 'custom:hui-element',
-                              'card_type': 'horizontal-stack',
-                              'cards': [
-                                {%- for cover in states.cover
-                                    | selectattr('entity_id', 'in', vacuum_filter)
+                              "type": "custom:layout-card",
+                              "layout_type": "grid",
+                              "layout": {
+                                "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                "grid-gap": "0px"
+                              },
+                              "cards": [
+                                {%- for device in states.media_player
+                                    | selectattr('entity_id', 'in', media_filter)
                                     | selectattr('entity_id', 'in', area_entities(area)) %}
                                   {
                                     'type': 'custom:bubble-card',
-                                    'card_type': 'cover',
-                                    'entity': '{{ cover.entity_id }}',
-                                    'icon_open': 'mdi:roller-shade',
-                                    'icon_close': 'mdi:roller-shade-closed'
+                                    'card_type': 'media-player',
+                                    'name': '{{ device.name }}',  {# <-- Use device.name #}
+                                    'entity': '{{ device.entity_id }}',
+                                    'show_state': 'true',
+                                    'show_last_updated': 'true',
+                                    'show_attribute': 'true',
+                                    'attribute': 'assumed_state',
+                                    'card_layout': 'large',
+                                    'scrolling_effect': 'false',
+                                    'show_icon': 'true',
+                                    'force_icon': 'true',
+                                    'show_name': 'false',
+                                    'show_last_changed': 'true',
+                                    'tap_action': {
+                                      'action': 'toggle'
+                                    },
                                   }{% if not loop.last %},{% endif %}
                                 {%- endfor %}
                               ]
@@ -6894,39 +6628,250 @@ views:
                           {%- endfor %}
                         ]
                       {% endif %}
-                  exclude:
-                    - hidden_by: '*'
-            - attributes:
-                label: Unassigned
-                icon: mdi:chat-question
-              card:
-                type: custom:auto-entities
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_misc_switches_tab_desktop'].state}
+                  icon: mdi:dip-switch
                 card:
-                  type: entities
-                  title: Entities Not Assigned to an Area
-                  show_header_toggle: false
-                filter:
-                  include:
-                    - domain: light
-                      not:
-                        area: '*'
-                    - domain: fan
-                      not:
-                        area: '*'
-                    - domain: switch
-                      not:
-                        area: '*'
-                    - domain: lock
-                      not:
-                        area: '*'
-                    - domain: sensor
-                      attributes:
-                        device_class: temperature
-                      not:
-                        area: '*'
-                  exclude:
-                    - domain: group
-                    - entity_id: '*screen*'
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %} {% set filter
+                        = ['switch.switch1', 'switch.switch2'] %}
+
+                        {%- set areas = states.switch
+                          | rejectattr('entity_id', 'in', filter)
+                          | map(attribute='entity_id')
+                          | map('area_name')
+                          | unique
+                          | reject('none')
+                          | reject('in', area_filter)
+                          | list -%}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              "type": "custom:button-text-card",
+                              "title": "Ingen brytere funnet",
+                              "subtitle": "Ingen tilgjengelige brytere i dette området",
+                              "icon": "mdi:toggle-switch-off",
+                              "background_color": "var(--primary-color)"
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                               { 'type': 'custom:button-card',
+                                'styles': {
+                                  'card': [
+                                    { 'height': '5px' },
+                                    { 'max-height': '10px' },
+                                    { 'padding': '0' },
+                                    { 'margin': '0' },
+                                    { 'background-color': 'var(--primary-color)' }
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "custom:button-text-card",
+                                "title": "{{ area }}",
+                                "icon": "mdi:toggle-switch",
+                                "background_color": "var(--primary-color)"
+                              },
+                              {
+                                "type": "custom:layout-card",
+                                "layout_type": "grid",
+                                "layout": {
+                                  "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                  "grid-gap": "0px"
+                                },
+                                "cards": [
+                                  {%- set switches = states.switch 
+                                    | rejectattr('entity_id', 'in', filter)
+                                    | selectattr('entity_id', 'in', area_entities(area)) 
+                                    | list -%}
+                                    
+                                  {%- for switch in switches -%}
+                                    {
+                                      "type": "custom:bubble-card",
+                                      "card_type": "button",
+                                      "button_type": "switch",
+                                      "force_icon": "true",
+                                      "show_last_changed": "true",
+                                      "show_attribute": "true",
+                                      "card_layout": "normal",
+                                      "entity": "{{ switch.entity_id }}"
+                                    }{%- if not loop.last %},{% endif %}
+                                  {%- endfor %}
+                                ]
+                              }{%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_misc_vacuums_tab_desktop'].state}
+                  icon: mdi:robot-vacuum
+                card:
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: >-
+                        {% set area_filter = ['area1', 'area2'] %}
+
+                        {# Filter for vacuum devices #} {% set vacuum_filter =
+                        states.vacuum | map(attribute='entity_id') | list %}
+
+                        {%- set areas = states.vacuum
+                          | map(attribute='entity_id')
+                          | map('area_name') | unique | reject('none') 
+                          | reject('in', area_filter)
+                          | list -%}
+
+                        {% if areas | length == 0 %}
+                          {{{ 'type': 'custom:button-text-card',
+                              'title': 'Ingen støvsugere funnet',
+                              'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)',
+                          }}},
+                        {% else %}   
+
+                        {%- for area in areas -%}
+                          {% set vacuums = states.vacuum
+                            | selectattr('entity_id', 'in', vacuum_filter)
+                            | selectattr('entity_id', 'in', area_entities(area)) | list -%}
+
+                                {{{ 'type': 'custom:button-text-card',
+                                    'title': area,
+                                    'icon': 'mdi:robot-vacuum',
+                                    'background_color': 'var(--primary-color)',
+                                }}},
+
+                          {%- for vacuum in vacuums -%}
+                            {{{ 'type': 'custom:mushroom-vacuum-card',
+                                'entity': vacuum.entity_id }}},
+                          {%- endfor %}
+                        {%- endfor %} {%- endif %}
+                      exclude:
+                        - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_misc_covers_tab_desktop'].state}
+                  icon: mdi:window-shutter
+                card:
+                  type: custom:mod-card
+                  card:
+                    type: custom:auto-entities
+                    card:
+                      type: entities
+                    filter:
+                      template: |-
+                        {% set area_filter = ['area1', 'area2'] %}
+
+                        {# Filter for cover devices #} {% set vacuum_filter =
+                        states.cover | map(attribute='entity_id') | list %}
+
+                        {%- set areas = states.cover
+                          | map(attribute='entity_id')
+                          | map('area_name') | unique | reject('none') 
+                          | reject('in', area_filter)
+                          | list -%}
+
+                        {% if areas | length == 0 %}
+                          [
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': 'Ingen persienner eller rullgardiner funnet',
+                              'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                              'icon': 'mdi:chat-question',
+                              'background_color': 'var(--primary-color)'
+                            }
+                          ]
+                        {% else %}
+                          [
+                            {%- for area in areas %}
+                              {
+                                'type': 'custom:button-card',
+                                'styles': {
+                                  'card': [
+                                    { 'height': '5px' },
+                                    { 'max-height': '10px' },
+                                    { 'padding': '0' },
+                                    { 'margin': '0' },
+                                    { 'background-color': 'var(--primary-color)' }
+                                  ]
+                                }
+                              },
+                              {
+                                'type': 'custom:button-text-card',
+                                'title': '{{ area }}',
+                                'icon': 'mdi:window-shutter',
+                                'background_color': 'var(--primary-color)'
+                              },
+                              {
+                                'type': 'custom:hui-element',
+                                'card_type': 'horizontal-stack',
+                                'cards': [
+                                  {%- for cover in states.cover
+                                      | selectattr('entity_id', 'in', vacuum_filter)
+                                      | selectattr('entity_id', 'in', area_entities(area)) %}
+                                    {
+                                      'type': 'custom:bubble-card',
+                                      'card_type': 'cover',
+                                      'entity': '{{ cover.entity_id }}',
+                                      'icon_open': 'mdi:roller-shade',
+                                      'icon_close': 'mdi:roller-shade-closed'
+                                    }{% if not loop.last %},{% endif %}
+                                  {%- endfor %}
+                                ]
+                              }
+                              {%- if not loop.last %},{% endif %}
+                            {%- endfor %}
+                          ]
+                        {% endif %}
+                    exclude:
+                      - hidden_by: '*'
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_misc_unassigned_tab_desktop'].state}
+                  icon: mdi:chat-question
+                card:
+                  type: custom:auto-entities
+                  card:
+                    type: entities
+                    show_header_toggle: false
+                  filter:
+                    include:
+                      - domain: light
+                        not:
+                          area: '*'
+                      - domain: fan
+                        not:
+                          area: '*'
+                      - domain: switch
+                        not:
+                          area: '*'
+                      - domain: lock
+                        not:
+                          area: '*'
+                      - domain: sensor
+                        attributes:
+                          device_class: temperature
+                        not:
+                          area: '*'
+                    exclude:
+                      - domain: group
+                      - entity_id: '*screen*'
     background: {}
   - title: Sikkerhet
     path: cameras
@@ -7805,7 +7750,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -7814,303 +7758,309 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
-                      }
-                         
         card:
-          type: custom:tabbed-card
-          styles: null
-          '--mdc-theme-primary': yellow
-          '--mdc-tab-text-label-color-default': orange
-          tabs:
-            - attributes:
-                label: Alarm
-                icon: mdi:shield
-              card:
-                type: vertical-stack
-                cards:
-                  - type: custom:gap-card
-                  - type: vertical-stack
-                    cards:
-                      - type: custom:alarmo-card
-                        entity: alarm_control_panel.alarmo
-                        button_scale_keypad: 1.5
-                        use_clear_icon: true
-                        name: Alarm
-                        button_scale_actions: 1.5
-                      - type: horizontal-stack
-                        cards:
-                          - type: custom:mushroom-chips-card
-                            chips:
-                              - type: action
-                                icon_color: primary
-                                tap_action:
-                                  action: navigate
-                                  navigation_path: /alarmo
-                                icon: mdi:cog
-                            alignment: start
-                            card_mod:
-                              style: |
-                                ha-card {
-                                  --chip-background: var(--primary-text-color);
-                                }
-            - attributes:
-                label: Kamera
-                icon: mdi:cctv
-              card:
-                type: custom:mod-card
-                card_mod:
-                  style:
-                    .: |
-                      ha-card {
-                        --ha-card-border-radius: 20px;
-                      }
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_security_alarm_tab_desktop
+            - sensor.tabbed_card_security_cameras_tab_desktop
+            - sensor.tabbed_card_security_doors_and_windows_tab_desktop
+            - sensor.tabbed_card_security_alarm_tab_desktop
+          card:
+            type: custom:tabbed-card
+            styles:
+              '--mdc-theme-primary': var(--primary-color)
+              '--mdc-tab-text-label-color-default': white
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_security_alarm_tab_desktop'].state}
+                  icon: mdi:shield
                 card:
-                  type: custom:auto-entities
-                  filter:
-                    include:
-                      - domain: camera
-                        options:
-                          type: picture-entity
-                          camera_view: live
-                          show_state: false
-                          show_name: false
+                  type: vertical-stack
+                  cards:
+                    - type: custom:gap-card
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:alarmo-card
+                          entity: alarm_control_panel.alarmo
+                          button_scale_keypad: 1.5
+                          use_clear_icon: true
+                          name: Alarm
+                          button_scale_actions: 1.5
+                        - type: horizontal-stack
+                          cards:
+                            - type: custom:mushroom-chips-card
+                              chips:
+                                - type: action
+                                  icon_color: primary
+                                  tap_action:
+                                    action: navigate
+                                    navigation_path: /alarmo
+                                  icon: mdi:cog
+                              alignment: start
+                              card_mod:
+                                style: |
+                                  ha-card {
+                                    --chip-background: var(--primary-text-color);
+                                  }
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_security_cameras_tab_desktop'].state}
+                  icon: mdi:cctv
+                card:
+                  type: custom:mod-card
+                  card_mod:
+                    style:
+                      .: |
+                        ha-card {
+                          --ha-card-border-radius: 20px;
+                        }
                   card:
-                    type: grid
-                    square: false
-                    columns: 1
-                    card_mod: null
-                    style: null
-                  card_param: cards
-            - attributes:
-                label: Dører & vinduer
-                icon: mdi:door-closed
-              card:
-                type: custom:mod-card
+                    type: custom:auto-entities
+                    filter:
+                      include:
+                        - domain: camera
+                          options:
+                            type: picture-entity
+                            camera_view: live
+                            show_state: false
+                            show_name: false
+                    card:
+                      type: grid
+                      square: false
+                      columns: 1
+                      card_mod: null
+                      style: null
+                    card_param: cards
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_security_doors_and_windows_tab_desktop'].state}
+                  icon: mdi:door-closed
                 card:
                   type: custom:mod-card
                   card:
-                    type: custom:auto-entities
+                    type: custom:mod-card
                     card:
-                      type: entities
-                    filter:
-                      template: >-
-                        {% set area_filter = ['area1', 'area2'] %} {% set
-                        door_filter = ['binary_sensor.door_sensor_1',
-                        'binary_sensor.door_sensor_2'] %} {% set window_filter =
-                        ['binary_sensor.window_sensor_1',
-                        'binary_sensor.window_sensor_2'] %}
+                      type: custom:auto-entities
+                      card:
+                        type: entities
+                      filter:
+                        template: >-
+                          {% set area_filter = ['area1', 'area2'] %} {% set
+                          door_filter = ['binary_sensor.door_sensor_1',
+                          'binary_sensor.door_sensor_2'] %} {% set window_filter
+                          = ['binary_sensor.window_sensor_1',
+                          'binary_sensor.window_sensor_2'] %}
 
-                        {%- set areas = states.binary_sensor
-                          | selectattr('attributes.device_class', 'in', ['door', 'window'])
-                          | rejectattr('entity_id', 'in', door_filter + window_filter)
-                          | map(attribute='entity_id')
-                          | map('area_name') | unique | reject('none') 
-                          | reject('in', area_filter)
-                          | list -%}
+                          {%- set areas = states.binary_sensor
+                            | selectattr('attributes.device_class', 'in', ['door', 'window'])
+                            | rejectattr('entity_id', 'in', door_filter + window_filter)
+                            | map(attribute='entity_id')
+                            | map('area_name') | unique | reject('none') 
+                            | reject('in', area_filter)
+                            | list -%}
 
-                        {% if areas | length == 0 %}
-                          [
-                            {
-                              'type': 'custom:button-text-card',
-                              'title': 'Ingen dør- eller vidusensorer funnet',
-                              'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                              'icon': 'mdi:chat-question',
-                              'background_color': 'var(--primary-color)'
-                            }
-                          ]
-                        {% else %}
-                          [
-                            {%- for area in areas %}
-                            {
-                                'type': 'custom:button-card',
-                                'styles': {
-                                  'card': [
-                                    { 'height': '5px'},
-                                    { 'max-height': '10px'},
-                                    { 'padding': '0'},
-                                    { 'margin': '0'},
-                                    { 'background-color': 'var(--primary-color)'}
-                                  ]
-                                }
-                              },
+                          {% if areas | length == 0 %}
+                            [
                               {
                                 'type': 'custom:button-text-card',
-                                'title': '{{ area }}',
-                                'icon': 'mdi:door-open',
+                                'title': 'Ingen dør- eller vidusensorer funnet',
+                                'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                                'icon': 'mdi:chat-question',
                                 'background_color': 'var(--primary-color)'
-                              },
-
-                              {                       
-                                  "type": "custom:layout-card",
-                                  "layout_type": "grid",
-                                  "layout": {
-                                    "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
-                                    "grid-gap": "0px"
-                                  },
-                                'cards': [
-                                  {%- for sensor in states.binary_sensor
-                                     | selectattr('attributes.device_class', 'in', ['door', 'window'])
-                                     | rejectattr('entity_id', 'in', door_filter + window_filter)
-                                     | selectattr('entity_id', 'in', area_entities(area)) %}
-                                    {
-                                      'type': 'custom:mushroom-entity-card',
-                                      'entity': '{{ sensor.entity_id }}',
-                                    }{% if not loop.last %},{% endif %}
-                                  {%- endfor %}
-                                ]
                               }
-                              {%- if not loop.last %},{% endif %}
-                            {%- endfor %}
-                          ]
-                        {% endif %}
-            - attributes:
-                label: Låser
-                icon: mdi:lock
-              card:
-                type: custom:auto-entities
+                            ]
+                          {% else %}
+                            [
+                              {%- for area in areas %}
+                              {
+                                  'type': 'custom:button-card',
+                                  'styles': {
+                                    'card': [
+                                      { 'height': '5px'},
+                                      { 'max-height': '10px'},
+                                      { 'padding': '0'},
+                                      { 'margin': '0'},
+                                      { 'background-color': 'var(--primary-color)'}
+                                    ]
+                                  }
+                                },
+                                {
+                                  'type': 'custom:button-text-card',
+                                  'title': '{{ area }}',
+                                  'icon': 'mdi:door-open',
+                                  'background_color': 'var(--primary-color)'
+                                },
+
+                                {                       
+                                    "type": "custom:layout-card",
+                                    "layout_type": "grid",
+                                    "layout": {
+                                      "grid-template-columns": "repeat(auto-fit, minmax(200px, 1fr))",
+                                      "grid-gap": "0px"
+                                    },
+                                  'cards': [
+                                    {%- for sensor in states.binary_sensor
+                                       | selectattr('attributes.device_class', 'in', ['door', 'window'])
+                                       | rejectattr('entity_id', 'in', door_filter + window_filter)
+                                       | selectattr('entity_id', 'in', area_entities(area)) %}
+                                      {
+                                        'type': 'custom:mushroom-entity-card',
+                                        'entity': '{{ sensor.entity_id }}',
+                                      }{% if not loop.last %},{% endif %}
+                                    {%- endfor %}
+                                  ]
+                                }
+                                {%- if not loop.last %},{% endif %}
+                              {%- endfor %}
+                            ]
+                          {% endif %}
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_security_locks_tab_desktop'].state}
+                  icon: mdi:lock
                 card:
-                  title: Låser
-                  type: entities
-                filter:
-                  template: >-
-                    {% set area_filter = ['area1', 'area2'] %}
+                  type: custom:auto-entities
+                  card:
+                    title: Låser
+                    type: entities
+                  filter:
+                    template: >-
+                      {% set area_filter = ['area1', 'area2'] %}
 
-                    {% set lock_filter = ['binary_sensor.lock_sensor_1',
-                    'binary_sensor.lock_sensor_2'] %}
+                      {% set lock_filter = ['binary_sensor.lock_sensor_1',
+                      'binary_sensor.lock_sensor_2'] %}
 
-                    {%- set areas = states.binary_sensor
-                      | selectattr('attributes.device_class', 'eq', 'lock')
-                      | rejectattr('entity_id', 'in', lock_filter)
-                      | map(attribute='entity_id')
-                      | map('area_name') | unique | reject('none') 
-                      | reject('in', area_filter)
-                      | list -%}
+                      {%- set areas = states.binary_sensor
+                        | selectattr('attributes.device_class', 'eq', 'lock')
+                        | rejectattr('entity_id', 'in', lock_filter)
+                        | map(attribute='entity_id')
+                        | map('area_name') | unique | reject('none') 
+                        | reject('in', area_filter)
+                        | list -%}
 
-                    {% if areas | length == 0 %}
-                      {{{ 'type': 'custom:button-text-card',
-                          'title': 'Ingen låser funnet',
-                          'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                          'icon': 'mdi:chat-question',
-                          'background_color': 'var(--primary-color)',
-                      }}},
-                    {% else %}
-                      {%- for area in areas -%}
-                      
-                        {
-                            'type': 'custom:button-card',
-                            'styles': {
-                              'card': [
-                                { 'height': '5px'},
-                                { 'max-height': '10px'},
-                                { 'padding': '0'},
-                                { 'margin': '0'},
-                                { 'background-color': 'var(--primary-color)'}
-                              ]
-                            }
-                          },
-
-                        {% set locks = states.binary_sensor
-                          | selectattr('attributes.device_class', 'eq', 'lock')
-                          | rejectattr('entity_id', 'in', lock_filter)
-                          | selectattr('entity_id', 'in', area_entities(area))
-                          | list -%}
-
+                      {% if areas | length == 0 %}
                         {{{ 'type': 'custom:button-text-card',
-                            'title': area,
-                            'icon': 'mdi:lock',
+                            'title': 'Ingen låser funnet',
+                            'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                            'icon': 'mdi:chat-question',
                             'background_color': 'var(--primary-color)',
                         }}},
-
-                        {%- for sensor in locks -%}
-                          {{{ 'type': 'custom:mushroom-lock-card',
-                              'entity': sensor.entity_id }}},
-                        {%- endfor %}
-                      {%- endfor %}
-                    {% endif %}
-            - attributes:
-                label: Røyk- og gassdetektorer
-                icon: mdi:smoke-detector-variant
-              card:
-                type: custom:auto-entities
-                card:
-                  title: Detektorer
-                  type: entities
-                filter:
-                  template: |-
-                    {% set areas = states.binary_sensor
-                      | selectattr('attributes.device_class', 'in', ['smoke', 'gas'])
-                      | map(attribute='entity_id')
-                      | map('area_name') | unique | reject('none') 
-                      | list -%}
-                    {% if areas | length == 0 %}
-                      [
-                        {
-                          'type': 'custom:button-text-card',
-                          'title': 'Ingen detekotrer funnet',
-                          'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
-                          'icon': 'mdi:chat-question',
-                          'background_color': 'var(--primary-color)'
-                        }
-                      ]
-                    {% else %}
-                      [
-                        {%- for area in areas %}
+                      {% else %}
+                        {%- for area in areas -%}
+                        
                           {
-                            'type': 'custom:button-card',
-                            'styles': {
-                              'card': [
-                                { 'height': '5px' },
-                                { 'max-height': '10px' },
-                                { 'padding': '0' },
-                                { 'margin': '0' },
-                                { 'background-color': 'var(--primary-color)' }
-                              ]
-                            }
-                          },
+                              'type': 'custom:button-card',
+                              'styles': {
+                                'card': [
+                                  { 'height': '5px'},
+                                  { 'max-height': '10px'},
+                                  { 'padding': '0'},
+                                  { 'margin': '0'},
+                                  { 'background-color': 'var(--primary-color)'}
+                                ]
+                              }
+                            },
+
+                          {% set locks = states.binary_sensor
+                            | selectattr('attributes.device_class', 'eq', 'lock')
+                            | rejectattr('entity_id', 'in', lock_filter)
+                            | selectattr('entity_id', 'in', area_entities(area))
+                            | list -%}
+
+                          {{{ 'type': 'custom:button-text-card',
+                              'title': area,
+                              'icon': 'mdi:lock',
+                              'background_color': 'var(--primary-color)',
+                          }}},
+
+                          {%- for sensor in locks -%}
+                            {{{ 'type': 'custom:mushroom-lock-card',
+                                'entity': sensor.entity_id }}},
+                          {%- endfor %}
+                        {%- endfor %}
+                      {% endif %}
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_security_smoke_and_gas_tab_desktop'].state}
+                  icon: mdi:smoke-detector-variant
+                card:
+                  type: custom:auto-entities
+                  card:
+                    type: entities
+                  filter:
+                    template: |-
+                      {% set areas = states.binary_sensor
+                        | selectattr('attributes.device_class', 'in', ['smoke', 'gas'])
+                        | map(attribute='entity_id')
+                        | map('area_name') | unique | reject('none') 
+                        | list -%}
+                      {% if areas | length == 0 %}
+                        [
                           {
                             'type': 'custom:button-text-card',
-                            'title': '{{ area }}',
-                            'icon': 'mdi:smoke-detector-variant',
+                            'title': 'Ingen detekotrer funnet',
+                            'subtitle':'Undersøk om enheten ligger under "Ikke tildelte enheter"',
+                            'icon': 'mdi:chat-question',
                             'background_color': 'var(--primary-color)'
-                          },
-                          {
-                            'type': 'custom:hui-element',
-                            'card_type': 'horizontal-stack',
-                            'cards': [
-                              {%- for sensor in states.binary_sensor
-                                  | selectattr('attributes.device_class', 'eq', 'smoke')
-                                  | selectattr('entity_id', 'in', area_entities(area)) %}
-                                {
-                                  'type': 'custom:mushroom-entity-card',
-                                  'entity': '{{ sensor.entity_id }}',
-                                  'icon_color': 'primary'
-                                }{% if not loop.last %},{% endif %}
-                              {%- endfor %}
-                            ]
-                          },
-                          {
-                            'type': 'custom:hui-element',
-                            'card_type': 'horizontal-stack',
-                            'cards': [
-                              {%- for sensor in states.binary_sensor
-                                  | selectattr('attributes.device_class', 'eq', 'gas')
-                                  | selectattr('entity_id', 'in', area_entities(area)) %}
-                                {
-                                  'type': 'custom:mushroom-entity-card',
-                                  'entity': '{{ sensor.entity_id }}'
-                                }{% if not loop.last %},{% endif %}
-                              {%- endfor %}
-                            ]
                           }
-                          {%- if not loop.last %},{% endif %}
-                        {%- endfor %}
-                      ]
-                    {% endif %}
-                exclude:
-                  - hidden_by: '*'
+                        ]
+                      {% else %}
+                        [
+                          {%- for area in areas %}
+                            {
+                              'type': 'custom:button-card',
+                              'styles': {
+                                'card': [
+                                  { 'height': '5px' },
+                                  { 'max-height': '10px' },
+                                  { 'padding': '0' },
+                                  { 'margin': '0' },
+                                  { 'background-color': 'var(--primary-color)' }
+                                ]
+                              }
+                            },
+                            {
+                              'type': 'custom:button-text-card',
+                              'title': '{{ area }}',
+                              'icon': 'mdi:smoke-detector-variant',
+                              'background_color': 'var(--primary-color)'
+                            },
+                            {
+                              'type': 'custom:hui-element',
+                              'card_type': 'horizontal-stack',
+                              'cards': [
+                                {%- for sensor in states.binary_sensor
+                                    | selectattr('attributes.device_class', 'eq', 'smoke')
+                                    | selectattr('entity_id', 'in', area_entities(area)) %}
+                                  {
+                                    'type': 'custom:mushroom-entity-card',
+                                    'entity': '{{ sensor.entity_id }}',
+                                    'icon_color': 'primary'
+                                  }{% if not loop.last %},{% endif %}
+                                {%- endfor %}
+                              ]
+                            },
+                            {
+                              'type': 'custom:hui-element',
+                              'card_type': 'horizontal-stack',
+                              'cards': [
+                                {%- for sensor in states.binary_sensor
+                                    | selectattr('attributes.device_class', 'eq', 'gas')
+                                    | selectattr('entity_id', 'in', area_entities(area)) %}
+                                  {
+                                    'type': 'custom:mushroom-entity-card',
+                                    'entity': '{{ sensor.entity_id }}'
+                                  }{% if not loop.last %},{% endif %}
+                                {%- endfor %}
+                              ]
+                            }
+                            {%- if not loop.last %},{% endif %}
+                          {%- endfor %}
+                        ]
+                      {% endif %}
+                  exclude:
+                    - hidden_by: '*'
     background: {}
   - title: Energi
     path: power
@@ -9063,7 +9013,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -9071,578 +9020,610 @@ views:
                   .mdc-tab--active {
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
-                  }          
+                  }
         card:
-          type: custom:tabbed-card
-          tabs:
-            - attributes:
-                label: Sanntidsstatistikk
-                icon: mdi:lightning-bolt
-              card:
-                type: vertical-stack
-                cards:
-                  - type: energy-distribution
-                    link_dashboard: false
-                  - type: custom:tabbed-card
-                    styles: null
-                    '--mdc-theme-primary': yellow
-                    '--mdc-tab-text-label-color-default': orange
-                    tabs:
-                      - attributes:
-                          label: Energiforbruk
-                          icon: mdi:lightning-bolt
-                        card:
-                          type: energy-usage-graph
-                      - attributes:
-                          label: Solproduksjon
-                          icon: mdi:solar-power-variant
-                        card:
-                          type: custom:mod-card
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --ha-card-border-radius: 20px;
-                                }
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_energy_current_statistics_tab_desktop
+            - sensor.tabbed_card_energy_electricity_price_tab_desktop
+            - sensor.tabbed_card_energy_gas_consumption_tab_desktop
+            - sensor.tabbed_card_energy_power_flow_tab_desktop
+            - sensor.tabbed_card_energy_solar_production_tab_desktop
+            - sensor.tabbed_card_energy_usage_statistics_tab_desktop
+            - sensor.tabbed_card_energy_usage_tab_desktop
+            - sensor.tabbed_card_energy_water_consumption_tab_desktop
+          card:
+            type: custom:tabbed-card
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_energy_current_statistics_tab_desktop'].state}
+                  icon: mdi:lightning-bolt
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: energy-distribution
+                      link_dashboard: false
+                    - type: custom:tabbed-card
+                      styles: null
+                      '--mdc-theme-primary': yellow
+                      '--mdc-tab-text-label-color-default': orange
+                      tabs:
+                        - attributes:
+                            label: >-
+                              ${states['sensor.tabbed_card_energy_usage_tab_desktop'].state}
+                            icon: mdi:lightning-bolt
                           card:
-                            type: energy-solar-graph
-                      - attributes:
-                          label: Gassforbruk
-                          icon: mdi:gas-cylinder
-                        card:
-                          type: custom:mod-card
+                            type: energy-usage-graph
+                        - attributes:
+                            label: >-
+                              ${states['sensor.tabbed_card_energy_solar_production_tab_desktop'].state}
+                            icon: mdi:solar-power-variant
                           card:
-                            type: energy-gas-graph
-                      - attributes:
-                          label: Vannforbruk
-                          icon: mdi:water
-                        card:
-                          type: custom:mod-card
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --ha-card-border-width: 0;
-                                  --ha-card-border-radius: 20px;
-                                }
+                            type: custom:mod-card
+                            card_mod:
+                              style:
+                                .: |
+                                  ha-card {
+                                    --ha-card-border-radius: 20px;
+                                  }
+                            card:
+                              type: energy-solar-graph
+                        - attributes:
+                            label: >-
+                              ${states['sensor.tabbed_card_energy_gas_consumption_tab_desktop'].state}
+                            icon: mdi:gas-cylinder
                           card:
-                            type: energy-water-graph
-                  - type: custom:mini-graph-card
-                    name: Forbruk
-                    entities:
-                      - sensor.dynamic_power_sensor
-                    points_per_hour: 10
-                    line_width: 1
-                    height: 60
-                    show:
-                      labels: true
-                      fill: true
-                      average: true
-                      extrema: true
-                    color_thresholds:
-                      - value: 2000
-                        color: '#f39c12'
-                      - value: 4000
-                        color: '#d35400'
-                      - value: 8000
-                        color: '#c0392b'
-                  - type: custom:mushroom-template-card
-                    primary: Ingen data? Klikk her
-                    secondary: Sett forbrukssensor i energipanelet
-                    icon: mdi:chat-question
-                    badge_icon: mdi:lightning-bolt
-                    badge_color: primary
-                    tap_action:
-                      action: navigate
-                      navigation_path: /energy
-                    layout: vertical
-            - attributes:
-                label: Forbruksstatistikk
-                icon: mdi:autorenew
-              card:
-                type: vertical-stack
-                cards:
-                  - type: vertical-stack
-                    cards:
-                      - type: energy-devices-detail-graph
-                        max_devices: 10
-                        card: null
-                      - type: horizontal-stack
-                        cards:
-                          - height: 200
-                            unit_prefix: k
-                            round: 1
-                            min_box_height: 5
-                            min_box_distance: 5
-                            show_states: true
-                            show_units: true
-                            energy_date_selection: true
-                            sections: []
-                            type: custom:sankey-chart
-                            autoconfig:
-                              print_yaml: false
-                            min_state: 0
-                            wide: true
-                            show_names: true
-                            show_icons: false
-            - attributes:
-                label: Pris
-                icon: mdi:currency-usd
-              card:
-                type: vertical-stack
-                cards:
-                  - type: vertical-stack
-                    cards:
-                      - type: custom:apexcharts-card
-                        graph_span: 48h
-                        header:
-                          title: ''
-                          show: true
-                        span:
-                          start: day
-                        apex_config:
-                          chart:
-                            height: 390px
-                        now:
-                          show: true
-                          label: Nå
-                        experimental:
-                          color_threshold: true
-                        yaxis:
-                          - id: pris
-                            opposite: false
-                            decimals: 2
-                            min: 0
-                            apex_config:
-                              tickAmount: 5
-                              labels:
-                                show: true
-                              legend:
-                                - show: false
-                          - id: powersaver
-                            opposite: true
-                            decimals: 0
-                            min: 0
-                            max: 1
-                            apex_config:
-                              tickAmount: 7
-                              labels:
-                                show: true
-                              legend:
-                                - show: true
-                        series:
-                          - entity: sensor.strompris_effektiv
-                            name: Effektiv Strømpris
-                            opacity: 1
-                            float_precision: 2
-                            extend_to: now
-                            yaxis_id: pris
-                            curve: smooth
-                            color: red
-                            stroke_width: 2
-                            show:
-                              legend_value: false
-                              in_header: true
-                              name_in_header: false
-                              datalabels: false
-                            data_generator: |
-
-                              const data = entity.attributes.hours.map(hour => {
-
-                                return [new Date(hour.start), hour.price];
-
-                              });
-
-                              if (data.length > 0) {
-
-                                const lastDataPoint = data[data.length - 1];
-
-                                const lastTime = new Date(lastDataPoint[0]);
-
-                                const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
-
-                                data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
-
-                              }
-
-                              return data;
-                          - entity: sensor.strompris_nordpool
-                            name: Nordpool
-                            opacity: 1
-                            float_precision: 2
-                            extend_to: now
-                            yaxis_id: pris
-                            curve: smooth
-                            color: 6B9EFF
-                            stroke_width: 2
-                            show:
-                              legend_value: false
-                              in_header: true
-                              name_in_header: false
-                              datalabels: false
-                            data_generator: |
-
-                              const data = entity.attributes.hours.map(hour => {
-
-                                return [new Date(hour.start), hour.price];
-
-                              });
-
-                              if (data.length > 0) {
-
-                                const lastDataPoint = data[data.length - 1];
-
-                                const lastTime = new Date(lastDataPoint[0]);
-
-                                const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
-
-                                data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
-
-                              }
-
-                              return data;
-                          - entity: sensor.strompris_stotte
-                            name: Strømstøtte
-                            opacity: 1
-                            float_precision: 2
-                            extend_to: now
-                            yaxis_id: pris
-                            curve: stepline
-                            color: green
-                            stroke_width: 1
-                            show:
-                              legend_value: false
-                              in_header: true
-                              name_in_header: false
-                              datalabels: false
-                            data_generator: |
-
-                              const data = entity.attributes.hours.map(hour => {
-
-                                return [new Date(hour.start), hour.price];
-
-                              });
-
-                              if (data.length > 0) {
-
-                                const lastDataPoint = data[data.length - 1];
-
-                                const lastTime = new Date(lastDataPoint[0]);
-
-                                const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
-
-                                data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
-
-                              }
-
-                              return data;
-                          - entity: sensor.strompris_nettleie
-                            name: Nettleie
-                            opacity: 1
-                            float_precision: 2
-                            extend_to: now
-                            yaxis_id: pris
-                            curve: stepline
-                            color: FF8800
-                            stroke_width: 3
-                            show:
-                              legend_value: false
-                              in_header: true
-                              name_in_header: false
-                              datalabels: false
-                            data_generator: |
-
-                              const data = entity.attributes.hours.map(hour => {
-
-                                return [new Date(hour.start), hour.price];
-
-                              });
-
-                              if (data.length > 0) {
-
-                                const lastDataPoint = data[data.length - 1];
-
-                                const lastTime = new Date(lastDataPoint[0]);
-
-                                const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
-
-                                data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
-
-                              }
-
-                              return data;
-                      - type: custom:apexcharts-card
-                        header:
-                          show: true
-                          title: Pris i dag + Forbruk + Powersaver
-                        now:
-                          show: true
-                          label: Nå
-                        graph_span: 2d
-                        span:
-                          start: day
-                        apex_config:
-                          chart:
-                            height: 400px
-                          stroke:
-                            width: 2
-                          dataLabels:
-                            enabled: true
-                          fill:
-                            type: gradient
-                            gradient:
-                              shadeIntensity: 1
-                              inverseColors: true
-                              opacityFrom: 0.8
-                              opacityTo: 0.2
-                          legend:
+                            type: custom:mod-card
+                            card:
+                              type: energy-gas-graph
+                        - attributes:
+                            label: >-
+                              ${states['sensor.tabbed_card_energy_water_consumption_tab_desktop'].state}
+                            icon: mdi:water
+                          card:
+                            type: custom:mod-card
+                            card_mod:
+                              style:
+                                .: |
+                                  ha-card {
+                                    --ha-card-border-width: 0;
+                                    --ha-card-border-radius: 20px;
+                                  }
+                            card:
+                              type: energy-water-graph
+                    - type: custom:mini-graph-card
+                      name: >-
+                        ${states['sensor.tabbed_card_energy_usage_tab_desktop'].state}
+                      entities:
+                        - sensor.dynamic_power_sensor
+                      points_per_hour: 10
+                      line_width: 1
+                      height: 60
+                      show:
+                        labels: true
+                        fill: true
+                        average: true
+                        extrema: true
+                      color_thresholds:
+                        - value: 2000
+                          color: '#f39c12'
+                        - value: 4000
+                          color: '#d35400'
+                        - value: 8000
+                          color: '#c0392b'
+                    - type: custom:mushroom-template-card
+                      primary: Ingen data? Klikk her
+                      secondary: Sett forbrukssensor i energipanelet
+                      icon: mdi:chat-question
+                      badge_icon: mdi:lightning-bolt
+                      badge_color: primary
+                      tap_action:
+                        action: navigate
+                        navigation_path: /energy
+                      layout: vertical
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_energy_usage_statistics_tab_desktop'].state}
+                  icon: mdi:autorenew
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: vertical-stack
+                      cards:
+                        - type: energy-devices-detail-graph
+                          max_devices: 10
+                          card: null
+                        - type: horizontal-stack
+                          cards:
+                            - height: 200
+                              unit_prefix: k
+                              round: 1
+                              min_box_height: 5
+                              min_box_distance: 5
+                              show_states: true
+                              show_units: true
+                              energy_date_selection: true
+                              sections: []
+                              type: custom:sankey-chart
+                              autoconfig:
+                                print_yaml: false
+                              min_state: 0
+                              wide: true
+                              show_names: true
+                              show_icons: false
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_energy_electricity_price_tab_desktop'].state}
+                  icon: mdi:currency-usd
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:apexcharts-card
+                          graph_span: 48h
+                          header:
+                            title: ''
                             show: true
+                          span:
+                            start: day
+                          apex_config:
+                            chart:
+                              height: 390px
+                          now:
+                            show: true
+                            label: Nå
+                          experimental:
+                            color_threshold: true
                           yaxis:
-                            - id: price
-                              show: true
+                            - id: pris
+                              opposite: false
+                              decimals: 2
                               min: 0
-                              max: 2.5
-                              tickAmount: 6
-                              opposite: true
-                              decimalsInFloat: 1
-                              floating: false
-                              forceNiceScale: true
-                              extend_to: end
-                            - id: usage
-                              decimalsInFloat: 0
-                              show: true
-                              min: 0
-                              forceNiceScale: true
+                              apex_config:
+                                tickAmount: 5
+                                labels:
+                                  show: true
+                                legend:
+                                  - show: false
                             - id: powersaver
-                              show: false
-                              decimalsInFloat: 0
-                              floating: false
+                              opposite: true
+                              decimals: 0
+                              min: 0
+                              max: 1
+                              apex_config:
+                                tickAmount: 7
+                                labels:
+                                  show: true
+                                legend:
+                                  - show: true
+                          series:
+                            - entity: sensor.strompris_effektiv
+                              name: Effektiv Strømpris
+                              opacity: 1
+                              float_precision: 2
                               extend_to: now
-                        series:
-                          - entity: sensor.strompris_effektiv
-                            yaxis_id: price
-                            extend_to: now
-                            name: Faktisk strømpris
-                            type: area
-                            curve: stepline
-                            color: tomato
-                            float_precision: 2
-                            show:
-                              legend_value: false
-                            data_generator: |
-                              return entity.attributes.hours.map((entry) => {
-                                return [new Date(entry.start), entry.price];
-                              });
-                          - entity: sensor.dynamic_power_sensor
-                            yaxis_id: usage
-                            type: column
-                            name: Forbruk
-                            time_delta: +30m
-                            group_by:
-                              func: max
-                            show:
-                              legend_value: true
-                          - entity: sensor.powersaver_payload
-                            data_generator: |
+                              yaxis_id: pris
+                              curve: smooth
+                              color: red
+                              stroke_width: 2
+                              show:
+                                legend_value: false
+                                in_header: true
+                                name_in_header: false
+                                datalabels: false
+                              data_generator: >
 
-                              return entity.attributes.hours.map((entry) => {
+                                const data = entity.attributes.hours.map(hour =>
+                                {
 
-                                return [new Date(entry.start), entry.onOff];
+                                  return [new Date(hour.start), hour.price];
 
-                              });
-                            yaxis_id: powersaver
-                            name: Power Saver
-                            type: area
-                            color: rgb(0, 255, 0)
-                            opacity: 0.1
-                            stroke_width: 1
-                            curve: stepline
-                            group_by:
-                              func: max
-                            show:
-                              legend_value: false
-                              in_header: false
-                              name_in_header: false
-                              datalabels: false
-            - attributes:
-                label: Effektledd og nettleie (Beta)
-                icon: mdi:cog
-              card:
-                type: vertical-stack
-                cards:
-                  - type: vertical-stack
-                    cards:
-                      - type: custom:numberbox-card
-                        border: true
-                        entity: input_number.energy_target
-                        name: false
-                        card_mod:
-                          style: >
-                            .body{display:block!important}
-                            .body::after{text-align:center;font-size:20px;content:"Kilowattgrense
-                            per time";display:block!important}
-                      - type: custom:mushroom-number-card
-                        entity: input_number.energy_target
-                        name: Maksgrense per time (KW)
-                        icon_color: primary
-                      - type: horizontal-stack
-                        cards:
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_0_2
-                              name: Trinn 0-2
-                              icon: mdi:currency-usd
-                              layout: vertical
+                                });
+
+
+                                if (data.length > 0) {
+
+                                  const lastDataPoint = data[data.length - 1];
+
+                                  const lastTime = new Date(lastDataPoint[0]);
+
+                                  const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
+
+                                  data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
+
+                                }
+
+
+                                return data;
+                            - entity: sensor.strompris_nordpool
+                              name: Nordpool
+                              opacity: 1
+                              float_precision: 2
+                              extend_to: now
+                              yaxis_id: pris
+                              curve: smooth
+                              color: 6B9EFF
+                              stroke_width: 2
+                              show:
+                                legend_value: false
+                                in_header: true
+                                name_in_header: false
+                                datalabels: false
+                              data_generator: >
+
+                                const data = entity.attributes.hours.map(hour =>
+                                {
+
+                                  return [new Date(hour.start), hour.price];
+
+                                });
+
+
+                                if (data.length > 0) {
+
+                                  const lastDataPoint = data[data.length - 1];
+
+                                  const lastTime = new Date(lastDataPoint[0]);
+
+                                  const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
+
+                                  data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
+
+                                }
+
+
+                                return data;
+                            - entity: sensor.strompris_stotte
+                              name: Strømstøtte
+                              opacity: 1
+                              float_precision: 2
+                              extend_to: now
+                              yaxis_id: pris
+                              curve: stepline
+                              color: green
+                              stroke_width: 1
+                              show:
+                                legend_value: false
+                                in_header: true
+                                name_in_header: false
+                                datalabels: false
+                              data_generator: >
+
+                                const data = entity.attributes.hours.map(hour =>
+                                {
+
+                                  return [new Date(hour.start), hour.price];
+
+                                });
+
+
+                                if (data.length > 0) {
+
+                                  const lastDataPoint = data[data.length - 1];
+
+                                  const lastTime = new Date(lastDataPoint[0]);
+
+                                  const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
+
+                                  data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
+
+                                }
+
+
+                                return data;
+                            - entity: sensor.strompris_nettleie
+                              name: Nettleie
+                              opacity: 1
+                              float_precision: 2
+                              extend_to: now
+                              yaxis_id: pris
+                              curve: stepline
+                              color: FF8800
+                              stroke_width: 3
+                              show:
+                                legend_value: false
+                                in_header: true
+                                name_in_header: false
+                                datalabels: false
+                              data_generator: >
+
+                                const data = entity.attributes.hours.map(hour =>
+                                {
+
+                                  return [new Date(hour.start), hour.price];
+
+                                });
+
+
+                                if (data.length > 0) {
+
+                                  const lastDataPoint = data[data.length - 1];
+
+                                  const lastTime = new Date(lastDataPoint[0]);
+
+                                  const nextTime = new Date(lastTime.getTime() + 60 * 60 * 1000); // Legger til en time
+
+                                  data.push([nextTime, lastDataPoint[1]]); // Kopierer prisen fra siste datapunkt
+
+                                }
+
+
+                                return data;
+                        - type: custom:apexcharts-card
+                          header:
+                            show: true
+                            title: Pris i dag + Forbruk + Powersaver
+                          now:
+                            show: true
+                            label: Nå
+                          graph_span: 2d
+                          span:
+                            start: day
+                          apex_config:
+                            chart:
+                              height: 400px
+                            stroke:
+                              width: 2
+                            dataLabels:
+                              enabled: true
+                            fill:
+                              type: gradient
+                              gradient:
+                                shadeIntensity: 1
+                                inverseColors: true
+                                opacityFrom: 0.8
+                                opacityTo: 0.2
+                            legend:
+                              show: true
+                            yaxis:
+                              - id: price
+                                show: true
+                                min: 0
+                                max: 2.5
+                                tickAmount: 6
+                                opposite: true
+                                decimalsInFloat: 1
+                                floating: false
+                                forceNiceScale: true
+                                extend_to: end
+                              - id: usage
+                                decimalsInFloat: 0
+                                show: true
+                                min: 0
+                                forceNiceScale: true
+                              - id: powersaver
+                                show: false
+                                decimalsInFloat: 0
+                                floating: false
+                                extend_to: now
+                          series:
+                            - entity: sensor.strompris_effektiv
+                              yaxis_id: price
+                              extend_to: now
+                              name: Faktisk strømpris
+                              type: area
+                              curve: stepline
+                              color: tomato
+                              float_precision: 2
+                              show:
+                                legend_value: false
+                              data_generator: |
+                                return entity.attributes.hours.map((entry) => {
+                                  return [new Date(entry.start), entry.price];
+                                });
+                            - entity: sensor.dynamic_power_sensor
+                              yaxis_id: usage
+                              type: column
+                              name: Forbruk
+                              time_delta: +30m
+                              group_by:
+                                func: max
+                              show:
+                                legend_value: true
+                            - entity: sensor.powersaver_payload
+                              data_generator: |
+
+                                return entity.attributes.hours.map((entry) => {
+
+                                  return [new Date(entry.start), entry.onOff];
+
+                                });
+                              yaxis_id: powersaver
+                              name: Power Saver
+                              type: area
+                              color: rgb(0, 255, 0)
+                              opacity: 0.1
+                              stroke_width: 1
+                              curve: stepline
+                              group_by:
+                                func: max
+                              show:
+                                legend_value: false
+                                in_header: false
+                                name_in_header: false
+                                datalabels: false
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_energy_power_flow_tab_desktop'].state}
+                  icon: mdi:cog
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:numberbox-card
+                          border: true
+                          entity: input_number.energy_target
+                          name: false
+                          card_mod:
+                            style: >
+                              .body{display:block!important}
+                              .body::after{text-align:center;font-size:20px;content:"Kilowattgrense
+                              per time";display:block!important}
+                        - type: custom:mushroom-number-card
+                          entity: input_number.energy_target
+                          name: Maksgrense per time (KW)
+                          icon_color: primary
+                        - type: horizontal-stack
+                          cards:
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_0_2
+                                name: Trinn 0-2
+                                icon: mdi:currency-usd
+                                layout: vertical
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: 0-2 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_2_5
+                                name: Trinn 2-5
+                                icon: mdi:currency-usd
+                                layout: vertical
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: 2-5 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_5_10
+                                icon: mdi:currency-usd
+                                name: Trinn 5-10
+                                layout: vertical
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: 5-10 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_10_15
+                                icon: mdi:currency-usd
+                                name: Trinn 10 - 15
+                                layout: vertical
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: 10-15 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_15_20
+                                name: Trinn 15-20
+                                layout: vertical
+                                icon: mdi:currency-usd
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: 15-20 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                            - type: custom:auto-entities
+                              show_empty: false
+                              card:
+                                type: custom:mushroom-entity-card
+                                entity: sensor.dynamic_energy_price_15_20
+                                name: Above 20 kWh
+                                layout: vertical
+                                icon: mdi:currency-usd
+                                icon_color: primary
+                              filter:
+                                include:
+                                  - entity_id: sensor.current_energy_level
+                                    state: Above 20 kWh
+                              style:
+                                card-mod:
+                                  style: |
+                                    ha-card {
+                                      background-color: green !important;
+                                    }
+                        - type: vertical-stack
+                          cards:
+                            - type: custom:mushroom-entity-card
+                              entity: input_number.energy_target
+                              name: Effektmål
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: 0-2 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_2_5
-                              name: Trinn 2-5
-                              icon: mdi:currency-usd
-                              layout: vertical
+                              icon: mdi:target
+                            - type: custom:mushroom-entity-card
+                              entity: sensor.current_energy_level
+                              name: Nåværende effektledd
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: 2-5 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_5_10
-                              icon: mdi:currency-usd
-                              name: Trinn 5-10
-                              layout: vertical
+                              icon: mdi:ethereum
+                            - type: custom:mushroom-entity-card
+                              entity: sensor.remaining_energy
+                              name: Gjenstående energi denne timen
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: 5-10 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_10_15
-                              icon: mdi:currency-usd
-                              name: Trinn 10 - 15
-                              layout: vertical
+                              icon: mdi:gauge-low
+                            - type: custom:mushroom-entity-card
+                              entity: input_number.peak_day_1
+                              name: Effekttopp dag 1 nåværende måned
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: 10-15 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_15_20
-                              name: Trinn 15-20
-                              layout: vertical
-                              icon: mdi:currency-usd
+                              icon: mdi:numeric-1-circle-outline
+                            - type: custom:mushroom-entity-card
+                              entity: input_number.peak_day_2
+                              name: Effekttopp dag 2 nåværende måned
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: 15-20 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                          - type: custom:auto-entities
-                            show_empty: false
-                            card:
-                              type: custom:mushroom-entity-card
-                              entity: sensor.dynamic_energy_price_15_20
-                              name: Above 20 kWh
-                              layout: vertical
-                              icon: mdi:currency-usd
+                              icon: mdi:numeric-2-circle-outline
+                            - type: custom:mushroom-entity-card
+                              entity: input_number.peak_day_3
+                              name: Effekttopp dag 2 nåværende måned
                               icon_color: primary
-                            filter:
-                              include:
-                                - entity_id: sensor.current_energy_level
-                                  state: Above 20 kWh
-                            style:
-                              card-mod:
-                                style: |
-                                  ha-card {
-                                    background-color: green !important;
-                                  }
-                      - type: vertical-stack
-                        cards:
-                          - type: custom:mushroom-entity-card
-                            entity: input_number.energy_target
-                            name: Effektmål
-                            icon_color: primary
-                            icon: mdi:target
-                          - type: custom:mushroom-entity-card
-                            entity: sensor.current_energy_level
-                            name: Nåværende effektledd
-                            icon_color: primary
-                            icon: mdi:ethereum
-                          - type: custom:mushroom-entity-card
-                            entity: sensor.remaining_energy
-                            name: Gjenstående energi denne timen
-                            icon_color: primary
-                            icon: mdi:gauge-low
-                          - type: custom:mushroom-entity-card
-                            entity: input_number.peak_day_1
-                            name: Effekttopp dag 1 nåværende måned
-                            icon_color: primary
-                            icon: mdi:numeric-1-circle-outline
-                          - type: custom:mushroom-entity-card
-                            entity: input_number.peak_day_2
-                            name: Effekttopp dag 2 nåværende måned
-                            icon_color: primary
-                            icon: mdi:numeric-2-circle-outline
-                          - type: custom:mushroom-entity-card
-                            entity: input_number.peak_day_3
-                            name: Effekttopp dag 2 nåværende måned
-                            icon_color: primary
-                            icon: mdi:numeric-3-circle-outline
-                          - type: custom:mushroom-entity-card
-                            entity: sensor.monthly_peak_energy
-                            name: Effekttopp nåværende måned
-                            icon: mdi:align-vertical-top
-                            icon_color: primary
-                          - type: custom:mushroom-entity-card
-                            entity: sensor.hourly_energy_usage
-                            name: Frobruk nåværende time
-                            icon: mdi:chart-bell-curve-cumulative
-                            icon_color: primary
+                              icon: mdi:numeric-3-circle-outline
+                            - type: custom:mushroom-entity-card
+                              entity: sensor.monthly_peak_energy
+                              name: Effekttopp nåværende måned
+                              icon: mdi:align-vertical-top
+                              icon_color: primary
+                            - type: custom:mushroom-entity-card
+                              entity: sensor.hourly_energy_usage
+                              name: Frobruk nåværende time
+                              icon: mdi:chart-bell-curve-cumulative
+                              icon_color: primary
     background: {}
   - title: Innstillinger - Enheter
     path: settings
@@ -11796,20 +11777,37 @@ views:
                         title: ''
                         subtitle: Legg til / Endre Automasjoner
                         alignment: center
-                      - type: custom:mushroom-chips-card
-                        chips:
-                          - type: action
-                            icon_color: primary
-                            tap_action:
-                              action: navigate
-                              navigation_path: /config/automation/dashboard
-                            icon: mdi:plus-minus-variant
-                        alignment: center
-                        card_mod:
-                          style: |
-                            ha-card {
-                              --chip-background: var(--primary-text-color);
-                            }   
+                      - type: horizontal-stack
+                        cards:
+                          - type: custom:mushroom-chips-card
+                            chips:
+                              - type: action
+                                icon_color: primary
+                                name: Tst card
+                                tap_action:
+                                  action: navigate
+                                  navigation_path: /config/automation/dashboard
+                                icon: mdi:tag-edit
+                            alignment: center
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  --chip-background: var(--primary-text-color);
+                                } 
+                          - type: custom:mushroom-chips-card
+                            chips:
+                              - type: action
+                                icon_color: primary
+                                tap_action:
+                                  action: navigate
+                                  navigation_path: /config/automation/edit/new
+                                icon: mdi:plus
+                            alignment: center
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  --chip-background: var(--primary-text-color);
+                                }                         
                   - type: custom:auto-entities
                     card:
                       type: entities
