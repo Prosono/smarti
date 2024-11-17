@@ -178,6 +178,198 @@ template:
             Weather forecast and radar
           {% endif %}
 
+      - name: "Lights Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Lys og Scener
+          {% elif is_state('input_select.language', 'French') %}
+            Lumières et Scènes
+          {% elif is_state('input_select.language', 'German') %}
+            Lichter und Szenen
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Luces y Escenas
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Lichten en Scènes
+          {% else %}
+            Light & Scenes
+          {% endif %}
+
+      - name: "Lights Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Lyskontroll og sceneaktivering
+          {% elif is_state('input_select.language', 'French') %}
+            Contrôle des lumières et activation des scènes
+          {% elif is_state('input_select.language', 'German') %}
+            Lichtsteuerung und Szenenaktivierung
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Control de luces y activación de escenas
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Lichtbediening en scène-activatie
+          {% else %}
+            Light control and scene activation
+          {% endif %}
+
+      - name: "Climate Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Klima
+          {% elif is_state('input_select.language', 'French') %}
+            Climat
+          {% elif is_state('input_select.language', 'German') %}
+            Klima
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Clima
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Klimaat
+          {% else %}
+            Climate
+          {% endif %}
+
+      - name: "Climate Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Termostater og AC-er, temperaturer og fuktighet, komfortskala, vannvarslere, luftfuktere og vifter
+          {% elif is_state('input_select.language', 'French') %}
+            Thermostats et climatiseurs, températures et humidité, échelle de confort, détecteurs d'eau, humidificateurs et ventilateurs
+          {% elif is_state('input_select.language', 'German') %}
+            Thermostate und Klimaanlagen, Temperaturen und Luftfeuchtigkeit, Komfortskala, Wassermelder, Luftbefeuchter und Ventilatoren
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Termostatos y aires acondicionados, temperaturas y humedad, escala de confort, detectores de agua, humidificadores y ventiladores
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Thermostaten en airconditioners, temperaturen en vochtigheid, comfort schaal, waterdetectors, luchtbevochtigers en ventilatoren
+          {% else %}
+            Thermostats & ACs, temperatures & humidity, Comfort Scale, Water Detectors, Humidifiers and Fans
+          {% endif %}
+
+      - name: "Misc Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Diverse
+          {% elif is_state('input_select.language', 'French') %}
+            Divers
+          {% elif is_state('input_select.language', 'German') %}
+            Verschiedenes
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Varios
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Diversen
+          {% else %}
+            Miscellaneous
+          {% endif %}
+
+      - name: "Misc Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Multimedia, brytere, støvsugere & persienner og rullgardiner
+          {% elif is_state('input_select.language', 'French') %}
+            Multimédia, interrupteurs, aspirateurs, stores vénitiens et rideaux roulants
+          {% elif is_state('input_select.language', 'German') %}
+            Multimedia, Schalter, Staubsauger, Jalousien und Rollos
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Multimedia, interruptores, aspiradoras, persianas y cortinas enrollables
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Multimedia, schakelaars, stofzuigers, jaloezieën en rolgordijnen
+          {% else %}
+            Multimedia, switches, vacuum cleaners, blinds, and roller shades
+          {% endif %}
+
+      - name: "Security Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Sikkerhet
+          {% elif is_state('input_select.language', 'French') %}
+            Sécurité
+          {% elif is_state('input_select.language', 'German') %}
+            Sicherheit
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Seguridad
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Beveiliging
+          {% else %}
+            Security
+          {% endif %}
+
+      - name: "Security Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Alarmpanel, kameraer, dører og vinduer, låser og røyk- og gassdetektorer
+          {% elif is_state('input_select.language', 'French') %}
+            Panneau d'alarme, caméras, portes et fenêtres, serrures et détecteurs de fumée et de gaz
+          {% elif is_state('input_select.language', 'German') %}
+            Alarmanlage, Kameras, Türen und Fenster, Schlösser sowie Rauch- und Gasdetektoren
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Panel de alarma, cámaras, puertas y ventanas, cerraduras y detectores de humo y gas
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Alarmbedienpaneel, camera's, deuren en ramen, sloten, rook- en gasdetectoren
+          {% else %}
+            Alarm Panel, Cameras, Doors & Windows, Locks, and Smoke and Gas Detectors
+          {% endif %}
+
+      - name: "Energy Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Energi
+          {% elif is_state('input_select.language', 'French') %}
+            Énergie
+          {% elif is_state('input_select.language', 'German') %}
+            Energie
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Energía
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Energie
+          {% else %}
+            Energy
+          {% endif %}
+
+      - name: "Energy Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Energioversikt, smart kontroll, priser, brukstatistikk og mer
+          {% elif is_state('input_select.language', 'French') %}
+            Aperçu énergétique, contrôle intelligent, prix, statistiques d'utilisation et plus
+          {% elif is_state('input_select.language', 'German') %}
+            Energieübersicht, intelligente Steuerung, Preise, Nutzungsstatistiken und mehr
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Resumen de energía, control inteligente, precios, estadísticas de uso y más
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Energieoverzicht, slimme bediening, prijzen, gebruiksstatistieken en meer
+          {% else %}
+            Energy Overview, Smart Control, Prices, Usage Statistics & more
+          {% endif %}
+
+      - name: "Actions Page Title"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Handlinger
+          {% elif is_state('input_select.language', 'French') %}
+            Actions
+          {% elif is_state('input_select.language', 'German') %}
+            Aktionen
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Acciones
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Acties
+          {% else %}
+            Actions
+          {% endif %}
+
+      - name: "Actions Page Subtitle"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Enhetsadministrasjon, innstillinger og systemstatistikk
+          {% elif is_state('input_select.language', 'French') %}
+            Gestion des appareils, paramètres et statistiques système
+          {% elif is_state('input_select.language', 'German') %}
+            Geräteverwaltung, Einstellungen und Systemstatistiken
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Gestión de dispositivos, configuraciones y estadísticas del sistema
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Apparaatbeheer, instellingen en systeemstatistieken
+          {% else %}
+            Device Management, Settings and System Statistics
+          {% endif %}
+
       # Home Page Tab Desktop
       - name: "Tabbed Card Home Page Room Tab Desktop"
         state: >
@@ -241,4 +433,54 @@ template:
             Kalender
           {% else %}
             Calendar
+          {% endif %}
+
+      # Weather Page Tab Desktop
+
+      - name: "Tabbed Card Weather Page Hourly Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Time for time
+          {% elif is_state('input_select.language', 'French') %}
+            Heure par heure
+          {% elif is_state('input_select.language', 'German') %}
+            Stunde für Stunde
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Hora por hora
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Uur per uur
+          {% else %}
+            Hour by Hour
+          {% endif %}
+
+      - name: "Tabbed Card Weather Page Weekly Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Ukentlig
+          {% elif is_state('input_select.language', 'French') %}
+            Hebdomadaire
+          {% elif is_state('input_select.language', 'German') %}
+            Wöchentlich
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Semanal
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Wekelijks
+          {% else %}
+            Weekly
+          {% endif %}
+
+      - name: "Tabbed Card Weather Page Weather Radar Tab Desktop"
+        state: >
+          {% if is_state('input_select.language', 'Norwegian') %}
+            Værradar
+          {% elif is_state('input_select.language', 'French') %}
+            Radar météorologique
+          {% elif is_state('input_select.language', 'German') %}
+            Wetterradar
+          {% elif is_state('input_select.language', 'Spanish') %}
+            Radar meteorológico
+          {% elif is_state('input_select.language', 'Dutch') %}
+            Weerradar
+          {% else %}
+            Weather Radar
           {% endif %}

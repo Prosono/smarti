@@ -679,16 +679,14 @@ views:
             conditions:
               - entity: input_boolean.show_light_tab
                 state: 'on'
-              - condition: and
+              - condition: or
                 conditions:
                   - condition: state
                     entity: binary_sensor.has_light
-                    state: ''
-                  - condition: or
-                    conditions:
-                      - condition: state
-                        entity: binary_sensor.has_scene
-                        state: ''
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_scene
+                    state: 'on'
             card:
               type: custom:button-card
               name: Light Control
@@ -720,29 +718,25 @@ views:
                 style: |
                   ha-card {
                     border-radius: 5px 5px 5px 5px;   
-
-                  }  
+                  }
           - type: conditional
             conditions:
               - entity: input_boolean.show_climate_tab
                 state: 'on'
-              - condition: and
+              - condition: or
                 conditions:
                   - condition: state
                     entity: binary_sensor.has_temperature_sensor
-                    state: ''
-                  - condition: or
-                    conditions:
-                      - condition: state
-                        entity: binary_sensor.has_climate
-                        state: ''
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: binary_sensor.has_humidifier
-                            state: ''
-                          - condition: or
-                            conditions: []
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_humidity_sensor
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_climate
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_humidifier
+                    state: 'on'
             card:
               type: custom:button-card
               name: Heating Control
@@ -775,6 +769,29 @@ views:
             conditions:
               - entity: input_boolean.show_misc_tab
                 state: 'on'
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity: binary_sensor.has_media_player
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_switch
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_lawn_mower
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_vacuum
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_vacuum
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_cover
+                    state: 'on'
+                  - condition: state
+                    entity: binary_sensor.has_unassigned_devices
+                    state: 'on'
             card:
               type: custom:button-card
               name: Multimedia
@@ -924,15 +941,15 @@ views:
             media_query: '(min-width: 0px)'
       - type: custom:config-template-card
         entities:
-          - sensor.grid_fee
-          - sensor.electricity_price
+          - sensor.home_page_horseshoe_electricity_price
+          - sensor.home_page_horseshoe_grid_fee
         card:
           type: conditional
           conditions:
             - condition: screen
               media_query: '(min-width: 768px)'
             - condition: state
-              entity: sensor.effective_electricity_price
+              entity: sensor.nordpool_price
               state_not: unavailable
           card:
             type: custom:mod-card
@@ -951,7 +968,7 @@ views:
                   entities:
                     - entity: sensor.monthly_peak_energy
                       decimals: 2
-                      name: ${states['sensor.grid_fee'].state}
+                      name: ${states['sensor.home_page_horseshoe_grid_fee'].state}
                       unit: kWh
                     - entity: sensor.remaining_energy
                       decimals: 2
@@ -1044,13 +1061,15 @@ views:
                   entities:
                     - entity: sensor.effective_electricity_price
                       decimals: 2
-                      name: ${states['sensor.electricity_price'].state}
+                      name: >-
+                        ${states['sensor.home_page_horseshoe_electricity_price'].state}
                       unit: kr/kw
                     - entity: sensor.grid_tariff
                       decimals: 2
-                      unit: ${states['sensor.grid_fee'].state}
+                      unit: ${states['sensor.home_page_horseshoe_grid_fee'].state}
                       icon: mdi:chart-bar
-                      name: ${states['sensor.electricity_price'].state}
+                      name: >-
+                        ${states['sensor.home_page_horseshoe_electricity_price'].state}
                     - entity: sensor.nordpool_price
                       decimals: 2
                       unit: NOK
@@ -1130,118 +1149,215 @@ views:
                         padding: 0 !important;
                         margin: 0 !important;
                       }
-      - type: conditional
-        conditions:
-          - condition: screen
-            media_query: '(min-width: 0px) and (max-width: 767px)'
-          - condition: state
-            entity: sensor.effective_electricity_price
-            state_not: unavailable
-          - condition: state
-            entity: sensor.effective_electricity_price
-            state_not: unknown
+      - type: custom:config-template-card
+        entities:
+          - sensor.home_page_horseshoe_electricity_price
+          - sensor.home_page_horseshoe_grid_fee
         card:
-          type: custom:mod-card
-          card_mod:
-            style:
-              .: |
-                ha-card {
-                  --ha-card-border-width: 0.5px;
-                  --ha-card-border-radius: 20px;
-                  --ha-card-background: transparent;
-                }           
+          type: conditional
+          conditions:
+            - condition: screen
+              media_query: '(min-width: 0px) and (max-width: 767px)'
+            - condition: state
+              entity: sensor.effective_electricity_price
+              state_not: unavailable
+            - condition: state
+              entity: sensor.effective_electricity_price
+              state_not: unknown
           card:
-            type: horizontal-stack
-            cards:
-              - type: custom:flex-horseshoe-card
-                entities:
-                  - entity: sensor.effective_electricity_price
-                    decimals: 1
-                    name: Strømpriser
-                    unit: kr/kw
-                  - entity: sensor.grid_tariff
-                    decimals: 1
-                    unit: kr nettleie
-                    icon: mdi:chart-bar
-                    name: nettleie
-                  - entity: sensor.nordpool_price
-                    decimals: 1
-                    unit: NOK
-                    icon: mdi:gauge
-                    name: ''
-                show:
-                  horseshoe_style: lineargradient
-                layout:
-                  hlines:
-                    - id: 0
-                      xpos: 50
-                      ypos: 42
-                      length: 70
-                      styles:
-                        - stroke: var(--primary-text-color);
-                        - stroke-width: 3;
-                        - stroke-linecap: round;
-                        - opacity: 0.7;
-                  states:
-                    - id: 0
-                      entity_index: 0
-                      xpos: 50
-                      ypos: 34
-                      styles:
-                        - font-size: 3em;
-                    - id: 1
-                      entity_index: 1
-                      xpos: 40
-                      ypos: 57
-                      styles:
-                        - text-anchor: start;
-                        - font-size: 2em;
-                    - id: 2
-                      entity_index: 2
-                      xpos: 40
-                      ypos: 72
-                      styles:
-                        - text-anchor: start;
-                        - font-size: 2em;
-                  icons:
-                    - id: 0
-                      entity_index: 1
-                      xpos: 37
-                      ypos: 57
-                      align: end
-                      size: 1.3
-                    - id: 1
-                      entity_index: 2
-                      xpos: 37
-                      ypos: 72
-                      align: end
-                      size: 1.3
-                  names:
-                    - id: 0
-                      entity_index: 0
-                      xpos: 50
-                      ypos: 95
-                horseshoe_scale:
-                  min: -10
-                  max: 30
-                color_stops:
-                  '0': '#51ce22'
-                  '20': '#c0392b'
-                card_mod:
-                  style: |
-                    :host {
-                      height: 200px !important;
-                      width: 200px !important;
-                      display: flex !important;
-                      align-items: center;
-                      justify-content: center;
-                    }
-                    ha-card {
-                      height: 100% !important;
-                      width: 100% !important;
-                      padding: 0 !important;
-                      margin: 0 !important;
-                    }
+            type: custom:mod-card
+            card_mod:
+              style:
+                .: |
+                  ha-card {
+                    --ha-card-border-width: 0.5px;
+                    --ha-card-border-radius: 20px;
+                    --ha-card-background: transparent;
+                  }           
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:flex-horseshoe-card
+                  entities:
+                    - entity: sensor.monthly_peak_energy
+                      decimals: 2
+                      name: ${states['sensor.home_page_horseshoe_grid_fee'].state}
+                      unit: kWh
+                    - entity: sensor.remaining_energy
+                      decimals: 2
+                      unit: kWh
+                      icon: mdi:chart-pie
+                      name: Gjenstående
+                    - entity: sensor.current_energy_level
+                      decimals: 2
+                      unit: null
+                      icon: mdi:chart-bar
+                      name: Brukt
+                  show:
+                    horseshoe_style: lineargradient
+                  layout:
+                    hlines:
+                      - id: 0
+                        xpos: 50
+                        ypos: 42
+                        length: 70
+                        styles:
+                          - stroke: var(--primary-text-color);
+                          - stroke-width: 3;
+                          - stroke-linecap: round;
+                          - opacity: 0.7;
+                    states:
+                      - id: 0
+                        entity_index: 0
+                        xpos: 50
+                        ypos: 34
+                        styles:
+                          - font-size: 3em;
+                      - id: 1
+                        entity_index: 1
+                        xpos: 40
+                        ypos: 57
+                        styles:
+                          - text-anchor: start;
+                          - font-size: 2em;
+                      - id: 2
+                        entity_index: 2
+                        xpos: 40
+                        ypos: 72
+                        styles:
+                          - text-anchor: start;
+                          - font-size: 2em;
+                    icons:
+                      - id: 0
+                        entity_index: 1
+                        xpos: 37
+                        ypos: 57
+                        align: end
+                        size: 1.3
+                      - id: 1
+                        entity_index: 2
+                        xpos: 37
+                        ypos: 72
+                        align: end
+                        size: 1.3
+                    names:
+                      - id: 0
+                        entity_index: 0
+                        xpos: 50
+                        ypos: 95
+                  horseshoe_scale:
+                    min: -10
+                    max: 30
+                  color_stops:
+                    '0': '#51ce22'
+                    '20': '#c0392b'
+                  card_mod:
+                    style: |
+                      :host {
+                        height: 200px !important;
+                        width: 200px !important;
+                        display: flex !important;
+                        align-items: center;
+                        justify-content: center;
+                      }
+                      ha-card {
+                        height: 100% !important;
+                        width: 100% !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                      }
+                - type: custom:flex-horseshoe-card
+                  entities:
+                    - entity: sensor.effective_electricity_price
+                      decimals: 2
+                      name: >-
+                        ${states['sensor.home_page_horseshoe_electricity_price'].state}
+                      unit: kr/kw
+                    - entity: sensor.grid_tariff
+                      decimals: 2
+                      unit: ${states['sensor.home_page_horseshoe_grid_fee'].state}
+                      icon: mdi:chart-bar
+                      name: >-
+                        ${states['sensor.home_page_horseshoe_electricity_price'].state}
+                    - entity: sensor.nordpool_price
+                      decimals: 2
+                      unit: NOK
+                      icon: mdi:gauge
+                      name: ''
+                  show:
+                    horseshoe_style: lineargradient
+                  layout:
+                    hlines:
+                      - id: 0
+                        xpos: 50
+                        ypos: 42
+                        length: 70
+                        styles:
+                          - stroke: var(--primary-text-color);
+                          - stroke-width: 5;
+                          - stroke-linecap: round;
+                          - opacity: 0.7;
+                    states:
+                      - id: 0
+                        entity_index: 0
+                        xpos: 50
+                        ypos: 34
+                        styles:
+                          - font-size: 3em;
+                      - id: 1
+                        entity_index: 1
+                        xpos: 40
+                        ypos: 57
+                        styles:
+                          - text-anchor: start;
+                          - font-size: 2em;
+                      - id: 2
+                        entity_index: 2
+                        xpos: 40
+                        ypos: 72
+                        styles:
+                          - text-anchor: start;
+                          - font-size: 2em;
+                    icons:
+                      - id: 0
+                        entity_index: 1
+                        xpos: 37
+                        ypos: 57
+                        align: end
+                        size: 1.3
+                      - id: 1
+                        entity_index: 2
+                        xpos: 37
+                        ypos: 72
+                        align: end
+                        size: 1.3
+                    names:
+                      - id: 0
+                        entity_index: 0
+                        xpos: 50
+                        ypos: 95
+                  horseshoe_scale:
+                    min: -10
+                    max: 30
+                  color_stops:
+                    '0': '#51ce22'
+                    '1': '#51ce22'
+                    '5': '#c0392b'
+                  card_mod:
+                    style: |
+                      :host {
+                        height: 200px !important;
+                        width: 200px !important;
+                        display: flex !important;
+                        align-items: center;
+                        justify-content: center;
+                      }
+                      ha-card {
+                        height: 100% !important;
+                        width: 100% !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                      }
       - type: custom:gap-card
         height: 25
         visibility:
@@ -1920,6 +2036,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -1939,10 +2056,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -2411,6 +2524,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -2422,6 +2537,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -2764,31 +2884,15 @@ views:
         visibility:
           - condition: screen
             media_query: '(min-width: 0px) and (max-width: 767px)'
-      - type: custom:gap-card
-        height: 25
-      - type: conditional
-        conditions:
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.weather_page_title'') }}'
+            subtitle: '{{ states(''sensor.weather_page_subtitle'') }}'
+            alignment: center
+        visibility:
           - condition: screen
             media_query: '(min-width: 0px)'
-        card:
-          type: custom:mod-card
-          card_mod:
-            style:
-              .: |
-                ha-card {
-                  --ha-card-border-width: 0.5px;
-                  --ha-card-border-radius: 20px;
-                  --ha-card-background: transparent;
-                }           
-          card:
-            type: horizontal-stack
-            cards:
-              - type: horizontal-stack
-                cards:
-                  - type: custom:mushroom-title-card
-                    title: Vær
-                    subtitle: Værvarsel og værradar
-                    alignment: center
       - type: conditional
         conditions:
           - condition: screen
@@ -2827,15 +2931,7 @@ views:
                 show_decimal: false
                 apparent_sensor: sensor.real_feel_temperature
                 aqi_sensor: sensor.air_quality_index
-              - type: vertical-stack
-                cards:
-                  - type: custom:gap-card
-                    height: 150
-                  - type: entity
-                    entity: sensor.smarti_max_temperature
-                  - type: entity
-                    entity: sensor.smarti_min_temperature
-                    height: 25
+              - type: custom:horizon-card
       - type: conditional
         conditions:
           - condition: screen
@@ -2884,7 +2980,6 @@ views:
               ha-card {
                 --ha-card-border-width: 0.5px;
                 --ha-card-border-radius: 20px;
-                --ha-card-background: transparent;
               } 
             tabbed-card $:
               mwc-tab:
@@ -2893,119 +2988,121 @@ views:
                     background: linear-gradient(to left, var(--accent-color), rgb(var(--rgb-primary-color-darker))) !important;
                     border-radius: 5px 5px 0px 0px;
                   }
-                  mwc-tab:hover {
-                    --mdc-theme-primary: red;
-                    --mdc-tab-color-default: red;
-                      }
-                    
         card:
-          type: custom:tabbed-card
-          options:
-            defaultTabIndex: null
-          tabs:
-            - attributes:
-                label: Time for time
-                icon: mdi:weather-cloudy
-                isFadingIndicator: true
-                isMinWidthIndicator: true
-              card:
-                type: vertical-stack
-                cards:
-                  - type: custom:weather-chart-card
-                    entity: weather.forecast_home
-                    show_time: true
-                    show_date: true
-                    units:
-                      speed: m/s
-                      pressure: ''
-                    forecast:
-                      precipitation_type: ''
-                      style: style2
-                      type: hourly
-                    animated_icons: true
-                    title: Time for time
-            - attributes:
-                label: Uke
-                icon: mdi:weather-partly-cloudy
-                isFadingIndicator: true
-                isMinWidthIndicator: true
-              card:
-                type: vertical-stack
-                cards:
-                  - type: custom:weather-chart-card
-                    entity: weather.forecast_home
-                    show_main: true
-                    show_temperature: true
-                    show_current_condition: true
-                    show_attributes: true
-                    show_time: false
-                    show_time_seconds: false
-                    show_day: false
-                    show_date: false
-                    show_humidity: true
-                    show_pressure: true
-                    show_wind_direction: true
-                    show_wind_speed: true
-                    show_sun: true
-                    show_feels_like: false
-                    show_dew_point: false
-                    show_wind_gust_speed: false
-                    show_visibility: false
-                    show_last_changed: false
-                    use_12hour_format: false
-                    icons_size: 25
-                    animated_icons: false
-                    icon_style: style1
-                    forecast:
-                      precipitation_type: rainfall
-                      show_probability: false
-                      labels_font_size: '11'
-                      precip_bar_size: '100'
-                      style: style1
-                      show_wind_forecast: true
-                      condition_icons: true
-                      round_temp: false
-                      type: daily
-                      number_of_forecasts: '0'
-                      disable_animation: false
-                    units:
-                      pressure: ''
-                      speed: ''
-                    title: Ukentlig
-            - attributes:
-                label: Værradar
-                icon: mdi:radar
-                isFadingIndicator: true
-                isMinWidthIndicator: true
-              card:
-                type: vertical-stack
-                cards:
-                  - type: custom:config-template-card
-                    entities:
-                      - zone.home
-                    card:
-                      type: iframe
-                      url: >-
-                        ${'https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=9&overlay=wind&product=ecmwf&level=surface&lat='
-                        + states['zone.home'].attributes.latitude + '&lon=' +
-                        states['zone.home'].attributes.longitude + '&detailLat='
-                        + states['zone.home'].attributes.latitude +
-                        '&detailLon=' + states['zone.home'].attributes.longitude
-                        + '&marker=true'}
-                      aspect_ratio: 50%
-                  - type: custom:weather-radar-card
-                    card_title: Regnradar
-                    map_style: Dark
-                    zoom_level: 10
-                    show_marker: true
-                    show_scale: false
-                    show_zoom: true
-                    show_range: false
-                    show_playback: false
-      - type: entity
-        entity: sensor.smarti_max_temperature
-      - type: entity
-        entity: sensor.smarti_min_temperature
+          type: custom:config-template-card
+          entities:
+            - sensor.tabbed_card_weather_page_hourly_tab_desktop
+            - sensor.tabbed_card_weather_page_weather_radar_tab_desktop
+            - sensor.tabbed_card_weather_page_weekly_tab_desktop
+          card:
+            type: custom:tabbed-card
+            options:
+              defaultTabIndex: null
+            tabs:
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_weather_page_hourly_tab_desktop'].state}
+                  icon: mdi:weather-cloudy
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:weather-chart-card
+                      entity: weather.forecast_home
+                      show_time: true
+                      show_date: true
+                      units:
+                        speed: m/s
+                        pressure: ''
+                      forecast:
+                        precipitation_type: ''
+                        style: style2
+                        type: hourly
+                      animated_icons: true
+                      title: Time for time
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_weather_page_weekly_tab_desktop'].state}
+                  icon: mdi:weather-partly-cloudy
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:weather-chart-card
+                      entity: weather.forecast_home
+                      show_main: true
+                      show_temperature: true
+                      show_current_condition: true
+                      show_attributes: true
+                      show_time: false
+                      show_time_seconds: false
+                      show_day: false
+                      show_date: false
+                      show_humidity: true
+                      show_pressure: true
+                      show_wind_direction: true
+                      show_wind_speed: true
+                      show_sun: true
+                      show_feels_like: false
+                      show_dew_point: false
+                      show_wind_gust_speed: false
+                      show_visibility: false
+                      show_last_changed: false
+                      use_12hour_format: false
+                      icons_size: 25
+                      animated_icons: false
+                      icon_style: style1
+                      forecast:
+                        precipitation_type: rainfall
+                        show_probability: false
+                        labels_font_size: '11'
+                        precip_bar_size: '100'
+                        style: style1
+                        show_wind_forecast: true
+                        condition_icons: true
+                        round_temp: false
+                        type: daily
+                        number_of_forecasts: '0'
+                        disable_animation: false
+                      units:
+                        pressure: ''
+                        speed: ''
+                      title: Ukentlig
+              - attributes:
+                  label: >-
+                    ${states['sensor.tabbed_card_weather_page_weather_radar_tab_desktop'].state}
+                  icon: mdi:radar
+                  isFadingIndicator: true
+                  isMinWidthIndicator: true
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:config-template-card
+                      entities:
+                        - zone.home
+                      card:
+                        type: iframe
+                        url: >-
+                          ${'https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=9&overlay=wind&product=ecmwf&level=surface&lat='
+                          + states['zone.home'].attributes.latitude + '&lon=' +
+                          states['zone.home'].attributes.longitude +
+                          '&detailLat=' +
+                          states['zone.home'].attributes.latitude +
+                          '&detailLon=' +
+                          states['zone.home'].attributes.longitude +
+                          '&marker=true'}
+                        aspect_ratio: 50%
+                    - type: custom:weather-radar-card
+                      card_title: Regnradar
+                      map_style: Dark
+                      zoom_level: 10
+                      show_marker: true
+                      show_scale: false
+                      show_zoom: true
+                      show_range: false
+                      show_playback: false
     background: {}
   - title: Lyskontroll
     path: lights
@@ -3027,6 +3124,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -3046,10 +3144,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -3518,6 +3612,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -3529,6 +3625,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -3875,11 +3976,12 @@ views:
       - type: horizontal-stack
         cards:
           - type: custom:mushroom-title-card
-            title: Lyskontroll
-            subtitle: |-
-
-              Lys & Scener
+            title: '{{ states(''sensor.lights_page_title'') }}'
+            subtitle: '{{ states(''sensor.lights_page_subtitle'') }}'
             alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: custom:mod-card
         card_mod:
           style:
@@ -4127,6 +4229,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -4146,10 +4249,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -4618,6 +4717,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -4629,6 +4730,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -4975,13 +5081,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Klimakontroll
-        subtitle: >-
-
-          Klima, temperatur og fuktighet, komfortskala, vannsensorer og
-          luftfuktere
-        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.climate_page_title'') }}'
+            subtitle: '{{ states(''sensor.climate_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: custom:mod-card
         card_mod:
           style:
@@ -5602,6 +5710,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -5621,10 +5730,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -6093,6 +6198,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -6104,6 +6211,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -6449,12 +6561,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Diverse
-        subtitle: |-
-
-          Multimedia, brytere, støvsugere & perisenner og rullgardiner
-        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.misc_page_title'') }}'
+            subtitle: '{{ states(''sensor.misc_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: custom:mod-card
         card_mod:
           style:
@@ -6833,6 +6948,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -6852,10 +6968,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -7324,6 +7436,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -7335,6 +7449,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -7670,12 +7789,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Sikkerhet
-        subtitle: |-
-
-          Alarm, Kameraer, Åpninger, Låser & Røyk- og gassdetektorer
-        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.security_page_title'') }}'
+            subtitle: '{{ states(''sensor.security_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: custom:mod-card
         card_mod:
           style:
@@ -8010,6 +8132,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -8029,10 +8152,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -8501,6 +8620,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -8512,6 +8633,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -8856,12 +8982,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Energi
-        subtitle: |-
-
-          Energioversikt, priser, forbruk & mer
-        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.energy_page_title'') }}'
+            subtitle: '{{ states(''sensor.energy_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: custom:mod-card
         card_mod:
           style:
@@ -9535,6 +9664,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -9554,10 +9684,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -10026,6 +10152,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -10037,6 +10165,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -10381,12 +10514,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Handlinger
-        alignment: center
-        subtitle: |-
-
-          Håndtering av enheter, innstillinger & systemstatistikk
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.actions_page_title'') }}'
+            subtitle: '{{ states(''sensor.actions_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: horizontal-stack
         cards:
           - type: custom:button-card
@@ -10634,6 +10770,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -10653,10 +10790,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -11125,6 +11258,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -11136,6 +11271,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -11480,12 +11620,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Handlinger
-        alignment: center
-        subtitle: |-
-
-          Håndtering av enheter, innstillinger & systemstatistikk
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.actions_page_title'') }}'
+            subtitle: '{{ states(''sensor.actions_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: horizontal-stack
         cards:
           - type: custom:button-card
@@ -11849,6 +11992,10 @@ views:
                             entities:
                               - entity: input_boolean.show_misc_tab
                                 name: Show Misc Tab
+                          - type: entities
+                            entities:
+                              - entity: input_boolean.show_security_tab
+                                name: Show Security Tab
             - attributes:
                 label: Oppdateringer
                 icon: mdi:update
@@ -11929,6 +12076,7 @@ views:
             - type: custom:button-card
               name: Internet
               icon: mdi:wifi
+              entity: binary_sensor.internet
               show_state: true
               show_icon: true
               styles:
@@ -11948,10 +12096,6 @@ views:
                 name:
                   - color: var(--primary-text-color)
                   - font-weight: bold
-              entity: binary_sensor.8_8_8_8
-              tap_action:
-                action: url
-                url_path: https://www.smarti.dev
               card_mod:
                 style: |
                   ha-card {
@@ -12420,6 +12564,8 @@ views:
                             - state: '-'
                             - state: unknown
                             - state: none
+                            - state: medium
+                            - state: high
                             - state: '= 0,0'
                             - state: '>= 20'
                             - state: 'off'
@@ -12431,6 +12577,11 @@ views:
                             - state: high
                             - name: /[Ll]ow/
                             - name: /[Ss]tate/
+                            - entity_id: '*phone*'
+                            - entity_id: '*browser*'
+                            - entity_id: '*watch*'
+                            - entity_id: '*pad*'
+                            - entity_id: '*tablet*'
                         sort:
                           method: friendly_name
                           numeric: true
@@ -12775,12 +12926,15 @@ views:
             media_query: '(min-width: 0px) and (max-width: 767px)'
       - type: custom:gap-card
         height: 25
-      - type: custom:mushroom-title-card
-        title: Handlinger
-        alignment: center
-        subtitle: |-
-
-          Håndtering av enheter, innstillinger & systemstatistikk
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: '{{ states(''sensor.actions_page_title'') }}'
+            subtitle: '{{ states(''sensor.actions_page_subtitle'') }}'
+            alignment: center
+        visibility:
+          - condition: screen
+            media_query: '(min-width: 0px)'
       - type: horizontal-stack
         cards:
           - type: custom:button-card
