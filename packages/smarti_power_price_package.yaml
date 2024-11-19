@@ -1,5 +1,13 @@
 # Home Assistant Configuration
 
+input_number:
+  cheapest_hours:
+    name: Number of Cheapest Hours
+    min: 0
+    max: 24
+    step: 1
+    mode: slider
+
 input_text:
   lowest_price_hours:
     name: Lowest Price Hours
@@ -260,6 +268,8 @@ automation:
         at: "00:05:00" # Runs at 5 minutes past midnight
       - platform: homeassistant
         event: start # Runs when Home Assistant starts
+      - platform: state
+        entity_id: input_number.cheapest_hours # Recalculate when the user changes the number
     action:
       - variables:
           today: "{{ state_attr('sensor.nordpool_price', 'today') or [] }}"
@@ -275,7 +285,8 @@ automation:
           sorted_prices: >
             {{ indexed_prices | sort(attribute='price') }}
           lowest_hours: >
-            {{ sorted_prices[:6] | map(attribute='index') | list }}
+            {% set count = states('input_number.cheapest_hours') | int %}
+            {{ sorted_prices[:count] | map(attribute='index') | list }}
       - service: input_text.set_value
         target:
           entity_id: input_text.lowest_price_hours
