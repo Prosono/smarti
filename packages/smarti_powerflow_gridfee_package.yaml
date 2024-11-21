@@ -40,6 +40,9 @@ input_boolean:
   device_turned_off_20:
     name: Device Turned Off 20
 
+  advanced_mode_view:
+    name: Advanced View
+
 input_select:
   # Dropdowns for adding new devices to categories
   new_category_1_device:
@@ -74,6 +77,13 @@ input_select:
   delete_category_3_device:
     name: "Delete Device from Category 3"
     options: ["Select a device"] # This will be populated dynamically
+
+  power_mode:
+    name: Power Mode
+    options:
+      - Nettleie
+      - Pris
+      - Flex
 
 input_button:
   delete_category_1_device_button:
