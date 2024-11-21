@@ -43,6 +43,15 @@ input_boolean:
   advanced_mode_view:
     name: Advanced View
 
+  mode_nettleie:
+    name: Nettleie
+
+  mode_pris:
+    name: Pris
+
+  mode_flex:
+    name: Flex
+
 input_select:
   # Dropdowns for adding new devices to categories
   new_category_1_device:
@@ -77,13 +86,6 @@ input_select:
   delete_category_3_device:
     name: "Delete Device from Category 3"
     options: ["Select a device"] # This will be populated dynamically
-
-  power_mode:
-    name: Power Mode
-    options:
-      - nettleie
-      - pris
-      - flex
 
 input_button:
   delete_category_1_device_button:
