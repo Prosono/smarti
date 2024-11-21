@@ -81,9 +81,9 @@ input_select:
   power_mode:
     name: Power Mode
     options:
-      - Nettleie
-      - Pris
-      - Flex
+      - nettleie
+      - pris
+      - flex
 
 input_button:
   delete_category_1_device_button:
