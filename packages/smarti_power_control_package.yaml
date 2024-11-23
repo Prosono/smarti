@@ -237,3 +237,15 @@ sensor:
             {% set current_hourly_usage = current_hourly_usage / 1000 %}
           {% endif %}
           {{ target - current_hourly_usage }}
+
+template:
+  - sensor:
+      - name: "Hourly Energy Usage Divided"
+        unit_of_measurement: "kWh"
+        state: >
+          {% set hourly_usage = states('sensor.hourly_energy_usage') | float(0) %}
+          {% if hourly_usage > 30 %}
+            {{ (hourly_usage / 1000) | round(2) }}
+          {% else %}
+            {{ hourly_usage | round(2) }}
+          {% endif %}
