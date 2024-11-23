@@ -399,15 +399,7 @@ automation:
     action:
       - service: homeassistant.update_entity
         entity_id: sensor.current_energy_level
-  - id: "1718354077935"
-    alias: SMARTi Calculate Remaining Energy
-    description: Updates the remaining energy for the hours not to break the user limit
-    trigger:
-      - platform: state
-        entity_id: sensor.dynamic_power_sensor, input_number.energy_target
-    action:
-      - service: homeassistant.update_entity
-        entity_id: sensor.remaining_energy
+
   - id: "1718354278151"
     alias: SMARTi Check Hourly Energy Usage and Alert
     description: Checks the hourly energy usage against the set value and the peaks and alerts if you are at risk of overstepping the limit

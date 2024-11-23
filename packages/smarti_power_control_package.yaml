@@ -111,6 +111,8 @@ sensor:
     name: Energy Consumed
     unit_prefix: k
     round: 2
+    unit_of_measurement: kWh
+    method: trapezoidal
 
   - platform: template
     sensors:
@@ -231,6 +233,6 @@ sensor:
 
       remaining_energy:
         value_template: >
-          {% set current_hourly_usage = states('utility_meter.hourly_energy_usage') | float(0) %}
+          {% set current_hourly_usage = states('sensor.hourly_energy_usage') | float(0) %}
           {% set target = states('input_number.energy_target') | float(0) %}
           {{ target - current_hourly_usage }}
