@@ -11,3 +11,9 @@ lovelace:
       title: "SMARTi Power Control"
       filename: dashboards/SMARTi_Power_Control_Page.yaml
       show_in_sidebar: true
+
+    smarti-power-control-test: # URL path with a hyphen
+      mode: yaml
+      title: "SMARTi Power Flow Test Page"
+      filename: dashboards/SMARTi_Power_Control_Page_Test.yaml
+      show_in_sidebar: true
